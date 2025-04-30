@@ -83,7 +83,7 @@ h3 {
 a {
   text-decoration: none;
   color: var(--second-text-color);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-md);
   font-size: var(--fs-sm);
   transition: ease 0.3s;
 }

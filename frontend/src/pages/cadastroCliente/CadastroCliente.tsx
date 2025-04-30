@@ -9,37 +9,6 @@ import Loading from "../../components/Loading/Loading";
 import ModalCadastroCliente from "../../components/CadastroDeCliente/ModalCadastroCliente";
 
 export default function CadastroCliente() {
-    const clientesMockados: tCliente[] = [
-        {
-          id: 1,
-          nome: "João da Silva",
-          cpf: "123.456.789-00",
-          telefone: "(45) 99999-9999",
-          email: "joao.silva@email.com",
-          situacao: "ATIVO",
-          veiculos: [],
-        },
-        {
-          id: 2,
-          nome: "Maria Souza",
-          cpf: "987.654.321-00",
-          telefone: "(45) 98888-8888",
-          email: "maria.souza@email.com",
-          situacao: "INATIVO",
-          veiculos: [],
-        },
-        {
-          id: 3,
-          nome: "Carlos Pereira",
-          cpf: "111.222.333-44",
-          telefone: "(45) 97777-7777",
-          email: "carlos.pereira@email.com",
-          situacao: "ATIVO",
-          veiculos: [],
-        },
-      ];
-      
-      
     const [clientes, setClientes] = useState<tCliente[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -64,25 +33,15 @@ export default function CadastroCliente() {
                 console.error("Erro:", error.message);
                 setError(error.message);
             }
-            console.error("Erro:", error);
         } finally {
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        setClientes(clientesMockados);
-        setLoading(false);
-      }, []);
+        bucarClientes();
+    }, []);
 
-
-    if (loading) {
-        return <Loading />;
-    }
-
-    if (error) {
-        return <div className="loading">Erro: {error}</div>;
-    }
     return (
         <div className="cadastro-mecanico-container">
             <h1>Cadastro de Clientes</h1>
@@ -98,7 +57,6 @@ export default function CadastroCliente() {
             </section>
 
             <div className="mecanico-table">
-
                 <table>
                     <thead>
                         <tr>
@@ -112,11 +70,17 @@ export default function CadastroCliente() {
                         </tr>
                     </thead>
                     <tbody>
-                        {clientes.length > 0 ? (
+                        {loading ? (
+                            <tr>
+                                <td colSpan={7}>
+                                    <Loading />
+                                </td>
+                            </tr>
+                        ) : clientes.length > 0 ? (
                             clientes.map((cliente) => (
                                 <tr key={cliente.id}>
                                     <td>{cliente.nome}</td>
-                                    <td>{cliente.veiculos.length}</td>
+                                    <td>{cliente.veiculos}</td>
                                     <td>{cliente.cpf}</td>
                                     <td>{cliente.telefone}</td>
                                     <td>{cliente.email}</td>
@@ -130,12 +94,13 @@ export default function CadastroCliente() {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan={5}>Nenhum cliente encontrado.</td>
+                                <td colSpan={7}>{error ? error : "Nenhum cliente encontrado."}</td>
                             </tr>
                         )}
                     </tbody>
                 </table>
             </div>
+
             {modalOpen && (
                 <ModalCadastroCliente
                     isOpen={modalOpen}
@@ -145,9 +110,7 @@ export default function CadastroCliente() {
                         setModalOpen(false);
                     }}
                 />
-
             )}
-
         </div>
     );
 }

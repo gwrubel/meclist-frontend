@@ -4,7 +4,8 @@ import { tMecanico } from "../../types/Mecanico";
 import InputCustom from "../../components/InputCustom/InputCustom";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
-import { Pencil, UserPlus } from 'lucide-react';
+import {  Pencil, UserPlus } from 'lucide-react';
+import { Link } from "react-router-dom";
 import Loading from "../../components/Loading/Loading";
 import ModalCadastroMecanico from "../../components/CadastroDeMecanico/ModalCadastroMecanico";
 import ModalEditarMecanico from "../../components/EditarMecanico/ModalEditarMecanico";
@@ -104,9 +105,9 @@ export default function CadastroMecanico() {
                             </tr>
                         ) : mecanicosFiltrados.length > 0 ? (
                             mecanicosFiltrados.map((mecanico) => (
-                                <tr key={mecanico.id}>
-                                    <td>MEC-{String(mecanico.id).padStart(3, '0')}</td>
-                                    <td>{mecanico.nome}</td>
+                                <tr  key={mecanico.id}>
+                                    <td><Link to={`/mecanicos/${mecanico.id}`}>MEC-{String(mecanico.id).padStart(3, '0')}</Link></td>
+                                    <td><Link to={`/mecanicos/${mecanico.id}`}>{mecanico.nome}</Link></td>
                                     <td>{mecanico.telefone}</td>
                                     <td>{mecanico.email}</td>
                                     <td>{mecanico.situacao.charAt(0).toUpperCase() + mecanico.situacao.slice(1).toLowerCase()}</td>
@@ -122,7 +123,7 @@ export default function CadastroMecanico() {
                             ))
                         ) : (
                             <tr>
-                              ({error}):<td colSpan={6}>Nenhum mecânico encontrado.</td>
+                              <td colSpan={6}>{error}</td>
                             </tr>
                         )}
                     </tbody>

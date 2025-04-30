@@ -68,9 +68,13 @@
 
 .mecanico-table th {
     background-color: var(--secondary-color); /* Cor de fundo dos cabeçalhos */
-    font-weight: 800;
+    font-weight: var(--fw-bold); /* Peso da fonte dos cabeçalhos */
 }
 
+.mecanico-table td {
+    
+    font-weight: var(--fw-base); 
+}
 .mecanico-table tr:nth-child(even) {
     background-color: #EAEAEA; /* Alterna a cor de fundo das linhas pares */
 }
