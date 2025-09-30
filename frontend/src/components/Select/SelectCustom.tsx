@@ -10,6 +10,7 @@ type SelectProps = {
   value: string;
   onChange: (value: string) => void;
   className?: string;
+  label?: string;
 };
 
 export const SelectCustom: React.FC<SelectProps> = ({
@@ -17,8 +18,11 @@ export const SelectCustom: React.FC<SelectProps> = ({
   value,
   onChange,
   className = "",
+  label
 }) => {
   return (
+    <div className="select-conatiner">
+    {label && <label className="select-label">{label}</label>}
     <select
       className={`select-filtro ${className}`}
       value={value}
@@ -30,5 +34,6 @@ export const SelectCustom: React.FC<SelectProps> = ({
         </option>
       ))}
     </select>
+    </div>
   );
 };

@@ -101,6 +101,27 @@ li {
   list-style: none;
 }
 
+.search-input {
+  width: 100%;
+  padding: 8px;
+  border: 2px solid var(--third-color);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-color);
+  font-size: 1rem;
+  transition: border-color 0.3s;
+  margin: 5px 0;
+}
+
+.search-input::placeholder {
+  color: var(--third-color);
+  font-size: 0.9rem;
+}
+
+.search-input:focus {
+  outline: none;
+  border-color: var(--text-color); /* ou uma cor que destaque no foco */
+}
 
 
 @media (width >= 1280px) {

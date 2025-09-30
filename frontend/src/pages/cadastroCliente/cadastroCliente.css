@@ -1,33 +1,33 @@
-.cadastro-mecanico-container {
+.cadastro-cliente-container {
     padding-top: 100px;
     text-align: center;
 }
 
-.cadastro-mecanico-container h1 {
+.cadastro-cliente-container h1 {
     margin-bottom: 40px;
 }
 
 
-.cadastro-mecanico-header {
+.cadastro-cliente-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     padding: 0rem 1rem;
 }
 
-.buscar-mecanico {
+.buscar-cliente {
     display: flex;
     align-items: center;
     gap: 10px;
     width: 700px;
 }
 
-.buscar-mecanico button {
+.buscar-cliente button {
     height: 50px;
     width: 30%;
 }
 
-.cadastro-mecanico-buscar {
+.cadastro-cliente-buscar {
     display: flex;
     flex-direction: column;
     align-items: end;
@@ -35,7 +35,7 @@
 
 
 
-.cadastro-mecanico-buscar>button {
+.cadastro-cliente-buscar>button {
     height: 50px;
     width: 40%;
 }
@@ -47,13 +47,13 @@
     height: 100vh;
 }
 
-.mecanico-table {
+.cliente-table {
     margin-top: 20px;
     text-align: center;
     overflow: hidden;
 }
 
-.mecanico-table table {
+.cliente-table table {
     width: 100%;
     border-collapse: collapse;
     /* Modificado de 'collapse' para 'separate' */
@@ -63,45 +63,54 @@
 }
 
 
-.mecanico-table th,
-.mecanico-table td {
+.cliente-table th,
+.cliente-table td {
     padding: 10px;
     border: 2px solid var(--third-color);
 }
 
-.mecanico-table th {
+.cliente-table th {
     background-color: var(--secondary-color);
     /* Cor de fundo dos cabeçalhos */
     font-weight: 800;
 }
 
-.mecanico-table tr:nth-child(even) {
+.cliente-table tr:nth-child(even) {
     background-color: #EAEAEA;
     /* Alterna a cor de fundo das linhas pares */
 }
 
-.mecanico-table tr:hover {
+.cliente-table tr:hover {
     background-color: #d0cece;
     /* Cor de fundo ao passar o mouse */
     transition: all 0.3s ease;
 }
 
-.coluna-edit button {
+.td-veiculo-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.add-veiculo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     border: none;
     background: none;
     cursor: pointer;
     padding: 0.5rem;
-}
-
-.edit {
     color: var(--text-color);
-
-}
-
-.edit:hover {
-    color: var(--primary-color);
+    
+    height: 30px;
     transition: color ease 0.3s;
 }
+
+.add-veiculo:hover {
+    color: var(--primary-color);
+}
+
+
 
 
 

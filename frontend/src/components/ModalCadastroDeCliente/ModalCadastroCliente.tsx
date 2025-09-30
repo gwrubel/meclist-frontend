@@ -4,6 +4,8 @@ import InputCustom from "../InputCustom/InputCustom";
 import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import "./ModalCadastroCliente.css";
+import { useAuth } from "../../contexts/AuthContext";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 
 interface CadastroDeClienteProps {
@@ -23,6 +25,8 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
   });
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { token } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
   function limparMascara(valor: string) {
@@ -51,9 +55,13 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
     };
 
     try {
+      setIsSubmitting(true);
       const response = await fetch('http://localhost:8080/clientes', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
         body: JSON.stringify(cleanedData),
       });
       const data = await response.json();
@@ -61,28 +69,34 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
       if (!response.ok) {
         if (data.errors) {
           setErrors(data.errors);
+          showErrorToast(data.message || "Erro ao realizar cadastro");
         } else {
           setErrors({ geral: data.message || "Erro ao realizar cadastro" });
         }
         return;
       }
-      alert(data.message);
+      showSuccessToast(data.message);
       onSucess?.();
     } catch (error) {
       if (error instanceof Error) {
         console.error("Erro:", error.message);
+        showErrorToast(error.message);
         setErrors({ geral: error.message });
       } else {
         console.error("Erro desconhecido:", error);
         setErrors({ geral: "Erro de conexão. Tente novamente." });
+        showErrorToast("Erro de conexão. Tente novamente.");
       }
     }
-
+    finally{
+      setIsSubmitting(false);
+    }
+    
   };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} header="Cadastro de Cliente" >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form-cadastro-cliente">
         <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required error={errors.nome} placeholder="Nome completo" />
         <InputCustom label="CPF" name="cpf" type="text" mask="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleFormChange} required error={errors.cpf} />
         <InputCustom label="Telefone" name="telefone" type="text" mask="phone" value={formData.telefone} onChange={handleFormChange} required error={errors.telefone} placeholder="(00) 00000-0000" />
@@ -94,7 +108,7 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
 
         <div className="form-buttons">
           <button type="button" onClick={onClose}>Cancelar</button>
-          <Button text="Cadastrar" secondary type="submit" />
+          <Button text={isSubmitting ? "Cadastrando..." : "Cadastrar"}  disabled={isSubmitting} secondary type="submit" />
         </div>
       </form>
     </Modal>

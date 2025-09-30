@@ -1,15 +1,20 @@
 import { useEffect, useState } from "react";
 import "./CadastroMecanico.css";
 import { tMecanico } from "../../types/Mecanico";
-import InputCustom from "../../components/InputCustom/InputCustom";
+
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
 import {  Pencil, UserPlus } from 'lucide-react';
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading/Loading";
-import ModalCadastroMecanico from "../../components/CadastroDeMecanico/ModalCadastroMecanico";
-import ModalEditarMecanico from "../../components/EditarMecanico/ModalEditarMecanico";
+import ModalCadastroMecanico from "../../components/ModalCadastroDeMecanico/ModalCadastroMecanico";
+import ModalEditarMecanico from "../../components/ModalEditarMecanico/ModalEditarMecanico";
+import { useAuth } from "../../contexts/AuthContext";
+import { aplicarMascaraTelefone } from "../../utils/maskUtils";
+
+
 export default function CadastroMecanico() {
+    const { token } = useAuth();
     const [mecanicos, setMecanicos] = useState<tMecanico[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -32,7 +37,12 @@ export default function CadastroMecanico() {
                 url.searchParams.append('situacao', filtro.toUpperCase());
             }
 
-            const response = await fetch(url.toString());
+            const response = await fetch(url.toString(),{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             if (!response.ok) {
                 throw new Error("Erro ao buscar mecânicos");
             }
@@ -72,13 +82,7 @@ export default function CadastroMecanico() {
                 <div className="cadastro-mecanico-buscar">
                     <Button text="Cadastrar mecânico" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalCadastroOpen(true)} />
                     <div className="buscar-mecanico">
-                        <InputCustom
-                            name="buscar"
-                            value={buscarTexto}
-                            onChange={(e) => setBuscarTexto(e.target.value)}
-                            type="text"
-                            placeholder="Buscar mecânico"
-                        />
+                       <input type="text" placeholder="Buscar mecânico" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
 
                     </div>
                 </div>
@@ -90,8 +94,8 @@ export default function CadastroMecanico() {
                         <tr>
                             <th>ID</th>
                             <th>Nome</th>
-                            <th>Celular</th>
-                            <th>E-mail</th>
+                            <th className="hide-on-mobile">Celular</th>
+                            <th className="hide-on-mobile">E-mail</th>
                             <th>Situação</th>
                             <th>Editar</th>
                         </tr>
@@ -108,8 +112,8 @@ export default function CadastroMecanico() {
                                 <tr  key={mecanico.id}>
                                     <td><Link to={`/mecanicos/${mecanico.id}`}>MEC-{String(mecanico.id).padStart(3, '0')}</Link></td>
                                     <td><Link to={`/mecanicos/${mecanico.id}`}>{mecanico.nome}</Link></td>
-                                    <td>{mecanico.telefone}</td>
-                                    <td>{mecanico.email}</td>
+                                    <td className="hide-on-mobile">{aplicarMascaraTelefone(mecanico.telefone)}</td>
+                                    <td className="hide-on-mobile">{mecanico.email}</td>
                                     <td>{mecanico.situacao.charAt(0).toUpperCase() + mecanico.situacao.slice(1).toLowerCase()}</td>
                                     <td className="coluna-edit">
                                         <button onClick={() => {
@@ -123,7 +127,7 @@ export default function CadastroMecanico() {
                             ))
                         ) : (
                             <tr>
-                              <td colSpan={6}>{error}</td>
+                              <td colSpan={6}>{error ? error : "Nenhum mecânico encontrado."}</td>
                             </tr>
                         )}
                     </tbody>

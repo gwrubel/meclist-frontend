@@ -1,0 +1,14 @@
+
+.form-cadastro-cliente{
+  max-height: 50%;
+}
+  
+.error {
+  color: red;
+  font-size: 0.75rem;
+  margin-top: 4px;
+  display: block;
+}
+  
+
+  

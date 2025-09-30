@@ -4,8 +4,9 @@ import InputCustom from "../InputCustom/InputCustom";
 import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import "./ModalEditarMecanico.css";
-import { limparMascara, aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
-import { showSuccessToast } from "../../utils/toast";
+import {  aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { useAuth } from "../../contexts/AuthContext";
 
 
 interface EditarMecanicoProps {
@@ -25,6 +26,9 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
     situacao: "ATIVO"
   });
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  const { token } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
 
   useEffect(() => {
     if (mecanico) {
@@ -33,14 +37,25 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
   }, [mecanico]);
 
   
-
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-      const { name, value } = e.target;
-      setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value } = e.target;
+  
+    let newValue = value;
+    if (name === "cpf") newValue = aplicarMascaraCpf(value);
+    if (name === "telefone") newValue = aplicarMascaraTelefone(value);
+  
+    setFormData((prev) => ({ ...prev, [name]: newValue }));
   };
+  
+  function limparMascara(valor: string) {
+    return valor.replace(/\D/g, "");
+  }
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true)
+
 
     const cleanedData = {
       ...formData,
@@ -51,15 +66,20 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
     try {
       const response = await fetch(`http://localhost:8080/mecanicos/${cleanedData.id}`, {
         method: 'PUT', 
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
         body: JSON.stringify(cleanedData),
       });
       const data = await response.json();
 
       if (!response.ok) {
         if (data.errors) {
+          showErrorToast(data.message || "Erro ao atualizar cadastro");
           setErrors(data.errors);
         } else {
+          showErrorToast(data.message || "Erro ao atualizar cadastro");
           setErrors({ geral: data.message || "Erro ao atualizar cadastro" });
         }
         return;
@@ -75,6 +95,9 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
         console.error("Erro desconhecido:", error);
         setErrors({ geral: "Erro de conexão. Tente novamente." });
       }
+    }
+    finally{
+      setIsSubmitting(false);
     }
   };
 
@@ -94,11 +117,10 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
             <option value="INATIVO">Inativo</option>
           </select>
         </div>
-        {errors.geral && <p className="error">{errors.geral}</p>}
-
+        
         <div className="form-buttons">
           <button type="button" onClick={onClose}>Cancelar</button>
-          <Button text="Salvar" secondary type="submit" />
+          <Button text={isSubmitting ? "Salvando..." : "Salvar"} disabled={isSubmitting} secondary type="submit" />
         </div>
       </form>
     </Modal>

@@ -7,14 +7,24 @@ interface IButtonProps {
   icon?: React.ReactNode;
   iconPosition?: 'left' | 'right';
   onClick?: () => void;
+  disabled?: boolean;
 }
 
-export default function Button({ text, secondary, onClick, icon, iconPosition = 'left', type }: IButtonProps) {
+export default function Button({
+  text,
+  secondary,
+  onClick,
+  icon,
+  iconPosition = 'left',
+  type,
+  disabled,
+}: IButtonProps) {
   return (
     <button
       className={secondary ? 'btn-secondary' : 'btn-primary'}
       onClick={onClick}
       type={type}
+      disabled={disabled}
     >
       {icon && iconPosition === 'left' && <span className="btn-icon left">{icon}</span>}
       <span className="btn-text">{text}</span>
@@ -22,3 +32,4 @@ export default function Button({ text, secondary, onClick, icon, iconPosition = 
     </button>
   );
 }
+

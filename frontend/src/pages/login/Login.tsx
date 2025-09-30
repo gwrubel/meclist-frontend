@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import "./login.css";
 import logo from "../../assets/logo.svg";
@@ -7,16 +7,17 @@ import Button from "../../components/Button/Button";
 import { useNavigate } from 'react-router-dom';
 import InputCustom from "../../components/InputCustom/InputCustom";
 import { tlogin } from "../../types/userLogin";
+import Loading from "../../components/Loading/Loading";
 
 
 
 function Login() {
     const navigate = useNavigate();
-    const { login } = useAuth(); // Ação de login do contexto
+    const { login } = useAuth(); 
     const [formData, setFormData] = useState<tlogin>({ email: "", senha: "" });
     const [errorMessage, setErrorMessage] = useState<string>("");
-
-    // Função para atualizar os valores dos campos de entrada
+    const [isLoading, setIsLoading] = useState<boolean>(false);
+   
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -28,6 +29,7 @@ function Login() {
     // Função que lida com o envio do formulário
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setIsLoading(true);
         console.log("Dados do formulário:", formData);
 
         // Envia uma requisição de login para o backend
@@ -45,7 +47,6 @@ function Login() {
             if (response.ok) {
                 // Sucesso no login, armazena o token ou outros dados conforme necessário
                 login(data.token);
-                console.log("Usuário logado com sucesso!", data);
                 navigate("/dashboard");
             } else {
                 // Se houver erro no login, exibe a mensagem de erro
@@ -60,8 +61,16 @@ function Login() {
                 setErrorMessage("Erro de conexão. Tente novamente.");
             }
         }
+        finally {
+            setIsLoading(false);
+        }
         
     };
+
+    useEffect(() => {
+        // Limpa a mensagem de erro ao alterar os dados do formulário
+        setErrorMessage("");    
+    }, [formData]);
 
     return (
         <div className="login-page">
@@ -79,6 +88,7 @@ function Login() {
                             type="text"
                             placeholder="Usuário"
                             name="email"
+                            required
                             value={formData.email}
                             onChange={handleChange}
                         />
@@ -86,11 +96,16 @@ function Login() {
                             type="password"
                             placeholder="Password"
                             name="senha"
+                            required
                             value={formData.senha}
                             onChange={handleChange}
                         />
                         {errorMessage && <p className="error">{errorMessage}</p>}
-                        <Button text="Entrar" />
+                        {isLoading ? (
+                            <Loading /> 
+                        ) : (
+                            <Button text="Entrar" />
+                        )}
                         <a href="#" className="forgot-password">
                             Esqueceu a senha?
                         </a>

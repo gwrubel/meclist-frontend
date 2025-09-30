@@ -8,22 +8,22 @@
 }
 
 
-.cadastro-mecanico-header{
+.cadastro-mecanico-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0rem 1rem;
+    flex-wrap: wrap; /* <-- Adicionado */
+    gap: 1rem; /* melhora espaçamento ao quebrar linha */
 }
+
+
 
 .buscar-mecanico{
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 700px;
-}
-.buscar-mecanico button{
-    height: 50px;
-    width:30%;
+    width: 500px;
+    
 }
 
 .cadastro-mecanico-buscar{
@@ -36,7 +36,7 @@
 
 .cadastro-mecanico-buscar > button{
     height: 50px;
-    width: 40%;
+    width: 50%;
 }
 
 .loading {
@@ -99,13 +99,36 @@
 }
 
 
+@media (max-width: 800px) {
 
-@media (width <= 1280px) {
-   
-   
-  
-    .mecanico-table th,
-    .mecanico-table td {
-      font-size: 14px;
-      padding: 8px;
-  }}
+  .cadastro-mecanico-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .hide-on-mobile {
+    display: none;
+  }
+  .buscar-mecanico {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .buscar-mecanico button,
+  .cadastro-mecanico-buscar > button {
+    width: 100%;
+  }
+
+  .mecanico-table table {
+    font-size: 12px;
+  }
+
+  .mecanico-table th,
+  .mecanico-table td {
+    padding: 6px;
+  }
+
+  .cadastro-mecanico-container {
+    padding: 60px 10px;
+  }
+}

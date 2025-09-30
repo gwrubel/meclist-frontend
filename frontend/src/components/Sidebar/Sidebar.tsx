@@ -24,6 +24,8 @@ export function Sidebar() {
   const [open, setOpen] = useState(false);
   const [cadastroOpen, setCadastroOpen] = useState(false);
   const [relatorioOpen, setRelatorioOpen] = useState(false);
+  const [checklistOpen, setChecklistOpen] = useState(false);
+
 
   return (
     <aside className={`sidebar ${open ? "sidebar--open" : "sidebar--closed"}`}>
@@ -41,34 +43,55 @@ export function Sidebar() {
 
       <nav className="sidebar-menu">
         <button onClick={() => navigate("/dashboard")}>
-        <img src={grid} alt="grid" />
+          <img src={grid} alt="grid" />
           Dashboard
         </button>
 
         <section className="sidebar-group">
           <button onClick={() => setCadastroOpen(!cadastroOpen)}>
-          <img src={cadastro} alt="cadastro" />
+            <img src={cadastro} alt="cadastro" />
             Cadastro <span>{cadastroOpen ? <img src={setaLabelBaixo} alt="seta" /> : <img src={setaLabelLado} alt="seta" />}</span>
           </button>
           {cadastroOpen && open && (
             <div className="sidebar-submenu">
               <button onClick={() => navigate("/cadastro-cliente")}>
-                Cadastro de clientes
+                Cadastro de Clientes
               </button>
               <button onClick={() => navigate("/cadastro-mecanico")}>
-                Cadastro de mecânicos
+                Cadastro de Mecânicos
               </button>
             </div>
           )}
         </section>
 
-        <button onClick={() => navigate("/checklist")}>
-        <img src={lista} alt="lista" />
-          Checklist</button>
+        <section className="sidebar-group">
+          <button onClick={() => setChecklistOpen(!checklistOpen)}>
+            <img src={lista} alt="lista" />
+            Checklist
+            <span>
+              {checklistOpen ? (
+                <img src={setaLabelBaixo} alt="seta" />
+              ) : (
+                <img src={setaLabelLado} alt="seta" />
+              )}
+            </span>
+          </button>
+          {checklistOpen && open && (
+            <div className="sidebar-submenu">
+              <button onClick={() => navigate("/checklist")}>
+                Gerenciar Checklist
+              </button>
+              <button onClick={() => navigate("/parte-checklist")}>
+                Cadastrar Itens
+              </button>
+            </div>
+          )}
+        </section>
+
 
         <section className="sidebar-group">
           <button onClick={() => setRelatorioOpen(!relatorioOpen)}>
-          <img src={relatorio} alt="relatorio" />
+            <img src={relatorio} alt="relatorio" />
             Relatório <span>{relatorioOpen ? <img src={setaLabelBaixo} alt="seta" /> : <img src={setaLabelLado} alt="seta" />}</span>
           </button>
           {relatorioOpen && open && (
@@ -90,19 +113,19 @@ export function Sidebar() {
       {open && (
         <footer className="sidebar-footer">
           <button onClick={() => navigate("/perfil")}>
-          <img src={userSvg} alt="user" />
+            <img src={userSvg} alt="user" />
             {user?.email}
           </button>
           <button onClick={() => navigate("/configuracoes")}>
-          <img src={configuracoes} alt="configuracaos" />
+            <img src={configuracoes} alt="configuracaos" />
             Configurações
           </button>
           <button onClick={() => navigate("/suporte")}>
-          <img src={suporte} alt="suporte" />
+            <img src={suporte} alt="suporte" />
             Ajuda e suporte
           </button>
           <button onClick={logout} className="sidebar-logout">
-          <img src={logoutSvg} alt="logout" />
+            <img src={logoutSvg} alt="logout" />
             Sair
           </button>
         </footer>

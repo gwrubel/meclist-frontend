@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import "./cadastroCliente.css";
 import { tCliente } from "../../types/Cliente";
-import InputCustom from "../../components/InputCustom/InputCustom";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
-import { Pencil, UserPlus } from 'lucide-react';
+import { CarFront, Plus, UserPlus } from 'lucide-react';
 import Loading from "../../components/Loading/Loading";
-import ModalCadastroCliente from "../../components/CadastroDeCliente/ModalCadastroCliente";
+import ModalCadastroCliente from "../../components/ModalCadastroDeCliente/ModalCadastroCliente";
+import { Link } from "react-router-dom";
+import { useAuth } from "../../contexts/AuthContext";
+import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
+import ModalCadastroVeiculo from "../../components/ModalCadastroVeiculo/ModalCadastroVeiculo";
 
 export default function CadastroCliente() {
+    const {token} = useAuth();
     const [clientes, setClientes] = useState<tCliente[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -19,10 +23,23 @@ export default function CadastroCliente() {
     ];
     const [filtro, setFiltro] = useState("Todos");
     const [modalOpen, setModalOpen] = useState(false);
+    const [buscarTexto, setBuscarTexto] = useState("")
+    const [ModalCadastroVeiculoOpen, setModalCadastroVeiculoOpen] = useState(false);
+    
 
     const bucarClientes = async () => {
         try {
-            const response = await fetch("http://localhost:8080/clientes");
+            const url = new URL("http://localhost:8080/clientes");
+            if (filtro.toLowerCase() !== "todos") {
+                url.searchParams.append('situacao', filtro.toUpperCase());
+            }
+
+            const response = await fetch(url.toString(),{
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            });
             if (!response.ok) {
                 throw new Error("Erro ao buscar clientes");
             }
@@ -34,29 +51,38 @@ export default function CadastroCliente() {
                 setError(error.message);
             }
         } finally {
+
             setLoading(false);
         }
     };
 
     useEffect(() => {
+        setLoading(true);
         bucarClientes();
-    }, []);
+    }, [filtro]);
 
+
+
+    const clientesFiltrados = clientes.filter((cliente) => {
+        const nomeMatch = cliente.nome.toLowerCase().includes(buscarTexto.toLowerCase());
+        const statusMatch = filtro.toLowerCase() === "todos" || cliente.situacao.toLowerCase() === filtro.toLowerCase();
+        return nomeMatch && statusMatch;
+    });
     return (
-        <div className="cadastro-mecanico-container">
+        <div className="cadastro-cliente-container">
             <h1>Cadastro de Clientes</h1>
-            <section className="cadastro-mecanico-header">
+            <section className="cadastro-cliente-header">
                 <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
-                <div className="cadastro-mecanico-buscar">
+                <div className="cadastro-cliente-buscar">
                     <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
-                    <div className="buscar-mecanico">
-                        <InputCustom name="buscar" value="" onChange={() => { }} type="text" placeholder="Buscar cliente" />
-                        <Button text="Buscar" />
+                    <div className="buscar-cliente">
+                    <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)}  className="search-input"/>
+
                     </div>
                 </div>
             </section>
 
-            <div className="mecanico-table">
+            <div className="cliente-table">
                 <table>
                     <thead>
                         <tr>
@@ -66,7 +92,7 @@ export default function CadastroCliente() {
                             <th>Telefone</th>
                             <th>E-mail</th>
                             <th>Situação</th>
-                            <th>Editar</th>
+
                         </tr>
                     </thead>
                     <tbody>
@@ -76,20 +102,42 @@ export default function CadastroCliente() {
                                     <Loading />
                                 </td>
                             </tr>
-                        ) : clientes.length > 0 ? (
-                            clientes.map((cliente) => (
+                        ) : clientesFiltrados.length > 0 ? (
+                            clientesFiltrados.map((cliente) => (
                                 <tr key={cliente.id}>
-                                    <td>{cliente.nome}</td>
-                                    <td>{cliente.veiculos}</td>
-                                    <td>{cliente.cpf}</td>
-                                    <td>{cliente.telefone}</td>
-                                    <td>{cliente.email}</td>
-                                    <td>{cliente.situacao.charAt(0).toUpperCase() + cliente.situacao.slice(1).toLowerCase()}</td>
-                                    <td className="coluna-edit">
-                                        <button>
-                                            <Pencil className="edit" />
-                                        </button>
+                                    <td>
+                                        <Link to={`/cliente/${cliente.id}`}>{cliente.nome}</Link>
                                     </td>
+
+                                    <td>
+                                        <div className="td-veiculo-content">
+                                            {cliente?.veiculos?.length ?? 0}
+                                            <button className="add-veiculo"  onClick={() => setModalCadastroVeiculoOpen(true)}>
+                                                <CarFront size={16} />
+                                                <Plus size={16} />
+                                                
+                                            </button>
+                                        </div>
+                                    </td>
+
+                                    <td>
+                                        <Link to={`/cliente/${cliente.id}`}>{aplicarMascaraCpf(cliente.cpf)}</Link>
+                                    </td>
+
+                                    <td>
+                                        <Link to={`/cliente/${cliente.id}`}>{aplicarMascaraTelefone(cliente.telefone)}</Link>
+                                    </td>
+
+                                    <td>
+                                        <Link to={`/cliente/${cliente.id}`}>{cliente.email}</Link>
+                                    </td>
+
+                                    <td>
+                                        <Link to={`/cliente/${cliente.id}`}>
+                                            {cliente.situacao.charAt(0).toUpperCase() + cliente.situacao.slice(1).toLowerCase()}
+                                        </Link>
+                                    </td>
+
                                 </tr>
                             ))
                         ) : (
@@ -108,6 +156,17 @@ export default function CadastroCliente() {
                     onSucess={() => {
                         bucarClientes();
                         setModalOpen(false);
+                    }}
+                />
+            )}
+
+            {ModalCadastroVeiculoOpen && (
+                <ModalCadastroVeiculo
+                    isOpen={ModalCadastroVeiculoOpen}
+                    onClose={() => { setModalCadastroVeiculoOpen(false) }}
+                    onSucess={() => {
+                        bucarClientes();
+                        setModalCadastroVeiculoOpen(false);
                     }}
                 />
             )}

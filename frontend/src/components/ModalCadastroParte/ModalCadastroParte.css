@@ -1,0 +1,137 @@
+.form-cadastro-parte {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.2rem;
+  padding: 0 1rem 1rem 1rem;
+}
+
+.form-cadastro-parte label {
+  display: block;
+  font-weight: 600;
+  color: var(--text-color);
+  margin-bottom: 0.4rem;
+}
+
+.form-cadastro-parte input[type="text"],
+.form-cadastro-parte select {
+  width: 100%;
+  padding: 10px 12px;
+  font-size: 1rem;
+  border: 2px solid var(--third-color);
+  border-radius: 8px;
+  background-color: transparent;
+  color: var(--text-color);
+  transition: border-color 0.25s ease;
+}
+
+
+.input-file-wrapper {
+  grid-column: 1 / -1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.input-file-wrapper label {
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.input-file-wrapper input[type="file"] {
+  padding: 12px;
+  border: 2px dashed var(--third-color);
+  border-radius: 8px;
+  background-color: #fafafa;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: border-color 0.3s ease;
+}
+
+.input-file-wrapper input[type="file"]:hover,
+.input-file-wrapper input[type="file"]:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 5px var(--primary-color);
+}
+
+.error {
+  color: #e74c3c;
+  font-size: 0.85rem;
+  margin-top: 0.25rem;
+}
+
+.form-buttons {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  margin-top: 1.5rem;
+}
+
+.form-buttons button {
+  padding: 12px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 1rem;
+  transition: background-color 0.3s ease;
+}
+
+.form-buttons button[type="button"] {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.form-buttons button[type="button"]:hover {
+  background-color: #c7c7c7;
+}
+
+.form-buttons button[type="submit"] {
+  background-color: var(--secondary-color);
+  color: white;
+}
+
+.form-buttons button[type="submit"]:hover:not(:disabled) {
+  background-color: var(--primary-color);
+}
+
+.form-buttons button:disabled {
+  background-color: #999;
+  cursor: not-allowed;
+}
+.preview-wrapper {
+  margin-top: 0.5rem;
+}
+
+.preview-wrapper p {
+  font-size: 0.9rem;
+  margin-bottom: 0.3rem;
+  color: var(--text-color);
+}
+
+.preview-image {
+  width: 100%;
+  max-height: 200px;
+  object-fit: contain;
+  border-radius: 8px;
+  border: 1px solid var(--third-color);
+  background-color: #f5f5f5;
+  padding: 5px;
+}
+
+
+@media (max-width: 768px) {
+  .form-cadastro-parte {
+    grid-template-columns: 1fr;
+  }
+
+  .form-buttons {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .form-buttons button {
+    width: 100%;
+  }
+}

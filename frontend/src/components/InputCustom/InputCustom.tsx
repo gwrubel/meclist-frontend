@@ -82,7 +82,7 @@ const InputCustom = ({
           onChange={handleInputChange}
           required={required}
         />
-        {error && <span className="input-error">{error}</span>}
+        <span className="input-error">{error || '\u00A0'}</span>
       </div>
     );
   };

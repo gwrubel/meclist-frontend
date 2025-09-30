@@ -18,7 +18,9 @@ export default function Modal({ isOpen, onClose, children, header }: ModalProps)
           {header && <h2>{header}</h2>}
           <button className="modal-close" onClick={onClose}>x</button>
         </div>
-          {children} 
+        <div className="modal-body">
+          {children}
+        </div>
       </div>
     </div>
   );

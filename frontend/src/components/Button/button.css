@@ -87,3 +87,20 @@
 .btn-text {
     display: inline-block;
 }
+button:disabled,
+.btn-primary:disabled,
+.btn-secondary:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  pointer-events: none;
+  filter: grayscale(30%);
+  transition: none;
+}
+@media (max-width: 480px) {
+    .btn-primary,
+    .btn-secondary {
+      font-size: var(--fs-xs);
+      padding-inline: 1rem;
+    }
+  }
+  

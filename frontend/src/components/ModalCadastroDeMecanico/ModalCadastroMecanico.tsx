@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { tMecanicoCadastro } from "../../types/Mecanico";
 import InputCustom from "../InputCustom/InputCustom";
 import Modal from "../../layouts/Modal/Modal";
@@ -6,6 +6,7 @@ import Button from "../Button/Button";
 import "./ModalCadastroMecanico.css";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { limparMascara} from "../../utils/maskUtils";
+import { useAuth } from "../../contexts/AuthContext";
 
 interface CadastroDeMecanicoProps {
   isOpen: boolean;
@@ -23,7 +24,8 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
   });
   const [confirmarSenha, setConfirmarSenha] = useState('');
   const [errors, setErrors] = useState<{ [key: string]: string }>({});
-
+  const { token } = useAuth();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
 
 
@@ -37,9 +39,12 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setIsSubmitting(true)
+
     if (formData.senha !== confirmarSenha) {
       setErrors({ confirmarSenha: "As senhas não coincidem" });
       showErrorToast("As senhas não coincidem");
+       setIsSubmitting(false);
       return;
     }
 
@@ -52,7 +57,10 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
     try {
       const response = await fetch('http://localhost:8080/mecanicos', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+      },
         body: JSON.stringify(cleanedData),
       });
       const data = await response.json();
@@ -81,12 +89,17 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
         showErrorToast("Erro de conexão. Tente novamente.");
       }
     }
-    
+    finally{
+      setIsSubmitting(false);
+    }
   };
-
+ useEffect(() => {
+        // Limpa a mensagem de erro ao alterar os dados do formulário
+        setErrors({});    
+    }, [formData]);
   return (
     <Modal isOpen={isOpen} onClose={onClose} header="Cadastro de Mecânico" >
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="form-cadastro-mecanico">
         <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required error={errors.nome} placeholder="Nome completo" />
         <InputCustom label="CPF" name="cpf" type="text" mask="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleFormChange} required error={errors.cpf} />
         <InputCustom label="Telefone" name="telefone" type="text" mask="phone" value={formData.telefone} onChange={handleFormChange} required error={errors.telefone} placeholder="(00) 00000-0000" />
@@ -97,7 +110,7 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
 
         <div className="form-buttons">
           <button type="button" onClick={onClose}>Cancelar</button>
-          <Button text="Cadastrar" secondary type="submit" />
+          <Button text={isSubmitting ? "Cadastrando..." : "Cadastrar"} secondary type="submit"  disabled={isSubmitting}/>
         </div>
       </form>
     </Modal>
