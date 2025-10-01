@@ -12,9 +12,10 @@ import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils
 import ModalCadastroVeiculo from "../../components/ModalCadastroVeiculo/ModalCadastroVeiculo";
 
 export default function CadastroCliente() {
-    const {token} = useAuth();
+    const { token } = useAuth();
     const [clientes, setClientes] = useState<tCliente[]>([]);
     const [loading, setLoading] = useState(true);
+    const [selectedClienteId, setSelectedClienteId] = useState<number | null>(null);
     const [error, setError] = useState<string | null>(null);
     const statusOptions = [
         { label: "Todos", value: "todos" },
@@ -25,7 +26,7 @@ export default function CadastroCliente() {
     const [modalOpen, setModalOpen] = useState(false);
     const [buscarTexto, setBuscarTexto] = useState("")
     const [ModalCadastroVeiculoOpen, setModalCadastroVeiculoOpen] = useState(false);
-    
+
 
     const bucarClientes = async () => {
         try {
@@ -34,7 +35,7 @@ export default function CadastroCliente() {
                 url.searchParams.append('situacao', filtro.toUpperCase());
             }
 
-            const response = await fetch(url.toString(),{
+            const response = await fetch(url.toString(), {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',
@@ -76,7 +77,7 @@ export default function CadastroCliente() {
                 <div className="cadastro-cliente-buscar">
                     <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
                     <div className="buscar-cliente">
-                    <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)}  className="search-input"/>
+                        <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
 
                     </div>
                 </div>
@@ -112,10 +113,13 @@ export default function CadastroCliente() {
                                     <td>
                                         <div className="td-veiculo-content">
                                             {cliente?.veiculos?.length ?? 0}
-                                            <button className="add-veiculo"  onClick={() => setModalCadastroVeiculoOpen(true)}>
+                                            <button className="add-veiculo" onClick={() => {
+                                                setSelectedClienteId(cliente.id);
+                                                setModalCadastroVeiculoOpen(true);
+                                            }}>
                                                 <CarFront size={16} />
                                                 <Plus size={16} />
-                                                
+
                                             </button>
                                         </div>
                                     </td>
@@ -163,7 +167,11 @@ export default function CadastroCliente() {
             {ModalCadastroVeiculoOpen && (
                 <ModalCadastroVeiculo
                     isOpen={ModalCadastroVeiculoOpen}
-                    onClose={() => { setModalCadastroVeiculoOpen(false) }}
+                    clienteId={selectedClienteId}
+                    onClose={() => {
+                        setModalCadastroVeiculoOpen(false)
+                        setSelectedClienteId(null);
+                    }}
                     onSucess={() => {
                         bucarClientes();
                         setModalCadastroVeiculoOpen(false);

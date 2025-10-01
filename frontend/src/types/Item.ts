@@ -1,8 +1,8 @@
-export type tParteVeiculo = {
+export type tItem = {
      id: number;
   nome: string;
-  imagem: string;
-  categoriaParteVeiculo: CategoriaParteVeiculo;
+  imagemIlustrativa: string;
+  parteDoVeiculo: CategoriaParteVeiculo;
 }
 
 export type CategoriaParteVeiculo =
@@ -11,3 +11,4 @@ export type CategoriaParteVeiculo =
   | "VEICULO_NO_CHAO"
   | "VEICULO_NO_ELEVADOR"
   | "CAPO_LEVANTADO";
+

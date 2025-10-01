@@ -3,7 +3,7 @@ import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
-import { CategoriaParteVeiculo } from "../../types/ParteVeiculo";
+import { CategoriaParteVeiculo } from "../../types/Item";
 import "./ModalCadastroParte.css";
 
 interface ModalCadastroParteProps {
@@ -12,7 +12,7 @@ interface ModalCadastroParteProps {
     onSuccess?: () => void;
 }
 
-export default function ModalCadastroParte({ isOpen, onClose, onSuccess }: ModalCadastroParteProps) {
+export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalCadastroParteProps) {
     const { token } = useAuth();
     const [formData, setFormData] = useState<{
         nome: string;
@@ -72,11 +72,11 @@ export default function ModalCadastroParte({ isOpen, onClose, onSuccess }: Modal
 
         const formPayload = new FormData();
         formPayload.append("nome", formData.nome);
-        formPayload.append("categoriaParteVeiculo", formData.categoriaParteVeiculo);
+        formPayload.append("parteDoVeiculo", formData.categoriaParteVeiculo);
         formPayload.append("imagem", formData.imagem);
 
         try {
-            const response = await fetch("http://localhost:8080/parte-veiculo", {
+            const response = await fetch("http://localhost:8080/itens", {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,

@@ -3,14 +3,14 @@ import "./ParteDoChecklist.css";
 import { Pencil, PlusCircle, Trash } from "lucide-react";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
-import ModalCadastroParte from "../../components/ModalCadastroParte/ModalCadastroParte";
+import ModalCadastroItem from "../../components/ModalCadastroParte/ModalCadastroItem";
 import { useAuth } from "../../contexts/AuthContext";
-import { tParteVeiculo } from "../../types/ParteVeiculo"
+import { tItem } from "../../types/Item"
 
 
 export default function CadastroParteChecklist() {
   const { token } = useAuth();
-  const [partes, setPartes] = useState<tParteVeiculo[]>([]);
+  const [item, setItens] = useState<tItem[]>([]);
   const [filtroCategoria, setFiltroCategoria] = useState("Todos");
   const [buscarTexto, setBuscarTexto] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
@@ -25,7 +25,7 @@ export default function CadastroParteChecklist() {
 
   const buscarPartes = async () => {
     try {
-      const url = new URL(" http://localhost:8080/parte-veiculo");
+      const url = new URL(" http://localhost:8080/itens");
       if (filtroCategoria !== "Todos") {
         url.searchParams.append("categoria", filtroCategoria);
       }
@@ -36,7 +36,8 @@ export default function CadastroParteChecklist() {
         },
       });
       const data = await response.json();
-      setPartes(data);
+      setItens(data);
+      console.log(data);
     } catch (error) {
       console.error("Erro ao buscar partes:", error);
     }
@@ -46,8 +47,8 @@ export default function CadastroParteChecklist() {
     buscarPartes();
   }, [filtroCategoria]);
 
-  const partesFiltradas = partes.filter((parte) =>
-    parte.nome.toLowerCase().includes(buscarTexto.toLowerCase())
+  const partesFiltradas = item.filter((item) =>
+    item.nome.toLowerCase().includes(buscarTexto.toLowerCase())
   );
 
   return (
@@ -63,7 +64,7 @@ export default function CadastroParteChecklist() {
 
         <div className="parte-checklist-actions">
           <Button
-            text="Cadastrar Parte"
+            text="Cadastrar Item"
             icon={<PlusCircle />}
             iconPosition="left"
             secondary
@@ -91,19 +92,19 @@ export default function CadastroParteChecklist() {
             </tr>
           </thead>
           <tbody>
-            {partesFiltradas.map((parte) => (
-              <tr key={parte.id}>
-                <td>N°{String(parte.id).padStart(3, "0")}</td>
+            {partesFiltradas.map((item) => (
+              <tr key={item.id}>
+                <td>N°{String(item.id).padStart(3, "0")}</td>
                 <td>
                   <img
-                    src={`${URL_BASE_IMAGEM}${parte.imagem}`}
-                    alt={parte.nome}
+                    src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`}
+                    alt={item.nome}
                     style={{ width: "100px", height: "auto", objectFit: "contain" }}
                   />
                 </td>
-                <td>{parte.nome}</td>
+                <td>{item.nome}</td>
                 <td>
-                  {parte.categoriaParteVeiculo
+                  {item.parteDoVeiculo
                     .replace(/_/g, " ")
                     .toLowerCase()
                     .replace(/\b\w/g, (l) => l.toUpperCase())}
@@ -120,7 +121,7 @@ export default function CadastroParteChecklist() {
       </div>
 
       {modalOpen && (
-        <ModalCadastroParte
+        <ModalCadastroItem
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           onSuccess={() => {

@@ -4,17 +4,16 @@ import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { tVeiculoCadastro } from "../../types/Veiculo";
-import { useParams } from "react-router-dom";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 interface CadastroDeVeiculoProps {
   isOpen: boolean;
   onClose: () => void;
   onSucess?: () => void;
+  clienteId?: number | null; 
 }
 
-export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess }: CadastroDeVeiculoProps) {
-  const { id } = useParams<{ id: string }>();
+export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, clienteId }: CadastroDeVeiculoProps) {
   const [formData, setFormData] = useState<tVeiculoCadastro>({
     placa: '',
     marca: '',
@@ -86,7 +85,7 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess }: Cada
     };
   
     try {
-      const response = await fetch(`http://localhost:8080/clientes/${id}/veiculos`, {
+      const response = await fetch(`http://localhost:8080/clientes/${clienteId}/veiculos`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
