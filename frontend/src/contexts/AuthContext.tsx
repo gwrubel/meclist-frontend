@@ -5,6 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { jwtDecode } from "jwt-decode";
 
 // Tipo do payload decodificado do JWT
 interface DecodedToken {
@@ -34,17 +35,19 @@ interface AuthProviderProps {
   children: ReactNode;
 }
 
-// Função para decodificar o JWT
-const decodeToken = (token: string): DecodedToken => {
-  const base64Url = token.split(".")[1];
-  const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
-  const jsonPayload = decodeURIComponent(
-    atob(base64)
-      .split("")
-      .map((c) => "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2))
-      .join("")
-  );
-  return JSON.parse(jsonPayload);
+// Funções auxiliares de segurança
+const isTokenExpired = (decoded: DecodedToken | null): boolean => {
+  if (!decoded) return true;
+  const nowInSeconds = Math.floor(Date.now() / 1000);
+  return typeof decoded.exp === "number" && decoded.exp <= nowInSeconds;
+};
+
+const safeDecode = (token: string): DecodedToken | null => {
+  try {
+    return jwtDecode<DecodedToken>(token);
+  } catch (_e) {
+    return null;
+  }
 };
 
 // Provider
@@ -56,15 +59,26 @@ export function AuthProvider({ children }: AuthProviderProps) {
   useEffect(() => {
     const storedToken = localStorage.getItem("authToken");
     if (storedToken) {
-      const decodedUser = decodeToken(storedToken);
-      setUser(decodedUser);
-      setToken(storedToken);
+      const decodedUser = safeDecode(storedToken);
+      if (!decodedUser || isTokenExpired(decodedUser)) {
+        localStorage.removeItem("authToken");
+      } else {
+        setUser(decodedUser);
+        setToken(storedToken);
+      }
     }
     setIsLoading(false);
   }, []);
 
   const login = (newToken: string) => {
-    const decodedUser = decodeToken(newToken);
+    const decodedUser = safeDecode(newToken);
+    if (!decodedUser || isTokenExpired(decodedUser)) {
+      // Token inválido/expirado: não persistir
+      setUser(null);
+      setToken(null);
+      localStorage.removeItem("authToken");
+      return;
+    }
     setUser(decodedUser);
     setToken(newToken);
     localStorage.setItem("authToken", newToken);

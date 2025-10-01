@@ -13,6 +13,8 @@
     justify-content: space-between;
     align-items: flex-end;
     padding: 0rem 1rem;
+    position: relative; /* garante empilhamento acima da tabela */
+    z-index: 2;
 }
 
 .buscar-cliente {
@@ -50,7 +52,9 @@
 .cliente-table {
     margin-top: 20px;
     text-align: center;
-    overflow: hidden;
+    overflow: visible; /* evita recorte do dropdown nativo */
+    position: relative;
+    z-index: 1;
 }
 
 .cliente-table table {
@@ -121,4 +125,20 @@
         font-size: 14px;
         padding: 8px;
     }
+}
+
+/* Mobile cards para tabela de clientes */
+@media (max-width: 800px) {
+    .cliente-table table { display: block; }
+    .cliente-table thead { display: none; }
+    .cliente-table tbody { display: grid; gap: 12px; }
+    .cliente-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; border: 2px solid var(--third-color); border-radius: 8px; background: #fff; }
+    .cliente-table td { border: 0; padding: 2px 0; text-align: left; }
+    .cliente-table td::before { font-weight: 700; margin-right: 6px; color: var(--second-text-color); }
+    .cliente-table td:nth-child(1)::before { content: "Nome: "; }
+    .cliente-table td:nth-child(2)::before { content: "Veículos: "; }
+    .cliente-table td:nth-child(3)::before { content: "CPF: "; }
+    .cliente-table td:nth-child(4)::before { content: "Telefone: "; }
+    .cliente-table td:nth-child(5)::before { content: "E-mail: "; }
+    .cliente-table td:nth-child(6)::before { content: "Situação: "; }
 }

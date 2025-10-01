@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { tVeiculoCadastro } from "../../types/Veiculo";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { SelectCustom } from "../Select/SelectCustom";
 
 interface CadastroDeVeiculoProps {
   isOpen: boolean;

@@ -137,3 +137,37 @@ hr {
     font-weight: 300;
     color: #ffffff;
 }
+
+/* Responsivo: empilhar colunas no mobile */
+@media (max-width: 820px) {
+    .login-container {
+        flex-direction: column;
+        height: auto;
+        max-width: 520px;
+    }
+
+    .login-box {
+        width: 100%;
+        padding: 2rem 1.25rem;
+        border-radius: 8px 8px 0 0;
+    }
+
+    .info-box {
+        width: 100%;
+        padding: 2rem 1.25rem;
+        border-radius: 0 0 8px 8px;
+        min-height: auto;
+    }
+
+    .info-header {
+        margin-bottom: 2rem;
+    }
+
+    .info-header h2 { font-size: 22px; }
+    .info-header span { font-size: 24px; }
+    .info-list p { font-size: 16px; }
+}
+
+@media (max-width: 380px) {
+    .login-container { max-width: 340px; }
+}

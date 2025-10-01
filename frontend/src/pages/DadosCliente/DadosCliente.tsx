@@ -153,7 +153,7 @@ export default function DadosCliente() {
                                                     <button onClick={() => {
                                                         setVeiculoSelecionado(veiculo);
                                                         setModalEditarVeiculoOpen(true);
-                                                    }}>
+                                                    }} aria-label={`Editar veículo ${veiculo.placa}`}>
                                                         <Pencil className="edit" />
                                                     </button>
                                                 </td>

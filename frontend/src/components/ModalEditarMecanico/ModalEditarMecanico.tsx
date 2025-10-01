@@ -7,6 +7,7 @@ import "./ModalEditarMecanico.css";
 import {  aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
+import { SelectCustom } from "../Select/SelectCustom";
 
 
 interface EditarMecanicoProps {
@@ -112,10 +113,15 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
         <InputCustom label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} required error={errors.email} placeholder="Digite o e-mail" />
         <div className="form-group">
           <label htmlFor="situacao">Situação:</label>
-          <select name="situacao" id="situacao" value={formData.situacao } onChange={handleFormChange}>
-            <option value="ATIVO">Ativo</option>
-            <option value="INATIVO">Inativo</option>
-          </select>
+          <SelectCustom
+            options={[
+              { label: "Ativo", value: "ATIVO" },
+              { label: "Inativo", value: "INATIVO" },
+            ]}
+            value={formData.situacao}
+            onChange={(val) => setFormData((p) => ({ ...p, situacao: val as "ATIVO" | "INATIVO" }))}
+            ariaLabel="Selecionar situação"
+          />
         </div>
         
         <div className="form-buttons">

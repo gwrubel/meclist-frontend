@@ -10,6 +10,7 @@ import { Link } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
 import ModalCadastroVeiculo from "../../components/ModalCadastroVeiculo/ModalCadastroVeiculo";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 export default function CadastroCliente() {
     const { token } = useAuth();
@@ -50,6 +51,7 @@ export default function CadastroCliente() {
             if (error instanceof Error) {
                 console.error("Erro:", error.message);
                 setError(error.message);
+                showErrorToast(error.message);
             }
         } finally {
 
@@ -116,7 +118,7 @@ export default function CadastroCliente() {
                                             <button className="add-veiculo" onClick={() => {
                                                 setSelectedClienteId(cliente.id);
                                                 setModalCadastroVeiculoOpen(true);
-                                            }}>
+                                            }} aria-label={`Adicionar veículo para ${cliente.nome}`}>
                                                 <CarFront size={16} />
                                                 <Plus size={16} />
 
@@ -160,6 +162,7 @@ export default function CadastroCliente() {
                     onSucess={() => {
                         bucarClientes();
                         setModalOpen(false);
+                        showSuccessToast("Cliente cadastrado com sucesso.");
                     }}
                 />
             )}
@@ -175,6 +178,7 @@ export default function CadastroCliente() {
                     onSucess={() => {
                         bucarClientes();
                         setModalCadastroVeiculoOpen(false);
+                        showSuccessToast("Veículo adicionado com sucesso.");
                     }}
                 />
             )}

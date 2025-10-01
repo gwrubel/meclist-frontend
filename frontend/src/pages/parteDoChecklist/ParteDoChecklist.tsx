@@ -6,6 +6,7 @@ import { SelectCustom } from "../../components/Select/SelectCustom";
 import ModalCadastroItem from "../../components/ModalCadastroParte/ModalCadastroItem";
 import { useAuth } from "../../contexts/AuthContext";
 import { tItem } from "../../types/Item"
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 
 export default function CadastroParteChecklist() {
@@ -25,7 +26,7 @@ export default function CadastroParteChecklist() {
 
   const buscarPartes = async () => {
     try {
-      const url = new URL(" http://localhost:8080/itens");
+      const url = new URL("http://localhost:8080/itens");
       if (filtroCategoria !== "Todos") {
         url.searchParams.append("categoria", filtroCategoria);
       }
@@ -35,11 +36,16 @@ export default function CadastroParteChecklist() {
           Authorization: `Bearer ${token}`,
         },
       });
+      if (!response.ok) {
+        throw new Error("Erro ao buscar itens do checklist");
+      }
       const data = await response.json();
       setItens(data);
       console.log(data);
     } catch (error) {
       console.error("Erro ao buscar partes:", error);
+      const message = error instanceof Error ? error.message : "Erro ao buscar partes";
+      showErrorToast(message);
     }
   };
 
@@ -110,8 +116,8 @@ export default function CadastroParteChecklist() {
                     .replace(/\b\w/g, (l) => l.toUpperCase())}
                 </td>
                 <td className="acoes">
-                  <button id="editar">Editar <Pencil/></button>
-                  <button id="deletar">Excluir <Trash /></button>
+                  <button id="editar" aria-label={`Editar item ${item.nome}`}>Editar <Pencil/></button>
+                  <button id="deletar" aria-label={`Excluir item ${item.nome}`}>Excluir <Trash /></button>
                 </td>
               </tr>
               
@@ -127,6 +133,7 @@ export default function CadastroParteChecklist() {
           onSuccess={() => {
             buscarPartes();
             setModalOpen(false);
+            showSuccessToast("Item cadastrado com sucesso.");
           }}
         />
       )}

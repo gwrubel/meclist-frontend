@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import InputCustom from "../../components/InputCustom/InputCustom";
 import { tlogin } from "../../types/userLogin";
 import Loading from "../../components/Loading/Loading";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 
 
@@ -30,7 +31,7 @@ function Login() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        console.log("Dados do formulário:", formData);
+        
 
         // Envia uma requisição de login para o backend
         try {
@@ -47,18 +48,23 @@ function Login() {
             if (response.ok) {
                 // Sucesso no login, armazena o token ou outros dados conforme necessário
                 login(data.token);
+                showSuccessToast("Login realizado com sucesso.");
                 navigate("/dashboard");
             } else {
                 // Se houver erro no login, exibe a mensagem de erro
-                setErrorMessage(data.message || "Erro ao fazer login. Tente novamente.");
+                const message = data.message || "Erro ao fazer login. Tente novamente.";
+                setErrorMessage(message);
+                showErrorToast(message);
             }
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Erro:", error.message);
                 setErrorMessage(error.message);
+                showErrorToast(error.message);
             } else {
                 console.error("Erro desconhecido:", error);
                 setErrorMessage("Erro de conexão. Tente novamente.");
+                showErrorToast("Erro de conexão. Tente novamente.");
             }
         }
         finally {

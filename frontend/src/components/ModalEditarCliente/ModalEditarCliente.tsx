@@ -7,6 +7,7 @@ import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils
 import { showSuccessToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { tCliente } from "../../types/Cliente";
+import { SelectCustom } from "../Select/SelectCustom";
 
 interface EditarClienteProps {
   isOpen: boolean;
@@ -101,10 +102,12 @@ export default function ModalEditarCliente({ isOpen, onClose, cliente, onSucess 
 
         <div id="select-situacao">
           <label htmlFor="situacao">Situação:</label>
-          <select name="situacao" id="situacao" value={formData.situacao} onChange={handleFormChange}>
-            <option value="ATIVO">Ativo</option>
-            <option value="INATIVO">Inativo</option>
-          </select>
+          <SelectCustom
+            options={[{ label: "Ativo", value: "ATIVO" }, { label: "Inativo", value: "INATIVO" }]}
+            value={formData.situacao}
+            onChange={(val) => setFormData((p) => ({ ...p, situacao: val as "ATIVO" | "INATIVO" }))}
+            ariaLabel="Selecionar situação"
+          />
         </div>
 
        

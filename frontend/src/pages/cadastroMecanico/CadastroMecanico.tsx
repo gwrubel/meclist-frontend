@@ -11,6 +11,7 @@ import ModalCadastroMecanico from "../../components/ModalCadastroDeMecanico/Moda
 import ModalEditarMecanico from "../../components/ModalEditarMecanico/ModalEditarMecanico";
 import { useAuth } from "../../contexts/AuthContext";
 import { aplicarMascaraTelefone } from "../../utils/maskUtils";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 
 export default function CadastroMecanico() {
@@ -52,6 +53,7 @@ export default function CadastroMecanico() {
             if (error instanceof Error) {
                 console.error("Erro:", error.message);
                 setError(error.message);
+                showErrorToast(error.message);
             }
             console.error("Erro:", error);
         } finally {
@@ -119,7 +121,7 @@ export default function CadastroMecanico() {
                                         <button onClick={() => {
                                             setMecanicoSelecionado(mecanico);
                                             setModalEditarOpen(true);
-                                        }}>
+                                        }} aria-label={`Editar mecânico ${mecanico.nome}`}>
                                             <Pencil className="edit" />
                                         </button>
                                     </td>
@@ -143,6 +145,7 @@ export default function CadastroMecanico() {
                     onSucess={() => {
                         bucarMecanicos();
                         setModalCadastroOpen(false);
+                        showSuccessToast("Mecânico cadastrado com sucesso.");
                     }}
                 />
             )}
@@ -158,6 +161,7 @@ export default function CadastroMecanico() {
                         bucarMecanicos();
                         setModalEditarOpen(false);
                         setMecanicoSelecionado(null);
+                        showSuccessToast("Mecânico atualizado com sucesso.");
                     }}
                 />
             )}

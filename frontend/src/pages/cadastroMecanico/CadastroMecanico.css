@@ -14,6 +14,8 @@
     align-items: flex-end;
     flex-wrap: wrap; /* <-- Adicionado */
     gap: 1rem; /* melhora espaçamento ao quebrar linha */
+    position: relative;
+    z-index: 2;
 }
 
 
@@ -49,7 +51,9 @@
 .mecanico-table {
     margin-top: 20px;
     text-align: center;
-    overflow: hidden;
+    overflow: visible;
+    position: relative;
+    z-index: 1;
 }
 
 .mecanico-table table {
@@ -120,13 +124,19 @@
   }
 
   .mecanico-table table {
-    font-size: 12px;
+    display: block;
   }
 
-  .mecanico-table th,
-  .mecanico-table td {
-    padding: 6px;
-  }
+  .mecanico-table tbody { display: grid; gap: 12px; }
+  .mecanico-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; border: 2px solid var(--third-color); border-radius: 8px; background: #fff; }
+  .mecanico-table td { border: 0; padding: 2px 0; text-align: left; }
+  .mecanico-table td::before { font-weight: 700; margin-right: 6px; color: var(--second-text-color); }
+  .mecanico-table td:nth-child(1)::before { content: "ID: "; }
+  .mecanico-table td:nth-child(2)::before { content: "Nome: "; }
+  .mecanico-table td:nth-child(3)::before { content: "Celular: "; }
+  .mecanico-table td:nth-child(4)::before { content: "E-mail: "; }
+  .mecanico-table td:nth-child(5)::before { content: "Situação: "; }
+  .mecanico-table td:nth-child(6)::before { content: "Editar: "; }
 
   .cadastro-mecanico-container {
     padding: 60px 10px;
