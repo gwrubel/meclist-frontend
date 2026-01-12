@@ -11,7 +11,7 @@ import ModalCadastroMecanico from "../../components/ModalCadastroDeMecanico/Moda
 import ModalEditarMecanico from "../../components/ModalEditarMecanico/ModalEditarMecanico";
 import { useAuth } from "../../contexts/AuthContext";
 import { aplicarMascaraTelefone } from "../../utils/maskUtils";
-import { showErrorToast, showSuccessToast } from "../../utils/toast";
+
 
 
 export default function CadastroMecanico() {
@@ -20,7 +20,7 @@ export default function CadastroMecanico() {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [filtro, setFiltro] = useState("Todos");
-    const [buscarTexto, setBuscarTexto] = useState(""); // <- novo state para busca
+    const [buscarTexto, setBuscarTexto] = useState(""); 
     const [modalCadastroOpen, setModalCadastroOpen] = useState(false);
     const [modalEditarOpen, setModalEditarOpen] = useState(false);
     const [mecanicoSelecionado, setMecanicoSelecionado] = useState<tMecanico | null>(null);
@@ -47,13 +47,13 @@ export default function CadastroMecanico() {
             if (!response.ok) {
                 throw new Error("Erro ao buscar mecânicos");
             }
-            const data: tMecanico[] = await response.json();
-            setMecanicos(data);
+            const data = await response.json();
+            setMecanicos(data.data);
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Erro:", error.message);
                 setError(error.message);
-                showErrorToast(error.message);
+                
             }
             console.error("Erro:", error);
         } finally {
@@ -80,13 +80,15 @@ export default function CadastroMecanico() {
         <div className="cadastro-mecanico-container">
             <h1>Cadastro de Mecânicos</h1>
             <section className="cadastro-mecanico-header">
-                <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                <div>
+                    <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                </div>
                 <div className="cadastro-mecanico-buscar">
                     <Button text="Cadastrar mecânico" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalCadastroOpen(true)} />
-                    <div className="buscar-mecanico">
-                       <input type="text" placeholder="Buscar mecânico" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
+                  
+                       <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
 
-                    </div>
+                  
                 </div>
             </section>
 
@@ -145,7 +147,7 @@ export default function CadastroMecanico() {
                     onSucess={() => {
                         bucarMecanicos();
                         setModalCadastroOpen(false);
-                        showSuccessToast("Mecânico cadastrado com sucesso.");
+                       
                     }}
                 />
             )}
@@ -161,7 +163,7 @@ export default function CadastroMecanico() {
                         bucarMecanicos();
                         setModalEditarOpen(false);
                         setMecanicoSelecionado(null);
-                        showSuccessToast("Mecânico atualizado com sucesso.");
+                        
                     }}
                 />
             )}

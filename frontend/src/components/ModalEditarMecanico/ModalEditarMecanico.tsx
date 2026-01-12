@@ -26,7 +26,7 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
     cpf: '',
     situacao: "ATIVO"
   });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+  
   const { token } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -78,10 +78,10 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
       if (!response.ok) {
         if (data.errors) {
           showErrorToast(data.message || "Erro ao atualizar cadastro");
-          setErrors(data.errors);
+          console.error(data.message);
         } else {
           showErrorToast(data.message || "Erro ao atualizar cadastro");
-          setErrors({ geral: data.message || "Erro ao atualizar cadastro" });
+          console.error(data.message);
         }
         return;
       }
@@ -91,10 +91,10 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
     } catch (error) {
       if (error instanceof Error) {
         console.error("Erro:", error.message);
-        setErrors({ geral: error.message });
+        showErrorToast(error.message);
       } else {
         console.error("Erro desconhecido:", error);
-        setErrors({ geral: "Erro de conexão. Tente novamente." });
+        showErrorToast("Erro de conexão. Tente novamente.");
       }
     }
     finally{
@@ -107,11 +107,11 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
   return (
     <Modal isOpen={isOpen} onClose={onClose} header="Editar Mecânico">
       <form onSubmit={handleSubmit}>
-        <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required error={errors.nome} placeholder="Nome completo" />
-        <InputCustom label="CPF" name="cpf" type="text"  placeholder="000.000.000-00" value={aplicarMascaraCpf(formData.cpf)} onChange={handleFormChange} required error={errors.cpf} />
-        <InputCustom label="Telefone" name="telefone" type="text"  value={aplicarMascaraTelefone(formData.telefone)}  onChange={handleFormChange} required error={errors.telefone} placeholder="(00) 00000-0000" />
-        <InputCustom label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} required error={errors.email} placeholder="Digite o e-mail" />
-        <div className="form-group">
+        <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required  placeholder="Nome completo" />
+        <InputCustom label="CPF" name="cpf" type="text"  placeholder="000.000.000-00" value={aplicarMascaraCpf(formData.cpf)} onChange={handleFormChange} required  />
+        <InputCustom label="Telefone" name="telefone" type="text"  value={aplicarMascaraTelefone(formData.telefone)}  onChange={handleFormChange} required  placeholder="(00) 00000-0000" />
+        <InputCustom label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} required  placeholder="Digite o e-mail" />
+        <div className="form-select">
           <label htmlFor="situacao">Situação:</label>
           <SelectCustom
             options={[

@@ -12,35 +12,30 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    padding: 0rem 1rem;
-    position: relative; /* garante empilhamento acima da tabela */
+    gap: 2rem;
+    padding: 0 1rem;
+    position: relative;
     z-index: 2;
 }
 
-.buscar-cliente {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    width: 700px;
-}
-
-.buscar-cliente button {
-    height: 50px;
-    width: 30%;
+.cadastro-cliente-header > div:first-child {
+    min-width: 200px;
+    width: 250px;
 }
 
 .cadastro-cliente-buscar {
     display: flex;
     flex-direction: column;
-    align-items: end;
+    align-items: flex-end;
+    gap: 10px;
+    flex: 1;
 }
 
 
 
-.cadastro-cliente-buscar>button {
-    height: 50px;
-    width: 40%;
-}
+
+
+
 
 .loading {
     display: flex;

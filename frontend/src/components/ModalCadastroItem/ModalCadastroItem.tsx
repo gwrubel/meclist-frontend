@@ -4,15 +4,15 @@ import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { CategoriaParteVeiculo } from "../../types/Item";
-import "./ModalCadastroParte.css";
+import "./ModalCadastroItem.css";
 
-interface ModalCadastroParteProps {
+interface ModalCadastroItemProps {
     isOpen: boolean;
     onClose: () => void;
     onSuccess?: () => void;
 }
 
-export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalCadastroParteProps) {
+export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalCadastroItemProps) {
     const { token } = useAuth();
     const [formData, setFormData] = useState<{
         nome: string;

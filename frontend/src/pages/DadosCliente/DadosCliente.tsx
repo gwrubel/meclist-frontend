@@ -1,6 +1,6 @@
 import { Link, useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { tCliente } from "../../types/Cliente";
+import {  tClienteComVeiculos } from "../../types/Cliente";
 import { tVeiculo } from "../../types/Veiculo";
 import Loading from "../../components/Loading/Loading";
 import { ArrowLeft, Pencil, Plus } from "lucide-react";
@@ -16,7 +16,7 @@ import ModalEditarVeiculo from "../../components/ModalEditarVeiculo/ModalEditarV
 
 export default function DadosCliente() {
     const { id } = useParams<{ id: string }>();
-    const [cliente, setCliente] = useState<tCliente | null>(null);
+    const [cliente, setCliente] = useState<tClienteComVeiculos | null>(null);
     const [loading, setLoading] = useState(true);
     const [abaAtiva, setAbaAtiva] = useState<"Dados Do Cliente" | "Veículos">("Dados Do Cliente");
     const { token } = useAuth();
@@ -37,7 +37,7 @@ export default function DadosCliente() {
                 }
             });
             const data = await response.json();
-            setCliente(data);
+            setCliente(data.data);
         } catch (error) {
             console.error("Erro ao buscar cliente", error);
         } finally {
@@ -91,8 +91,8 @@ export default function DadosCliente() {
                                     <dt>Nome:</dt>
                                     <dd>{cliente?.nome}</dd>
 
-                                    <dt>CPF:</dt>
-                                    <dd>{cliente?.cpf ? aplicarMascaraCpf(cliente.cpf) : ""}</dd>
+                                    <dt>{cliente?.tipoDocumento}</dt>
+                                    <dd>{cliente?.documento ? aplicarMascaraCpf(cliente.documento) : ""}</dd>
 
                                     <dt>Telefone:</dt>
                                     <dd>{cliente?.telefone ? aplicarMascaraTelefone(cliente.telefone) : ""}</dd>
@@ -169,6 +169,7 @@ export default function DadosCliente() {
                     {modalOpen && (
                         <ModalCadastroVeiculo
                             isOpen={modalOpen}
+                            id={cliente?.id}
                             onClose={() => setModalOpen(false)}
                             onSucess={() => {
                                 fetchCliente();
@@ -191,7 +192,7 @@ export default function DadosCliente() {
 
                     {modalEditarVeiculoOpen && (
                         <ModalEditarVeiculo
-                            cliente={cliente}
+                            id={cliente?.id}
                             isOpen={modalEditarVeiculoOpen}
                             veiculo={veiculoSelecionado}
                             onClose={() => setModalEditarVeiculoOpen(false)}

@@ -5,16 +5,16 @@ import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { tVeiculoCadastro } from "../../types/Veiculo";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
-import { SelectCustom } from "../Select/SelectCustom";
+
 
 interface CadastroDeVeiculoProps {
   isOpen: boolean;
   onClose: () => void;
   onSucess?: () => void;
-  clienteId?: number | null; 
+   id: number | undefined;
 }
 
-export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, clienteId }: CadastroDeVeiculoProps) {
+export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, id }: CadastroDeVeiculoProps) {
   const [formData, setFormData] = useState<tVeiculoCadastro>({
     placa: '',
     marca: '',
@@ -23,7 +23,6 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, client
     cor: '',
     quilometragem: '',
   });
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { token } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -39,43 +38,47 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, client
     const ano = Number(formData.ano);
     const quilometragem = Number(formData.quilometragem);
   
-    const newErrors: { [key: string]: string } = {};
-  
     // Validação da placa (padrão antigo e novo)
     const placaRegex = /^[A-Z]{3}[0-9][A-Z0-9][0-9]{2}$/i;
     if (!placaRegex.test(formData.placa.toUpperCase())) {
-      newErrors.placa = "Placa inválida (ex: ABC1234 ou ABC1D23)";
-      showErrorToast("Placa inválida!");
+      showErrorToast("Placa inválida (ex: ABC1234 ou ABC1D23)");
+      setIsSubmitting(false);
+      return;
     }
   
     if (!formData.marca.trim()) {
-      newErrors.marca = "Marca obrigatória";
+      showErrorToast("Marca obrigatória");
+      setIsSubmitting(false);
+      return;
     }
   
     if (!formData.modelo.trim()) {
-      newErrors.modelo = "Modelo obrigatório";
+      showErrorToast("Modelo obrigatório");
+      setIsSubmitting(false);
+      return;
     }
   
     if (!formData.cor.trim()) {
-      newErrors.cor = "Cor obrigatória";
+      showErrorToast("Cor obrigatória");
+      setIsSubmitting(false);
+      return;
     }
   
     if (isNaN(ano) || ano <= 0 || ano.toString().length !== 4) {
-      newErrors.ano = "Ano inválido";
       showErrorToast("Ano inválido");
-    } else if (ano > currentYear) {
-      newErrors.ano = `Ano não pode ser maior que ${currentYear}`;
+      setIsSubmitting(false);
+      return;
+    }
+    
+    if (ano > currentYear) {
       showErrorToast(`Ano não pode ser maior que ${currentYear}`);
+      setIsSubmitting(false);
+      return;
     }
   
     if (isNaN(quilometragem) || quilometragem < 0) {
-      newErrors.quilometragem = "Quilometragem inválida";
       showErrorToast("Quilometragem inválida");
-    }
-  
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      setIsSubmitting(false); // <- Aqui você garante que o botão volte ao normal
+      setIsSubmitting(false);
       return;
     }
   
@@ -86,7 +89,8 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, client
     };
   
     try {
-      const response = await fetch(`http://localhost:8080/clientes/${clienteId}/veiculos`, {
+      
+      const response = await fetch(`http://localhost:8080/clientes/${id}/veiculos`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -99,14 +103,12 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, client
   
       if (!response.ok) {
         showErrorToast(data.message || "Erro ao cadastrar veículo");
-        setErrors(data.errors || { geral: data.message || "Erro ao cadastrar veículo" });
         return;
       }
   
       showSuccessToast(data.message);
       onSucess?.();
     } catch (error) {
-      setErrors({ geral: error instanceof Error ? error.message : "Erro de conexão. Tente novamente." });
       showErrorToast(error instanceof Error ? error.message : "Erro de conexão. Tente novamente.");
     } finally {
       setIsSubmitting(false);
@@ -117,12 +119,12 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, client
   return (
     <Modal isOpen={isOpen} onClose={onClose} header="Cadastro de Veículo">
       <form onSubmit={handleSubmit}>
-        <InputCustom label="Placa" name="placa" type="text" value={formData.placa} onChange={handleFormChange} required error={errors.placa} placeholder="Digite a placa do veículo" />
-        <InputCustom label="Marca" name="marca" type="text" value={formData.marca} onChange={handleFormChange} required error={errors.marca} placeholder="Digite a marca do veículo" />
-        <InputCustom label="Modelo" name="modelo" type="text" value={formData.modelo} onChange={handleFormChange} required error={errors.modelo} placeholder="Digite o modelo do veículo" />
-        <InputCustom label="Ano" name="ano" type="number" value={formData.ano} onChange={handleFormChange} required error={errors.ano} placeholder="Digite o ano do veículo" />
-        <InputCustom label="Cor" name="cor" type="text" value={formData.cor} onChange={handleFormChange} required error={errors.cor} placeholder="Digite a cor do veículo" />
-        <InputCustom label="Quilometragem" name="quilometragem" type="number" value={formData.quilometragem} onChange={handleFormChange} required error={errors.quilometragem} placeholder="Digite a quilometragem do veículo" />
+        <InputCustom label="Placa" name="placa" type="text" value={formData.placa} onChange={handleFormChange} required placeholder="Digite a placa do veículo" />
+        <InputCustom label="Marca" name="marca" type="text" value={formData.marca} onChange={handleFormChange} required placeholder="Digite a marca do veículo" />
+        <InputCustom label="Modelo" name="modelo" type="text" value={formData.modelo} onChange={handleFormChange} required placeholder="Digite o modelo do veículo" />
+        <InputCustom label="Ano" name="ano" type="number" value={formData.ano} onChange={handleFormChange} required placeholder="Digite o ano do veículo" />
+        <InputCustom label="Cor" name="cor" type="text" value={formData.cor} onChange={handleFormChange} required placeholder="Digite a cor do veículo" />
+        <InputCustom label="Quilometragem" name="quilometragem" type="number" value={formData.quilometragem} onChange={handleFormChange} required placeholder="Digite a quilometragem do veículo" />
 
       
 

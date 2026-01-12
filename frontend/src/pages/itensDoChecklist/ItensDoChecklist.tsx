@@ -1,20 +1,22 @@
 import { useEffect, useState } from "react";
-import "./ParteDoChecklist.css";
+import "./ItensDoChecklist.css";
 import { Pencil, PlusCircle, Trash } from "lucide-react";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
-import ModalCadastroItem from "../../components/ModalCadastroParte/ModalCadastroItem";
+import ModalCadastroItem from "../../components/ModalCadastroItem/ModalCadastroItem";
 import { useAuth } from "../../contexts/AuthContext";
 import { tItem } from "../../types/Item"
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import Loading from "../../components/Loading/Loading";
 
 
-export default function CadastroParteChecklist() {
+export default function ItensDoChecklist() {
   const { token } = useAuth();
   const [item, setItens] = useState<tItem[]>([]);
   const [filtroCategoria, setFiltroCategoria] = useState("Todos");
   const [buscarTexto, setBuscarTexto] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [loading, setLoading] = useState(true);
   const URL_BASE_IMAGEM = "http://localhost:8080";
 
 
@@ -22,10 +24,14 @@ export default function CadastroParteChecklist() {
     { label: "Todos", value: "Todos" },
     { label: "Dentro do Veículo", value: "DENTRO_DO_VEICULO" },
     { label: "Fora do Veículo", value: "FORA_DO_VEICULO" },
+    { label: "Veículo no Chão", value: "VEICULO_NO_CHAO" },
+    { label: "Veículo no Elevador", value: "VEICULO_NO_ELEVADOR" },
+    { label: "Capô Levantado", value: "CAPO_LEVANTADO" },
   ];
 
   const buscarPartes = async () => {
     try {
+      setLoading(true);
       const url = new URL("http://localhost:8080/itens");
       if (filtroCategoria !== "Todos") {
         url.searchParams.append("categoria", filtroCategoria);
@@ -40,12 +46,14 @@ export default function CadastroParteChecklist() {
         throw new Error("Erro ao buscar itens do checklist");
       }
       const data = await response.json();
-      setItens(data);
-      console.log(data);
+      setItens(data.data);
+      
     } catch (error) {
       console.error("Erro ao buscar partes:", error);
       const message = error instanceof Error ? error.message : "Erro ao buscar partes";
       showErrorToast(message);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,17 +66,19 @@ export default function CadastroParteChecklist() {
   );
 
   return (
-    <div className="parte-checklist-container">
-      <h1>Cadastro de Partes do Checklist</h1>
+    <div className="itens-checklist-container">
+      <h1>Itens do Checklist</h1>
 
-      <section className="parte-checklist-header">
-        <SelectCustom
-          options={categorias}
-          value={filtroCategoria}
-          onChange={setFiltroCategoria}
-        />
+      <section className="itens-checklist-header">
+        <div>
+          <SelectCustom
+            options={categorias}
+            value={filtroCategoria}
+            onChange={setFiltroCategoria}
+          />
+        </div>
 
-        <div className="parte-checklist-actions">
+        <div className="itens-checklist-actions">
           <Button
             text="Cadastrar Item"
             icon={<PlusCircle />}
@@ -78,7 +88,7 @@ export default function CadastroParteChecklist() {
           />
           <input
             type="text"
-            placeholder="Buscar parte"
+            placeholder="Buscar por nome"
             value={buscarTexto}
             onChange={(e) => setBuscarTexto(e.target.value)}
             className="search-input"
@@ -91,37 +101,55 @@ export default function CadastroParteChecklist() {
           <thead>
             <tr>
               <th>ID</th>
-              <th>Imagem</th>
-              <th>Nome</th>
-              <th>Categoria</th>
-              <th>Ações</th>
+              <th>Nome do Item</th>
+              <th>Imagem ilustrativa</th>
+              <th>Parte do Veículo</th>
+              <th>Editar</th>
+              <th>Excluir</th>
+              <th>Gerenciar produtos</th>
             </tr>
           </thead>
           <tbody>
-            {partesFiltradas.map((item) => (
-              <tr key={item.id}>
-                <td>N°{String(item.id).padStart(3, "0")}</td>
-                <td>
-                  <img
-                    src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`}
-                    alt={item.nome}
-                    style={{ width: "100px", height: "auto", objectFit: "contain" }}
-                  />
-                </td>
-                <td>{item.nome}</td>
-                <td>
-                  {item.parteDoVeiculo
-                    .replace(/_/g, " ")
-                    .toLowerCase()
-                    .replace(/\b\w/g, (l) => l.toUpperCase())}
-                </td>
-                <td className="acoes">
-                  <button id="editar" aria-label={`Editar item ${item.nome}`}>Editar <Pencil/></button>
-                  <button id="deletar" aria-label={`Excluir item ${item.nome}`}>Excluir <Trash /></button>
+            {loading ? (
+              <tr>
+                <td colSpan={7}>
+                  <Loading />
                 </td>
               </tr>
-              
-            ))}
+            ) : partesFiltradas.length > 0 ? (
+              partesFiltradas.map((item) => (
+                <tr key={item.id}>
+                  <td>N°{String(item.id).padStart(3, "0")}</td>
+                  <td>{item.nome}</td>
+                  <td>
+                    <img
+                      src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`}
+                      alt={item.nome}
+                      style={{ width: "100px", height: "auto", objectFit: "contain" }}
+                    />
+                  </td>
+                  <td>
+                    {item.parteDoVeiculo
+                      .replace(/_/g, " ")
+                      .toLowerCase()
+                      .replace(/\b\w/g, (l) => l.toUpperCase())}
+                  </td>
+                  <td className="acoes">
+                    <button id="editar" aria-label={`Editar item ${item.nome}`}><Pencil/></button>
+                  </td>
+                  <td className="acoes">
+                    <button id="deletar" aria-label={`Excluir item ${item.nome}`}><Trash /></button>
+                  </td>
+                  <td className="acoes">
+                    <button id="gerenciar" aria-label={`Gerenciar produtos do item ${item.nome}`}>Gerenciar</button>
+                  </td>
+                </tr>
+              ))
+            ) : (
+              <tr>
+                <td colSpan={7}>Nenhum item encontrado.</td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>

@@ -2,3 +2,9 @@
     margin: 0;
     height: 45px;
 }
+
+.form-select{
+   display: flex;
+    flex-direction: column;
+
+}

@@ -1,17 +1,23 @@
 .input-container {
     position: relative;
-    margin: 5px 0;
+    margin: 8px 0;
     width: 100%;
 }
 
 .input-container input {
     width: 100%;
-    padding: 8px;
+    padding: 10px 12px;
     border: 2px solid var(--third-color);
     border-radius: 6px;
     background: transparent;
     color: var(--text-color);
     font-size: 1rem;
+    transition: border-color 0.2s ease;
+}
+
+.input-container input:focus {
+    outline: none;
+    border-color: var(--primary-color);
 }
 
 .input-container input::placeholder {
@@ -25,5 +31,32 @@
     display: block;
     text-align: center;
     min-height: 1rem;
-  }
+}
+
+/* Media queries para responsividade */
+@media (max-width: 520px) {
+    .input-container input {
+        padding: 8px 10px;
+        font-size: 0.95rem;
+    }
+    
+    .input-container input::placeholder {
+        font-size: 0.85rem;
+    }
+}
+
+@media (max-width: 380px) {
+    .input-container {
+        margin: 6px 0;
+    }
+    
+    .input-container input {
+        padding: 7px 8px;
+        font-size: 0.9rem;
+    }
+    
+    .input-container input::placeholder {
+        font-size: 0.8rem;
+    }
+}
   

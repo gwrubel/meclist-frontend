@@ -16,7 +16,7 @@ export default function CadastroCliente() {
     const { token } = useAuth();
     const [clientes, setClientes] = useState<tCliente[]>([]);
     const [loading, setLoading] = useState(true);
-    const [selectedClienteId, setSelectedClienteId] = useState<number | null>(null);
+    const [selectedClienteId, setSelectedClienteId] = useState<number | undefined>(undefined);
     const [error, setError] = useState<string | null>(null);
     const statusOptions = [
         { label: "Todos", value: "todos" },
@@ -45,8 +45,8 @@ export default function CadastroCliente() {
             if (!response.ok) {
                 throw new Error("Erro ao buscar clientes");
             }
-            const data: tCliente[] = await response.json();
-            setClientes(data);
+            const data = await response.json();
+            setClientes(data.data);
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Erro:", error.message);
@@ -75,13 +75,14 @@ export default function CadastroCliente() {
         <div className="cadastro-cliente-container">
             <h1>Cadastro de Clientes</h1>
             <section className="cadastro-cliente-header">
-                <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                <div>
+                    <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                </div>
                 <div className="cadastro-cliente-buscar">
                     <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
-                    <div className="buscar-cliente">
+                    
                         <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
 
-                    </div>
                 </div>
             </section>
 
@@ -91,7 +92,7 @@ export default function CadastroCliente() {
                         <tr>
                             <th>Nome</th>
                             <th>Veículos</th>
-                            <th>CPF</th>
+                            <th>CPF/CNPJ</th>
                             <th>Telefone</th>
                             <th>E-mail</th>
                             <th>Situação</th>
@@ -101,7 +102,7 @@ export default function CadastroCliente() {
                     <tbody>
                         {loading ? (
                             <tr>
-                                <td colSpan={7}>
+                                <td colSpan={6}>
                                     <Loading />
                                 </td>
                             </tr>
@@ -114,7 +115,7 @@ export default function CadastroCliente() {
 
                                     <td>
                                         <div className="td-veiculo-content">
-                                            {cliente?.veiculos?.length ?? 0}
+                                            {cliente?.quantidadeVeiculos}
                                             <button className="add-veiculo" onClick={() => {
                                                 setSelectedClienteId(cliente.id);
                                                 setModalCadastroVeiculoOpen(true);
@@ -127,7 +128,7 @@ export default function CadastroCliente() {
                                     </td>
 
                                     <td>
-                                        <Link to={`/cliente/${cliente.id}`}>{aplicarMascaraCpf(cliente.cpf)}</Link>
+                                        <Link to={`/cliente/${cliente.id}`}>{aplicarMascaraCpf(cliente.documento)}</Link>
                                     </td>
 
                                     <td>
@@ -170,15 +171,15 @@ export default function CadastroCliente() {
             {ModalCadastroVeiculoOpen && (
                 <ModalCadastroVeiculo
                     isOpen={ModalCadastroVeiculoOpen}
-                    clienteId={selectedClienteId}
+                    id={selectedClienteId}
                     onClose={() => {
                         setModalCadastroVeiculoOpen(false)
-                        setSelectedClienteId(null);
+                        setSelectedClienteId(undefined);
                     }}
                     onSucess={() => {
                         bucarClientes();
                         setModalCadastroVeiculoOpen(false);
-                        showSuccessToast("Veículo adicionado com sucesso.");
+                        setSelectedClienteId(undefined);
                     }}
                 />
             )}

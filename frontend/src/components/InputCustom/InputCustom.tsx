@@ -7,13 +7,13 @@ type InputProps = {
     type: 'text' | 'number' | 'email' | 'password';
     name: string;
     required?: boolean;
-    mask?: 'cpf' | 'phone';
+    mask?: 'cpf' | 'cnpj' | 'phone';
     error?: string;
     onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
   };
   
 
-const applyMask = (value: string, mask?: 'cpf' | 'phone'): string => {
+const applyMask = (value: string, mask?: 'cpf' | 'cnpj' | 'phone'): string => {
   if (!mask) return value;
 
   const numericValue = value.replace(/\D/g, '');
@@ -23,6 +23,15 @@ const applyMask = (value: string, mask?: 'cpf' | 'phone'): string => {
       .replace(/(\d{3})(\d)/, '$1.$2')
       .replace(/(\d{3})(\d)/, '$1.$2')
       .replace(/(\d{3})(\d{1,2})/, '$1-$2')
+      .replace(/(-\d{2})\d+?$/, '$1');
+  }
+
+  if (mask === 'cnpj') {
+    return numericValue
+      .replace(/(\d{2})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1.$2')
+      .replace(/(\d{3})(\d)/, '$1/$2')
+      .replace(/(\d{4})(\d{1,2})/, '$1-$2')
       .replace(/(-\d{2})\d+?$/, '$1');
   }
 
@@ -51,7 +60,6 @@ const InputCustom = ({
     name,
     value,
     mask,
-    error,
     onChange,
     required
   }: InputProps) => {
@@ -82,7 +90,7 @@ const InputCustom = ({
           onChange={handleInputChange}
           required={required}
         />
-        <span className="input-error">{error || '\u00A0'}</span>
+     
       </div>
     );
   };

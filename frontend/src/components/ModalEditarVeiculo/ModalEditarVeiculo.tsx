@@ -6,16 +6,16 @@ import "./ModalEditarVeiculo.css";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { tVeiculo } from "../../types/Veiculo";
-import { tCliente } from "../../types/Cliente";
+
 
 interface EditarVeiculoProps {
-    cliente: tCliente | null;
+    id: number | undefined;
     isOpen: boolean;
     onClose: () => void;
     veiculo: tVeiculo | null;
     onSucess?: () => void;
 }
-export default function ModalEditarVeiculo({ cliente, isOpen, onClose, veiculo, onSucess }: EditarVeiculoProps) {
+export default function ModalEditarVeiculo({ id, isOpen, onClose, veiculo, onSucess }: EditarVeiculoProps) {
     const [formData, setFormData] = useState<tVeiculo>({
         id: 0,
         placa: '',
@@ -99,7 +99,7 @@ export default function ModalEditarVeiculo({ cliente, isOpen, onClose, veiculo, 
         };
 
         try {
-            const id = cliente?.id;
+            
             const response = await fetch(`http://localhost:8080/clientes/${id}/veiculos/${formData.id}`, {
                 method: 'PUT',
                 headers: {

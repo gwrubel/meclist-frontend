@@ -99,6 +99,7 @@ form label{
     width: 100%;
     justify-content: space-between;
     margin-top: 1rem;
+    align-items: center;
   }
   .form-buttons > * {
     width: auto;

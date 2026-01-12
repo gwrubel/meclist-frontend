@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { tMecanicoCadastro } from "../../types/Mecanico";
 import InputCustom from "../InputCustom/InputCustom";
 import Modal from "../../layouts/Modal/Modal";
@@ -23,14 +23,9 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
     cpf: '',
   });
   const [confirmarSenha, setConfirmarSenha] = useState('');
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
+
   const { token } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
-
-
-
-
-
   const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -42,7 +37,6 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
     setIsSubmitting(true)
 
     if (formData.senha !== confirmarSenha) {
-      setErrors({ confirmarSenha: "As senhas não coincidem" });
       showErrorToast("As senhas não coincidem");
        setIsSubmitting(false);
       return;
@@ -66,13 +60,7 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
       const data = await response.json();
 
       if (!response.ok) {
-        if (data.errors) {
-          setErrors(data.errors);
-          showErrorToast("Erro ao validar os campos. Verifique e tente novamente.");
-        } else {
-          setErrors({ geral: data.message || "Erro ao realizar cadastro" });
-          showErrorToast(data.message || "Erro ao realizar cadastro.");
-        }
+        showErrorToast(data.message || "Erro ao realizar cadastro.");
         return;
       }
       
@@ -81,11 +69,9 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
     } catch (error) {
       if (error instanceof Error) {
         console.error("Erro:", error.message);
-        setErrors({ geral: error.message });
         showErrorToast(error.message);
       } else {
         console.error("Erro desconhecido:", error);
-        setErrors({ geral: "Erro de conexão. Tente novamente." });
         showErrorToast("Erro de conexão. Tente novamente.");
       }
     }
@@ -93,20 +79,16 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
       setIsSubmitting(false);
     }
   };
- useEffect(() => {
-        // Limpa a mensagem de erro ao alterar os dados do formulário
-        setErrors({});    
-    }, [formData]);
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} header="Cadastro de Mecânico" >
       <form onSubmit={handleSubmit} className="form-cadastro-mecanico">
-        <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required error={errors.nome} placeholder="Nome completo" />
-        <InputCustom label="CPF" name="cpf" type="text" mask="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleFormChange} required error={errors.cpf} />
-        <InputCustom label="Telefone" name="telefone" type="text" mask="phone" value={formData.telefone} onChange={handleFormChange} required error={errors.telefone} placeholder="(00) 00000-0000" />
-        <InputCustom label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} required error={errors.email} placeholder="Digite o e-mail" />
-        <InputCustom label="Senha" name="senha" type="password" value={formData.senha} onChange={handleFormChange} required error={errors.senha} placeholder="Digite a senha" />
-        <InputCustom label="Confirmar Senha" name="confirmarSenha" type="password" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required error={errors.confirmarSenha} placeholder="Confirme a senha" />
-        {errors.geral && <p className="error">{errors.geral}</p>}
+        <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required placeholder="Nome completo" />
+        <InputCustom label="CPF" name="cpf" type="text" mask="cpf" placeholder="000.000.000-00" value={formData.cpf} onChange={handleFormChange} required />
+        <InputCustom label="Telefone" name="telefone" type="text" mask="phone" value={formData.telefone} onChange={handleFormChange} required placeholder="(00) 00000-0000" />
+        <InputCustom label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} required placeholder="Digite o e-mail" />
+        <InputCustom label="Senha" name="senha" type="password" value={formData.senha} onChange={handleFormChange} required placeholder="Digite a senha" />
+        <InputCustom label="Confirmar Senha" name="confirmarSenha" type="password" value={confirmarSenha} onChange={(e) => setConfirmarSenha(e.target.value)} required placeholder="Confirme a senha" />
 
         <div className="form-buttons">
           <button type="button" onClick={onClose}>Cancelar</button>

@@ -12,33 +12,37 @@
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    flex-wrap: wrap; /* <-- Adicionado */
-    gap: 1rem; /* melhora espaçamento ao quebrar linha */
+    gap: 2rem;
+    padding: 0 1rem;
     position: relative;
     z-index: 2;
 }
 
+.cadastro-mecanico-header > div:first-child {
+    min-width: 200px;
+    width: 250px;
+}
+
+.cadastro-mecanico-buscar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    flex: 1;
+}
 
 
-.buscar-mecanico{
+
+.buscar-mecanico {
     display: flex;
     align-items: center;
     gap: 10px;
-    width: 500px;
-    
+    width: 100%;
 }
 
-.cadastro-mecanico-buscar{
-    display: flex;
-    flex-direction: column;
-    align-items: end;
-}
-
-
-
-.cadastro-mecanico-buscar > button{
-    height: 50px;
-    width: 50%;
+.buscar-mecanico input {
+    flex: 1;
+    min-width: 200px;
 }
 
 .loading {

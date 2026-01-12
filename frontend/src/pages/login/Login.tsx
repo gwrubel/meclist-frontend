@@ -47,7 +47,7 @@ function Login() {
 
             if (response.ok) {
                 // Sucesso no login, armazena o token ou outros dados conforme necessário
-                login(data.token);
+                login(data.data.token);
                 showSuccessToast("Login realizado com sucesso.");
                 navigate("/dashboard");
             } else {

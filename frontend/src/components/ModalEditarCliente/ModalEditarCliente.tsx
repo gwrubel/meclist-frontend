@@ -3,8 +3,7 @@ import InputCustom from "../InputCustom/InputCustom";
 import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import "./ModalEditarCliente.css";
-import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
-import { showSuccessToast } from "../../utils/toast";
+import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { tCliente } from "../../types/Cliente";
 import { SelectCustom } from "../Select/SelectCustom";
@@ -22,13 +21,13 @@ export default function ModalEditarCliente({ isOpen, onClose, cliente, onSucess 
     nome: '',
     email: '',
     telefone: '',
-    cpf: '',
+    tipoDocumento: 'CPF',
+    documento: '',
     endereco: '',
-    situacao: "ATIVO",
-    veiculos: [],
+    situacao: 'ATIVO',
+    quantidadeVeiculos: 0
   });
 
-  const [errors, setErrors] = useState<{ [key: string]: string }>({});
   const { token } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -38,17 +37,18 @@ export default function ModalEditarCliente({ isOpen, onClose, cliente, onSucess 
     }
   }, [cliente]);
 
-  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  function limparMascara(valor: string) {
+    return valor.replace(/\D/g, "");
+  }
+
+  const handleFormChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-
-    let newValue = value;
-    if (name === "cpf") newValue = aplicarMascaraCpf(value);
-    if (name === "telefone") newValue = aplicarMascaraTelefone(value);
-
-    setFormData((prev) => ({ ...prev, [name]: newValue }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const limparMascara = (valor: string) => valor.replace(/\D/g, "");
+  const handleSelectChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, tipoDocumento: value as 'CPF' | 'CNPJ' }));
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -56,7 +56,7 @@ export default function ModalEditarCliente({ isOpen, onClose, cliente, onSucess 
 
     const cleanedData = {
       ...formData,
-      cpf: limparMascara(formData.cpf),
+      documento: limparMascara(formData.documento),
       telefone: limparMascara(formData.telefone),
     };
 
@@ -73,48 +73,112 @@ export default function ModalEditarCliente({ isOpen, onClose, cliente, onSucess 
       const data = await response.json();
 
       if (!response.ok) {
-        setErrors(data.errors || { geral: data.message || "Erro ao atualizar cliente" });
+        showErrorToast(data.message || "Erro ao atualizar cliente");
         return;
       }
 
-      showSuccessToast(data.message);
+      showSuccessToast(data.message || "Cliente atualizado com sucesso!");
       onSucess?.();
+      onClose();
     } catch (error) {
-      setErrors({ geral: error instanceof Error ? error.message : "Erro de conexão. Tente novamente." });
-    }
-    finally{
+      if (error instanceof Error) {
+        console.error("Erro:", error.message);
+        showErrorToast(error.message);
+      } else {
+        console.error("Erro desconhecido:", error);
+        showErrorToast("Erro de conexão. Tente novamente.");
+      }
+    } finally {
       setIsSubmitting(false);
     }
-
-    
   };
 
   if (!cliente) return null;
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} header="Editar Cliente">
-      <form onSubmit={handleSubmit}>
-        <InputCustom label="Nome" name="nome" type="text" value={formData.nome} onChange={handleFormChange} required error={errors.nome} placeholder="Nome completo" />
-        <InputCustom label="CPF" name="cpf" type="text" placeholder="000.000.000-00" value={aplicarMascaraCpf(formData.cpf)} onChange={handleFormChange} required error={errors.cpf} />
-        <InputCustom label="Telefone" name="telefone" type="text" placeholder="(00) 00000-0000" value={aplicarMascaraTelefone(formData.telefone)} onChange={handleFormChange} required error={errors.telefone} />
-        <InputCustom label="Email" name="email" type="email" value={formData.email} onChange={handleFormChange} required error={errors.email} placeholder="Digite o e-mail" />
-        <InputCustom label="Endereço" name="endereco" type="text" value={formData.endereco} onChange={handleFormChange} required error={errors.endereco} placeholder="Endereço completo" />
+      <form onSubmit={handleSubmit} className="form-cadastro-cliente">
+        <InputCustom 
+          label="Nome" 
+          name="nome" 
+          type="text" 
+          value={formData.nome} 
+          onChange={handleFormChange} 
+          required 
+          placeholder="Nome completo" 
+        />
+      <div className="form-select">
+        <label htmlFor="tipoDocumento">Tipo de Documento:</label>
+        <SelectCustom 
+          options={[
+            { label: "CPF", value: "CPF" },
+            { label: "CNPJ", value: "CNPJ" }
+          ]}
+          value={formData.tipoDocumento}
+          onChange={handleSelectChange}
+        />
+</div>
+        <InputCustom 
+          label={formData.tipoDocumento === 'CPF' ? 'CPF' : 'CNPJ'} 
+          name="documento" 
+          type="text" 
+          mask={formData.tipoDocumento === 'CPF' ? 'cpf' : 'cnpj'} 
+          placeholder={formData.tipoDocumento === 'CPF' ? "000.000.000-00" : "00.000.000/0000-00"} 
+          value={formData.documento} 
+          onChange={handleFormChange} 
+          required 
+        />
 
-        <div id="select-situacao">
+        <InputCustom 
+          label="Telefone" 
+          name="telefone" 
+          type="text" 
+          mask="phone" 
+          value={formData.telefone} 
+          onChange={handleFormChange} 
+          required 
+          placeholder="(00) 00000-0000" 
+        />
+
+        <InputCustom 
+          label="Email" 
+          name="email" 
+          type="email" 
+          value={formData.email} 
+          onChange={handleFormChange} 
+          required 
+          placeholder="Digite o e-mail" 
+        />
+
+        <InputCustom 
+          label="Endereço" 
+          name="endereco" 
+          type="text" 
+          value={formData.endereco} 
+          onChange={handleFormChange} 
+          required 
+
+          placeholder="Digite o endereço do cliente" 
+        />
+        <div className="form-select">
           <label htmlFor="situacao">Situação:</label>
-          <SelectCustom
-            options={[{ label: "Ativo", value: "ATIVO" }, { label: "Inativo", value: "INATIVO" }]}
-            value={formData.situacao}
-            onChange={(val) => setFormData((p) => ({ ...p, situacao: val as "ATIVO" | "INATIVO" }))}
-            ariaLabel="Selecionar situação"
-          />
-        </div>
-
-       
-
+        <SelectCustom
+          options={[
+            { label: "Ativo", value: "ATIVO" }, 
+            { label: "Inativo", value: "INATIVO" }
+          ]}
+          value={formData.situacao}
+          onChange={(val) => setFormData((p) => ({ ...p, situacao: val as "ATIVO" | "INATIVO" }))}
+        />
+</div>
         <div className="form-buttons">
           <button type="button" onClick={onClose}>Cancelar</button>
-          <Button text={isSubmitting ? "Salvando..." : "Salvar"} disabled={isSubmitting} secondary type="submit" />
+          <Button 
+            text={isSubmitting ? "Salvando..." : "Salvar"} 
+            disabled={isSubmitting} 
+            secondary 
+            type="submit" 
+          />
         </div>
       </form>
     </Modal>
