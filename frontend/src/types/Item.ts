@@ -3,6 +3,8 @@ export type tItem = {
   nome: string;
   imagemIlustrativa: string;
   parteDoVeiculo: CategoriaParteVeiculo;
+  quantidadeProdutos: number;
+  situacao: "ATIVO" | "INATIVO";
 }
 
 export type CategoriaParteVeiculo =

@@ -120,9 +120,9 @@ export default function DadosCliente() {
                         <div className="veiculos-cliente">
                             <h3>Veículos</h3>
                             <div className="veiculos-header">
-
+                                <div>
                                 <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
-
+                                </div>
                                 <Button text="Adicionar Veículo" icon={<Plus size={16} />} iconPosition="right" onClick={() => setModalOpen(true)} secondary type="button" />
                             </div>
                             {cliente?.veiculos && cliente.veiculos.length > 0 ? (

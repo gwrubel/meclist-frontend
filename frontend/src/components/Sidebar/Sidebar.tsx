@@ -120,7 +120,7 @@ export function Sidebar() {
                 Gerenciar Checklist
               </button>
               <button onClick={() => navigate("/parte-checklist")} aria-label="Ir para Cadastrar Itens">
-                Cadastrar Itens
+                Itens do Checklist
               </button>
             </div>
           )}

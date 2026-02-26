@@ -19,9 +19,9 @@
 
 /* --- PRIMARY --- */
 .btn-primary {
-    background: var(--primary-color);
-    color: var(--light-text-color);
-    border: solid transparent 0.15rem;
+    background: transparent;
+    color: var(--text-color);
+    border: solid var(--text-color) 0.15rem;
 }
 
 .btn-primary:hover {

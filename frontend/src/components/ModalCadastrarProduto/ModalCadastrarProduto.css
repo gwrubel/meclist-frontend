@@ -1,0 +1,14 @@
+.cadastro-produto-form {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.cadastro-produto-form .form-buttons {
+    margin-top: 0.5rem;
+
+    gap: 1rem;
+    width: 100%;
+    flex-wrap: wrap;
+}
+

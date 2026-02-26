@@ -1,0 +1,12 @@
+.editar-produto-form {
+    display: flex !important;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.editar-produto-form .form-buttons {
+    margin-top: 0.5rem;
+    justify-content: space-between !important;
+    gap: 1rem;
+    width: 100%;
+}

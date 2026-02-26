@@ -1,0 +1,8 @@
+.deletar-produto-buttons {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 0 2rem 1rem 2rem;
+}
+
+

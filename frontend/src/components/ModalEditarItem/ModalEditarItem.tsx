@@ -3,17 +3,18 @@ import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
-import { CategoriaParteVeiculo } from "../../types/Item";
-import "./ModalCadastroItem.css";
+import { CategoriaParteVeiculo, tItem } from "../../types/Item";
+import "./ModalEditarItem.css";
 import { SelectCustom } from "../Select/SelectCustom";
 
-interface ModalCadastroItemProps {
+interface ModalEditarItemProps {
     isOpen: boolean;
     onClose: () => void;
     onSuccess?: () => void;
+    item: tItem | undefined;
 }
 
-export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalCadastroItemProps) {
+export default function ModalEditarItem({ isOpen, onClose, onSuccess, item }: ModalEditarItemProps) {
     const { token } = useAuth();
     const [formData, setFormData] = useState<{
         nome: string;
@@ -24,7 +25,7 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
         imagem: null,
         categoriaParteVeiculo: "",
     });
-    
+     const URL_BASE_IMAGEM = "http://localhost:8080";
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -37,8 +38,6 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
         { label: "Capô Levantado", value: "CAPO_LEVANTADO" },
     ];
     const [preview, setPreview] = useState<string | null>(null);
-
-
 
     const handleFormChange = (
         e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -59,14 +58,13 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
         }
     };
 
-
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsSubmitting(true);
         setErrors({});
 
-        if (!formData.imagem) {
-            setErrors({ imagem: "Selecione uma imagem" });
+        if (!item) {
+            showErrorToast("Item não encontrado");
             setIsSubmitting(false);
             return;
         }
@@ -74,11 +72,15 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
         const formPayload = new FormData();
         formPayload.append("nome", formData.nome);
         formPayload.append("parteDoVeiculo", formData.categoriaParteVeiculo);
-        formPayload.append("imagem", formData.imagem);
+        
+        // Só envia a imagem se uma nova foi selecionada
+        if (formData.imagem) {
+            formPayload.append("imagem", formData.imagem);
+        }
 
         try {
-            const response = await fetch("http://localhost:8080/itens", {
-                method: "POST",
+            const response = await fetch(`http://localhost:8080/itens/${item.id}`, {
+                method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`,
                 },
@@ -92,13 +94,14 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
                     console.error(data.errors);
                     showErrorToast("Verifique os campos e tente novamente.");
                 } else {
-                    showErrorToast(data.message || "Erro ao cadastrar a parte.");
+                    showErrorToast(data.message || "Erro ao atualizar o item.");
                 }
                 return;
             }
 
-            showSuccessToast(data.message);
+            showSuccessToast(data.message || "Item atualizado com sucesso!");
             onSuccess?.();
+            onClose();
         } catch (error) {
             showErrorToast("Erro ao conectar com o servidor.");
             console.error(error);
@@ -108,20 +111,20 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
     };
 
     useEffect(() => {
-        if (isOpen) {
+        if (isOpen && item) {
             setFormData({
-                nome: "",
+                nome: item.nome || "",
                 imagem: null,
-                categoriaParteVeiculo: "",
+                categoriaParteVeiculo: item.parteDoVeiculo || "",
             });
+            setPreview(null);
             setErrors({});
         }
-    }, [isOpen]);
-
+    }, [isOpen, item]);
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} header="Cadastrar Parte do Checklist">
-            <form onSubmit={handleSubmit} className="form-cadastro-parte">
+        <Modal isOpen={isOpen} onClose={onClose} header="Editar Item do Checklist">
+            <form onSubmit={handleSubmit} className="form-editar-parte">
                 <div>
                     <label htmlFor="nome">Nome do item</label>
                     <input
@@ -154,19 +157,33 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
                 </div>
 
                 <div className="input-file-wrapper">
-                    <label htmlFor="imagem">Imagem</label>
+                    <label htmlFor="imagem">Imagem {formData.imagem ? "(Nova)" : "(Opcional - mantenha a atual)"}</label>
                     <input
                         type="file"
                         name="imagem"
                         accept="image/*"
                         onChange={handleFileChange}
-                        required
                     />
+                    
                     {preview && (
                         <div className="preview-wrapper">
-                            <img src={preview} alt="Preview" className="preview-image" />
+                            <img src={preview} alt="Preview da nova imagem" className="preview-image" />
                         </div>
                     )}
+                    
+                    {!preview && item?.imagemIlustrativa && (
+                        <div className="current-image-wrapper">
+                            <span className="current-image-label">Imagem atual:</span>
+                            <div className="preview-wrapper">
+                                <img 
+                                    src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`} 
+                                    alt="Imagem atual" 
+                                    className="preview-image" 
+                                />
+                            </div>
+                        </div>
+                    )}
+                    
                     {errors.imagem && <span className="error">{errors.imagem}</span>}
                 </div>
 
@@ -176,7 +193,12 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
                     <button type="button" onClick={onClose}>
                         Cancelar
                     </button>
-                    <Button text={isSubmitting ? "Cadastrando..." : "Cadastrar"} type="submit" secondary disabled={isSubmitting} />
+                    <Button 
+                        text={isSubmitting ? "Atualizando..." : "Atualizar"} 
+                        type="submit" 
+                        secondary 
+                        disabled={isSubmitting} 
+                    />
                 </div>
             </form>
         </Modal>

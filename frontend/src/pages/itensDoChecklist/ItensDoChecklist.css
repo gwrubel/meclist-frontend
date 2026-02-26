@@ -62,6 +62,138 @@
   transition: all 0.3s ease;
 }
 
+
+
+.acoes button {
+  margin: 0 2px;
+  padding: 4px 6px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: var(--fw-bold);
+  transition: all 0.3s ease;
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+
+}
+.acoes{
+  display: flex;
+  gap: 25px;
+  justify-content: center;
+
+}
+/* A linha divisória */
+.acoes button:first-child::after {
+  content: "";
+  position: absolute;
+  right: -12px; /* Metade do gap aproximadamente */
+  height: 100%; /* Altura da linha em relação ao botão */
+  width: 2px;
+  background-color: var(--third-color);
+  cursor: default;
+}
+
+#editar {
+  border: none;
+}
+
+#editar:hover {
+  color: var(--primary-color);
+}
+
+#desativar {
+  border: none;
+  transition: all 0.3s ease;
+}
+
+
+#desativar:hover {
+  color: red;
+}
+
+/* Linha de item inativo visualmente apagada, mas mantendo o ícone de ativar forte */
+.item-inativo td {
+  color: #777;
+}
+
+.item-inativo td img {
+  filter: grayscale(100%);
+  opacity: 0.6;
+}
+
+.item-inativo .acoes button {
+  color: #777;
+}
+
+/* Ícone de ativar (Eye) permanece com destaque mesmo em item inativo */
+.item-inativo #ativar {
+  color: black;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+/* Hover diferente quando for ação de ativar (linha inativa) */
+.item-inativo #ativar:hover {
+  color: #008000;
+  
+}
+
+.coluna-gerenciar-produtos {
+  text-align: center;
+}
+
+.btn-produtos {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 6px 10px;
+  border-radius: 6px;
+  border: solid var(--text-color) 0.15rem;
+  background-color: transparent;
+  color: var(--text-color);
+  font-weight: var(--fw-bold);
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  white-space: nowrap;
+}
+
+.btn-produtos:hover {
+  border: solid var(--primary-color) 0.15rem;
+  color: var(--primary-color);
+}
+
+.btn-produtos:hover:not(:disabled) {
+  filter: brightness(0.9);
+}
+
+.btn-produtos:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-produtos-icon {
+  flex-shrink: 0;
+}
+
+/* Ajuste para telas menores: botão mais compacto */
+@media (max-width: 800px) {
+  .btn-produtos {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+  }
+}
+
+/* Muito pequenas: mostra só o ícone para não quebrar layout */
+@media (max-width: 520px) {
+  .btn-produtos-text {
+    display: none;
+  }
+}
+
 @media (max-width: 800px) {
   .parte-checklist-header {
     flex-direction: column;
@@ -80,4 +212,12 @@
   .parte-table td {
     padding: 6px;
   }
+}
+
+.item-imagem {
+  width: 90px;          /* tamanho padrão */
+  height: 90px;         /* tamanho padrão */
+  object-fit: cover;    /* preenche mantendo proporção e cortando o excesso */
+  border-radius: 8px;   /* bordas arredondadas */
+  border: 1px solid #ddd;
 }

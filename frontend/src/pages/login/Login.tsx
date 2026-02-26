@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import "./login.css";
 import logo from "../../assets/logo.svg";
@@ -14,11 +14,10 @@ import { showErrorToast, showSuccessToast } from "../../utils/toast";
 
 function Login() {
     const navigate = useNavigate();
-    const { login } = useAuth(); 
+    const { login } = useAuth();
     const [formData, setFormData] = useState<tlogin>({ email: "", senha: "" });
-    const [errorMessage, setErrorMessage] = useState<string>("");
     const [isLoading, setIsLoading] = useState<boolean>(false);
-   
+
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData((prevData) => ({
@@ -27,20 +26,17 @@ function Login() {
         }));
     };
 
-    // Função que lida com o envio do formulário
+
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setIsLoading(true);
-        
-
-        // Envia uma requisição de login para o backend
         try {
             const response = await fetch("http://localhost:8080/adms/login", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify(formData), // Envia os dados do formulário
+                body: JSON.stringify(formData), 
             });
 
             const data = await response.json();
@@ -48,35 +44,29 @@ function Login() {
             if (response.ok) {
                 // Sucesso no login, armazena o token ou outros dados conforme necessário
                 login(data.data.token);
-                showSuccessToast("Login realizado com sucesso.");
+                showSuccessToast("Seja bem-vindo.");
                 navigate("/dashboard");
             } else {
-                // Se houver erro no login, exibe a mensagem de erro
+                // Erro no login
                 const message = data.message || "Erro ao fazer login. Tente novamente.";
-                setErrorMessage(message);
                 showErrorToast(message);
             }
         } catch (error) {
             if (error instanceof Error) {
                 console.error("Erro:", error.message);
-                setErrorMessage(error.message);
                 showErrorToast(error.message);
             } else {
                 console.error("Erro desconhecido:", error);
-                setErrorMessage("Erro de conexão. Tente novamente.");
                 showErrorToast("Erro de conexão. Tente novamente.");
             }
         }
         finally {
             setIsLoading(false);
         }
-        
+
     };
 
-    useEffect(() => {
-        // Limpa a mensagem de erro ao alterar os dados do formulário
-        setErrorMessage("");    
-    }, [formData]);
+
 
     return (
         <div className="login-page">
@@ -106,9 +96,9 @@ function Login() {
                             value={formData.senha}
                             onChange={handleChange}
                         />
-                        {errorMessage && <p className="error">{errorMessage}</p>}
+
                         {isLoading ? (
-                            <Loading /> 
+                            <Loading />
                         ) : (
                             <Button text="Entrar" />
                         )}
@@ -126,23 +116,23 @@ function Login() {
                     <div className="info-list">
                         <ul>
                             <li>
-                            <img src={checkbox} alt="Checkbox" /> <p>Gestão de clientes</p>
+                                <img src={checkbox} alt="Checkbox" /> <p>Gestão de clientes</p>
                             </li>
                             <li>
-                            <img src={checkbox} alt="Checkbox" /> <p>Serviços e Ordens</p>
+                                <img src={checkbox} alt="Checkbox" /> <p>Serviços e Ordens</p>
                             </li>
                             <li>
-                            <img src={checkbox} alt="Checkbox" /> <p>Controle de Mecânicos</p>
+                                <img src={checkbox} alt="Checkbox" /> <p>Controle de Mecânicos</p>
                             </li>
                             <li>
-                            <img src={checkbox} alt="Checkbox" /> <p>Faturamento e Custos</p>
+                                <img src={checkbox} alt="Checkbox" /> <p>Faturamento e Custos</p>
                             </li>
                             <li>
-                            <img src={checkbox} alt="Checkbox" /> <p>Transparência Total</p>
+                                <img src={checkbox} alt="Checkbox" /> <p>Transparência Total</p>
                             </li>
                         </ul>
-                        
-                      
+
+
                     </div>
                 </div>
             </div>

@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import "./ItensDoChecklist.css";
-import { Pencil, PlusCircle, Trash } from "lucide-react";
+import { Pencil, PlusCircle, EyeOff, Eye, Box } from "lucide-react";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
 import ModalCadastroItem from "../../components/ModalCadastroItem/ModalCadastroItem";
@@ -8,6 +8,9 @@ import { useAuth } from "../../contexts/AuthContext";
 import { tItem } from "../../types/Item"
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import Loading from "../../components/Loading/Loading";
+import ModalEditarItem from "../../components/ModalEditarItem/ModalEditarItem";
+import ModalProdutosDoItem from "../../components/ModalProdutosDoItem/ModalProdutosDoItem";
+import ModalDesativarItem from "../../components/ModalDeletarItem/ModalDesativarItem";
 
 
 export default function ItensDoChecklist() {
@@ -16,9 +19,15 @@ export default function ItensDoChecklist() {
   const [filtroCategoria, setFiltroCategoria] = useState("Todos");
   const [buscarTexto, setBuscarTexto] = useState("");
   const [modalOpen, setModalOpen] = useState(false);
+  const [modalDesativarItem, setModalDesativarItem] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [itemSelecionado, setItemSelecionado] = useState<tItem | undefined>(undefined);
+  const [modalEditarItem, setModalEditarItem] = useState(false);
+  const [modalProdutosDoItem, setModalProdutosDoItem] = useState(false);
   const URL_BASE_IMAGEM = "http://localhost:8080";
 
+  // NOVO: filtro de situação
+  const [filtroSituacao, setFiltroSituacao] = useState<string>("ATIVO");
 
   const categorias = [
     { label: "Todos", value: "Todos" },
@@ -29,13 +38,21 @@ export default function ItensDoChecklist() {
     { label: "Capô Levantado", value: "CAPO_LEVANTADO" },
   ];
 
-  const buscarPartes = async () => {
+  // NOVO: opções de situação
+  const situacoes = [
+    { label: "Ativos", value: "ATIVO" },
+    { label: "Inativos", value: "INATIVO" },
+  ];
+
+  const buscarItens = useCallback(async () => {
     try {
       setLoading(true);
       const url = new URL("http://localhost:8080/itens");
       if (filtroCategoria !== "Todos") {
         url.searchParams.append("categoria", filtroCategoria);
       }
+      // NOVO: sempre envia situacao (ATIVO ou INATIVO)
+      url.searchParams.append("situacao", filtroSituacao);
 
       const response = await fetch(url.toString(), {
         headers: {
@@ -47,7 +64,7 @@ export default function ItensDoChecklist() {
       }
       const data = await response.json();
       setItens(data.data);
-      
+
     } catch (error) {
       console.error("Erro ao buscar partes:", error);
       const message = error instanceof Error ? error.message : "Erro ao buscar partes";
@@ -55,11 +72,42 @@ export default function ItensDoChecklist() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [filtroCategoria, filtroSituacao, token]);
 
   useEffect(() => {
-    buscarPartes();
-  }, [filtroCategoria]);
+    buscarItens();
+  }, [filtroCategoria, filtroSituacao, buscarItens]);
+
+
+  const handleToggleSituacao = async (selectedItem: tItem) => {
+    try {
+      if (selectedItem.situacao === "ATIVO") {
+        setModalDesativarItem(true);
+        setItemSelecionado(selectedItem);
+        return;
+      }
+
+      const response = await fetch(`http://localhost:8080/itens/${selectedItem.id}/ativar`, {
+        method: "PATCH",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Erro ao ativar item");
+      }
+
+      showSuccessToast("Item ativado com sucesso");
+      buscarItens();
+    } catch (error) {
+      console.error("Erro ao alterar situação do item:", error);
+      const message =
+        error instanceof Error ? error.message : "Erro ao alterar situação do item";
+      showErrorToast(message);
+    }
+  };
+
 
   const partesFiltradas = item.filter((item) =>
     item.nome.toLowerCase().includes(buscarTexto.toLowerCase())
@@ -75,6 +123,15 @@ export default function ItensDoChecklist() {
             options={categorias}
             value={filtroCategoria}
             onChange={setFiltroCategoria}
+          />
+        </div>
+
+        
+        <div>
+          <SelectCustom
+            options={situacoes}
+            value={filtroSituacao}
+            onChange={setFiltroSituacao}
           />
         </div>
 
@@ -104,28 +161,30 @@ export default function ItensDoChecklist() {
               <th>Nome do Item</th>
               <th>Imagem ilustrativa</th>
               <th>Parte do Veículo</th>
-              <th>Editar</th>
-              <th>Excluir</th>
+              <th>Ações</th>
               <th>Gerenciar produtos</th>
             </tr>
           </thead>
           <tbody>
             {loading ? (
               <tr>
-                <td colSpan={7}>
+                <td colSpan={6}>
                   <Loading />
                 </td>
               </tr>
             ) : partesFiltradas.length > 0 ? (
               partesFiltradas.map((item) => (
-                <tr key={item.id}>
+                <tr
+                  key={item.id}
+                  className={item.situacao === "INATIVO" ? "item-inativo" : ""}
+                >
                   <td>N°{String(item.id).padStart(3, "0")}</td>
                   <td>{item.nome}</td>
                   <td>
                     <img
+                      className="item-imagem"
                       src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`}
                       alt={item.nome}
-                      style={{ width: "100px", height: "auto", objectFit: "contain" }}
                     />
                   </td>
                   <td>
@@ -134,20 +193,61 @@ export default function ItensDoChecklist() {
                       .toLowerCase()
                       .replace(/\b\w/g, (l) => l.toUpperCase())}
                   </td>
-                  <td className="acoes">
-                    <button id="editar" aria-label={`Editar item ${item.nome}`}><Pencil/></button>
+                  <td className="acoes-coluna">
+                    <div className="acoes">
+                    <button
+                      id="editar"
+                      aria-label={`Editar item`}
+                      title={`Editar item`}
+                      onClick={() => {
+                        setModalEditarItem(true);
+                        setItemSelecionado(item);
+                      }}
+                      disabled={item.situacao === "INATIVO"}
+                    >
+                      <Pencil />
+                    </button>
+
+                    <button
+                      id="desativar"
+                      onClick={() => handleToggleSituacao(item)}
+                      aria-label={
+                        item.situacao === "ATIVO"
+                          ? `Desativar item`
+                          : `Ativar item`
+                      }
+                      title={
+                        item.situacao === "ATIVO"
+                          ? `Desativar item`
+                          : `Ativar item`
+                      }
+                    >
+                      {item.situacao === "ATIVO" ? <EyeOff /> : <Eye id="ativar" />}
+                    </button>
+                    </div>
                   </td>
-                  <td className="acoes">
-                    <button id="deletar" aria-label={`Excluir item ${item.nome}`}><Trash /></button>
-                  </td>
-                  <td className="acoes">
-                    <button id="gerenciar" aria-label={`Gerenciar produtos do item ${item.nome}`}>Gerenciar</button>
+                  {/* COLUNA DE GERENCIAR PRODUTOS */}
+                  <td className="coluna-gerenciar-produtos">
+                    <button
+                      className="btn-produtos"
+                      onClick={() => {
+                        setModalProdutosDoItem(true);
+                        setItemSelecionado(item);
+                      }}
+                      disabled={item.situacao === "INATIVO"}
+                      
+                    >
+                      <span className="btn-produtos-text">
+                        Produtos ({item.quantidadeProdutos})
+                      </span>
+                      <Box className="btn-produtos-icon" size={18} />
+                    </button>
                   </td>
                 </tr>
               ))
             ) : (
               <tr>
-                <td colSpan={7}>Nenhum item encontrado.</td>
+                <td colSpan={6}>Nenhum item encontrado.</td>
               </tr>
             )}
           </tbody>
@@ -159,12 +259,49 @@ export default function ItensDoChecklist() {
           isOpen={modalOpen}
           onClose={() => setModalOpen(false)}
           onSuccess={() => {
-            buscarPartes();
+            buscarItens();
             setModalOpen(false);
-            showSuccessToast("Item cadastrado com sucesso.");
           }}
         />
       )}
+
+      {modalDesativarItem && (
+        <ModalDesativarItem
+          isOpen={modalDesativarItem}
+          item={itemSelecionado}
+          onClose={() => setModalDesativarItem(false)}
+          onSuccess={() => {
+            buscarItens();
+            setModalDesativarItem(false);
+            setItemSelecionado(undefined);
+          }}
+        />
+      )}
+
+      {modalEditarItem && (
+        <ModalEditarItem
+          isOpen={modalEditarItem}
+          item={itemSelecionado}
+          onClose={() => { setModalEditarItem(false); buscarItens(); }}
+          onSuccess={() => {
+            buscarItens();
+            setModalEditarItem(false);
+            setItemSelecionado(undefined);
+          }}
+        />)}
+
+      {modalProdutosDoItem && (
+        <ModalProdutosDoItem
+          isOpen={modalProdutosDoItem}
+          item={itemSelecionado}
+          onClose={() => { { setModalProdutosDoItem(false); buscarItens(); }
+        }
+      }
+        />)}
+
+
+
+
     </div>
   );
 }

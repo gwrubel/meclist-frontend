@@ -1,0 +1,63 @@
+.form-editar-parte {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-editar-parte label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-editar-parte input[type="text"] {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+.input-select-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-file-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.input-file-wrapper input[type="file"] {
+    padding: 0.5rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.preview-wrapper {
+    margin-top: 0.5rem;
+    display: flex;
+    justify-content: center;
+}
+
+.preview-image {
+    width: 100%;
+    max-height: 200px;
+    object-fit: contain;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.current-image-wrapper {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.current-image-label {
+    font-size: 0.9rem;
+    color: #666;
+}
+

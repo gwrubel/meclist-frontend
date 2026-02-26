@@ -9,6 +9,7 @@
   align-items: center;
   justify-content: center;
   z-index: 1000;
+  padding: 1rem;
 }
 
 .modal-content {
@@ -22,10 +23,9 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  overflow: visible; /* garante que dropdowns nativos não sejam cortados pelo contêiner */
+  overflow: auto;
 }
 
-/* Evita que o arredondamento da borda recorte dropdown nativo quando o select estiver focado */
 .modal-content:has(select:focus) {
   border-radius: 0;
 }
@@ -36,11 +36,13 @@
   justify-content: space-between;
   border-bottom: 2px solid var(--secondary-color);
   padding-bottom: 0.75rem;
+  gap: 1rem;
 }
 
 .modal-header h2 {
   color: var(--second-text-color);
   margin: 0;
+  font-size: clamp(1rem, 3vw, 1.5rem);
 }
 
 .modal-close {
@@ -50,6 +52,8 @@
   color: var(--second-text-color);
   cursor: pointer;
   transition: color 0.2s ease;
+  flex-shrink: 0;
+  padding: 0.25rem;
 }
 
 .modal-close:hover {
@@ -57,91 +61,135 @@
 }
 
 .modal-body {
-  margin: 2rem 1rem;
-  overflow: visible; /* evita corte de conteúdos como dropdowns */
+  margin: 1.5rem 0.5rem;
+  overflow: visible;
 }
 
-/* Garante que o select dentro do modal fique acima de elementos irmãos */
 .modal-body select {
   position: relative;
   z-index: 1100;
 }
 
-
-/* Estiliza o form dentro do modal com grid */
+/* Estiliza o form dentro do modal com grid responsivo */
 .modal-body form {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
   gap: 1rem;
 }
 
-/* Botões ocupam a linha inteira */
+/* Labels */
+form label {
+  display: block;
+  text-align: left;
+  font-weight: bold;
+  margin-bottom: 0.25rem;
+}
+
+/* Selects */
+form select {
+  width: 100%;
+  padding: 0.5rem;
+  border: 2px solid var(--third-color);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--text-color);
+  font-size: 1rem;
+}
+
+/* Botões do formulário */
 .form-buttons {
   grid-column: 1 / -1;
   display: flex;
-  justify-content: flex-end;
-  
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .form-buttons button {
-  width: 40%;
-  height: 50px;
-}
-
-form label{
-   display: block;
-    text-align: left;
-    font-weight: bold;
-}
-
-  .form-buttons {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-top: 1rem;
-    align-items: center;
-  }
-  .form-buttons > * {
     width: auto;
-  }
-  
-  
-  
-.form-buttons button {
-    padding: 0.5rem 1.2rem;
-    border-radius: 6px;
-    border: none;
+    min-width: 200px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem; /* espaçamento entre ícone e texto */
+    font-weight: var(--fw-bold);
+    font-size: var(--fs-sm);
+    padding-block: 0.75rem;
+    padding-inline: 1.5rem;
+    border-radius: 0.4rem;
     cursor: pointer;
-    font-weight: 500;
-    transition: background 0.2s ease;
-  }
-  
-form button[type="button"] {
-    background-color: #e5e7eb;
-    color: #374151;
-  }
-  
-form button[type="button"]:hover {
-    background-color: #d1d5db;
-  }
-
-form select{
-    width: 100%;
-    padding: 8px;
-    border: 2px solid var(--third-color);
-    border-radius: 6px;
-    background: transparent;
-    color: var(--text-color);
-    font-size: 1rem;
+    transition: all 0.3s ease;
+    margin: 0.5rem 0;
+    height: auto;
 }
 
+form button[type="button"] {
+  background-color: #e5e7eb;
+  color: #374151;
+}
+
+form button[type="button"]:hover {
+  background-color: #d1d5db;
+}
+
+/* Responsividade para tablets */
 @media (max-width: 768px) {
+  .modal-content {
+    padding: 0.75rem;
+    max-height: 95vh;
+  }
+
+  .modal-body {
+    margin: 1rem 0.25rem;
+  }
+
   .modal-body form {
     grid-template-columns: 1fr;
+    gap: 0.875rem;
+  }
+
+  .form-buttons {
+    gap: 0.75rem;
+  }
+
+  .form-buttons button {
+    min-width: 100px;
+    max-width: none;
+    padding: 0.625rem 1rem;
+  }
+}
+
+/* Responsividade para mobile */
+@media (max-width: 480px) {
+  .modal-overlay {
+    padding: 0.5rem;
+  }
+
+  .modal-content {
+    padding: 0.5rem;
+    border-radius: 8px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.125rem;
+  }
+
+  .modal-body {
+    margin: 1rem 0;
+  }
+
+  .modal-body form {
+    gap: 0.75rem;
   }
 
   .form-buttons {
     flex-direction: column;
-    align-items: stretch;
+    gap: 0.5rem;
+  }
+
+  .form-buttons button {
+    width: 100%;
+    max-width: none;
   }
 }
