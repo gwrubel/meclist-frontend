@@ -26,7 +26,7 @@ export function AppRoutes() {
         <Route path="/cadastro-cliente" element={<CadastroCliente />} />
         <Route path="/cadastro-mecanico" element={<CadastroMecanico />} />
         <Route path="/cliente/:id" element={<DadosCliente />} />
-        <Route path="/parte-checklist" element={<ItensDoChecklist />} />
+        <Route path="/itens-do-checklist" element={<ItensDoChecklist />} />
       </Route>
     </Routes>
   );

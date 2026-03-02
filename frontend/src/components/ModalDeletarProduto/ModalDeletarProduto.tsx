@@ -19,26 +19,34 @@ export default function ModalDeletarProduto({ isOpen, onClose, onSuccess, produt
     const [isDeleting, setIsDeleting] = useState(false);
 
     const handleDelete = async () => {
+        if (!itemId || !produto?.produtoId) return;
+
         try {
             setIsDeleting(true);
-            const response = await fetch(`http://localhost:8080/itens/${itemId}/produtos/${produto?.idProduto}`, {
-                method: 'DELETE',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-            });
-            
+            const response = await fetch(
+                `http://localhost:8080/itens/${itemId}/produtos/${produto.produtoId}/desativar`,
+                {
+                    method: "PATCH",
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                }
+            );
+
             if (!response.ok) {
                 const data = await response.json();
-                throw new Error(data.message || 'Erro ao deletar o produto');
+                throw new Error(data.message || "Erro ao desativar o produto");
             }
-            
-            showSuccessToast('Produto deletado com sucesso');
+
+            showSuccessToast("Produto desativado com sucesso");
             onSuccess?.();
             onClose();
         } catch (error) {
-            console.error('Erro ao deletar o produto:', error);
-            const message = error instanceof Error ? error.message : 'Erro ao deletar o produto';
+            console.error("Erro ao desativar o produto:", error);
+            const message =
+                error instanceof Error
+                    ? error.message
+                    : "Erro ao desativar o produto";
             showErrorToast(message);
         } finally {
             setIsDeleting(false);
@@ -46,17 +54,17 @@ export default function ModalDeletarProduto({ isOpen, onClose, onSuccess, produt
     };
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} header="Confirmar Exclusão">
+        <Modal isOpen={isOpen} onClose={onClose} header="Confirmar Desativação">
             <div>
                 <p style={{ fontWeight: 'bold', padding: '2rem' }}>
-                    Tem certeza que deseja deletar o produto "{produto?.nomeProduto}"?
+                    Tem certeza que deseja desativar o produto "{produto?.nomeProduto}"?
                 </p>
-                <div className="deletar-produto-buttons">
+                <div className="desativar-produto-buttons">
                     <button id="cancelar" onClick={onClose} disabled={isDeleting}>Cancelar</button>
-                    <Button 
-                        text={isDeleting ? "Deletando..." : "Confirmar"} 
-                        onClick={handleDelete} 
-                        disabled={isDeleting} 
+                    <Button
+                        text={isDeleting ? "Desativando..." : "Confirmar"}
+                        onClick={handleDelete}
+                        disabled={isDeleting}
                         secondary
                     />
                 </div>

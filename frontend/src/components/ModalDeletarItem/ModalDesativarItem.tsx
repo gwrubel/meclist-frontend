@@ -47,7 +47,7 @@ export default function ModalDeletarItem({ isOpen, onClose, onSuccess, item }: M
     if (!isOpen) return null;
 
     return (
-        <Modal isOpen={isOpen} onClose={onClose} header="Confirmar Exclusão">
+        <Modal isOpen={isOpen} onClose={onClose} header="Confirmar Desativação">
             <div>
                 <p style={{ fontWeight: 'bold', padding: '2rem' }}>Tem certeza que deseja desativar este item?</p>
                 <div className="deletar-item-buttons">

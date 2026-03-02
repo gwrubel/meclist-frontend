@@ -2,8 +2,9 @@
   padding-top: 100px;
   text-align: center;
 }
+
 .itens-checklist-container h1 {
-    margin-bottom: 40px;
+  margin-bottom: 40px;
 }
 
 .itens-checklist-header {
@@ -16,7 +17,7 @@
   z-index: 2;
 }
 
-.itens-checklist-header > div:first-child {
+.itens-checklist-header>div:first-child {
   min-width: 200px;
   width: 250px;
 }
@@ -78,18 +79,22 @@
   position: relative;
 
 }
-.acoes{
+
+.acoes {
   display: flex;
   gap: 25px;
   justify-content: center;
 
 }
+
 /* A linha divisória */
 .acoes button:first-child::after {
   content: "";
   position: absolute;
-  right: -12px; /* Metade do gap aproximadamente */
-  height: 100%; /* Altura da linha em relação ao botão */
+  right: -12px;
+  /* Metade do gap aproximadamente */
+  height: 100%;
+  /* Altura da linha em relação ao botão */
   width: 2px;
   background-color: var(--third-color);
   cursor: default;
@@ -137,7 +142,7 @@
 /* Hover diferente quando for ação de ativar (linha inativa) */
 .item-inativo #ativar:hover {
   color: #008000;
-  
+
 }
 
 .coluna-gerenciar-produtos {
@@ -215,9 +220,13 @@
 }
 
 .item-imagem {
-  width: 90px;          /* tamanho padrão */
-  height: 90px;         /* tamanho padrão */
-  object-fit: cover;    /* preenche mantendo proporção e cortando o excesso */
-  border-radius: 8px;   /* bordas arredondadas */
+  width: 90px;
+  /* tamanho padrão */
+  height: 90px;
+  /* tamanho padrão */
+  object-fit: cover;
+  /* preenche mantendo proporção e cortando o excesso */
+  border-radius: 8px;
+  /* bordas arredondadas */
   border: 1px solid #ddd;
 }

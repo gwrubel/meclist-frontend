@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { useAuth } from "../../contexts/AuthContext";
 import { tItem } from "../../types/Item";
 import { tProduto } from "../../types/Produtos";
-import { showErrorToast } from "../../utils/toast";
+import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import Modal from "../../layouts/Modal/Modal";
 import Loading from "../Loading/Loading";
-import { Pencil, Trash } from "lucide-react";
+import { Pencil, Eye, EyeOff } from "lucide-react";
 import "./ModalProdutosDoItem.css";
 import Button from "../Button/Button";
 import { ModalCadastrarProduto } from "../ModalCadastrarProduto/ModalCadastrarProduto";
@@ -19,7 +19,7 @@ interface ModalProdutosDoItemProps {
 }
 
 export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProdutosDoItemProps) {
-    const token = useAuth();
+    const { token } = useAuth();
     const [produtos, setProdutos] = useState<tProduto[]>([]);
     const [loading, setLoading] = useState(false);
     const [modalCadastrarProdutoOpen, setModalCadastrarProduto] = useState(false);
@@ -53,6 +53,45 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
         }
     }, [item?.id, token]);
 
+    const handleToggleSituacaoProduto = useCallback(
+        async (produto: tProduto) => {
+            if (!item?.id) return;
+
+            try {
+                if (produto.situacao === "ATIVO") {
+                    setProdutoSelecionado(produto);
+                    setModalDeletarProduto(true);
+                    return;
+                }
+
+                const response = await fetch(
+                    `http://localhost:8080/itens/${item.id}/produtos/${produto.produtoId}/ativar`,
+                    {
+                        method: "PATCH",
+                        headers: {
+                            Authorization: `Bearer ${token}`,
+                        },
+                    }
+                );
+
+                if (!response.ok) {
+                    throw new Error("Erro ao ativar produto");
+                }
+
+                showSuccessToast("Produto ativado com sucesso");
+                buscarProdutosDoItem();
+            } catch (error) {
+                console.error("Erro ao alterar situação do produto:", error);
+                const message =
+                    error instanceof Error
+                        ? error.message
+                        : "Erro ao alterar situação do produto";
+                showErrorToast(message);
+            }
+        },
+        [item?.id, token, buscarProdutosDoItem]
+    );
+
      useEffect(() => {
     if (isOpen && item) {
       buscarProdutosDoItem();
@@ -84,8 +123,10 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                             </tr>
                         ) : produtos.length > 0 ? (
                             produtos.map((produto) => (
-                                <tr key={produto.id}>
-                                    
+                                <tr
+                                    key={produto.id}
+                                    className={produto.situacao === "INATIVO" ? "produto-inativo" : ""}
+                                >
                                     <td>{produto.nomeProduto}</td>
                                     <td className="acoes-coluna">
                                       <div className="acoes">
@@ -94,23 +135,29 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                                             aria-label={`Editar produto ${produto.nomeProduto}`}
                                             title={`Editar produto`}
                                             onClick={() => {
-                                                   setProdutoSelecionado(produto);
-                                                   setModalEditarProduto(true);
+                                               setProdutoSelecionado(produto);
+                                               setModalEditarProduto(true);
                                             }}
+                                            disabled={produto.situacao === "INATIVO"}
                                         >
                                             <Pencil />
                                         </button>
 
                                         <button
-                                            id="desativar"
-                                            aria-label={`Desativar produto ${produto.nomeProduto}`}
-                                            title={`Desativar produto`}
-                                            onClick={() => {
-                                                   setProdutoSelecionado(produto);
-                                                   setModalDeletarProduto(true);
-                                            }}
+                                            id={produto.situacao === "ATIVO" ? "desativar-produto" : "ativar-produto"}
+                                            aria-label={
+                                                produto.situacao === "ATIVO"
+                                                    ? `Desativar produto ${produto.nomeProduto}`
+                                                    : `Ativar produto ${produto.nomeProduto}`
+                                            }
+                                            title={
+                                                produto.situacao === "ATIVO"
+                                                    ? "Desativar produto"
+                                                    : "Ativar produto"
+                                            }
+                                            onClick={() => handleToggleSituacaoProduto(produto)}
                                         >
-                                            <Trash />
+                                            {produto.situacao === "ATIVO" ? <EyeOff /> : <Eye />}
                                         </button>
                                       </div>
                                     </td>

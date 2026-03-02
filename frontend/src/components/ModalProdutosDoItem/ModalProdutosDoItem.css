@@ -27,6 +27,32 @@
   background-color: #d0cece;
   transition: all 0.3s ease;
 }
+#desativar-produto, #ativar-produto {
+  background: none;
+  border: none;
+}
+#desativar-produto :hover{
+  color: red;
+  opacity: 0.7;
+  transition: all 0.3s ease;
+}
+.produto-inativo td {
+  color: #777;
+}
+
+.produto-inativo .acoes button {
+  color: #777;
+}
+
+.produto-inativo #ativar-produto {
+  color: black;
+  opacity: 1;
+  transition: all 0.3s ease;
+}
+
+.produto-inativo #ativar-produto:hover {
+  color: #008000;
+}
 
 .table-header {
   display: flex;
