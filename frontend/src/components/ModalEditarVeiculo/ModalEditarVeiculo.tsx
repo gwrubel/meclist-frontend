@@ -6,6 +6,7 @@ import "./ModalEditarVeiculo.css";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { tVeiculo } from "../../types/Veiculo";
+import { buildApiUrl } from "../../config/api";
 
 
 interface EditarVeiculoProps {
@@ -100,7 +101,7 @@ export default function ModalEditarVeiculo({ id, isOpen, onClose, veiculo, onSuc
 
         try {
             
-            const response = await fetch(`http://localhost:8080/clientes/${id}/veiculos/${formData.id}`, {
+            const response = await fetch(buildApiUrl(`/clientes/${id}/veiculos/${formData.id}`), {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,

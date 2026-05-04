@@ -1,0 +1,77 @@
+.encaminhar-mecanico-lista {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  max-height: 360px;
+  overflow-y: auto;
+ 
+}
+
+.encaminhar-mecanico-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid #b8b8b8;
+  gap: 12px;
+}
+
+
+
+.encaminhar-mecanico-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 0;
+}
+
+.encaminhar-mecanico-nome {
+  font-weight: var(--fw-bold);
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.encaminhar-mecanico-telefone {
+  font-size: 0.82rem;
+  color: #777;
+}
+
+.encaminhar-mecanico-empty {
+  text-align: center;
+  color: #888;
+  font-size: 0.9rem;
+  padding: 16px 0;
+}
+
+.encaminhar-mecanico-actions {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem;
+  margin-top: 10px;
+}
+
+.btn-vincular {
+  padding: 5px 14px;
+  border-radius: 6px;
+  border: 1.5px solid var(--primary-color);
+  color: var(--primary-color);
+  background: transparent;
+  font-size: 0.85rem;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  flex-shrink: 0;
+}
+
+.btn-vincular:hover:not(:disabled) {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-vincular:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}

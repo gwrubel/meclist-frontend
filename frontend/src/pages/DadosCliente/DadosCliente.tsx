@@ -12,6 +12,7 @@ import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils
 import ModalCadastroVeiculo from "../../components/ModalCadastroVeiculo/ModalCadastroVeiculo";
 import ModalEditarCliente from "../../components/ModalEditarCliente/ModalEditarCliente";
 import ModalEditarVeiculo from "../../components/ModalEditarVeiculo/ModalEditarVeiculo";
+import { buildApiUrl } from "../../config/api";
 
 
 export default function DadosCliente() {
@@ -30,7 +31,7 @@ export default function DadosCliente() {
     const [modalEditarVeiculoOpen, setModalEditarVeiculoOpen] = useState(false);
     async function fetchCliente() {
         try {
-            const response = await fetch(`http://localhost:8080/clientes/${id}`, {
+            const response = await fetch(buildApiUrl(`/clientes/${id}`), {
                 headers: {
                     'Authorization': `Bearer ${token}`,
                     'Content-Type': 'application/json',

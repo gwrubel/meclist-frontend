@@ -11,6 +11,7 @@ import { useAuth } from "../../contexts/AuthContext";
 import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
 import ModalCadastroVeiculo from "../../components/ModalCadastroVeiculo/ModalCadastroVeiculo";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { buildApiUrl } from "../../config/api";
 
 export default function CadastroCliente() {
     const { token } = useAuth();
@@ -31,7 +32,7 @@ export default function CadastroCliente() {
 
     const bucarClientes = async () => {
         try {
-            const url = new URL("http://localhost:8080/clientes");
+            const url = new URL(buildApiUrl("/clientes"));
             if (filtro.toLowerCase() !== "todos") {
                 url.searchParams.append('situacao', filtro.toUpperCase());
             }

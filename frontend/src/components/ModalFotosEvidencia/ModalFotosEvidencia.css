@@ -1,0 +1,41 @@
+.modal-fotos-loading {
+  display: flex;
+  justify-content: center;
+  padding: 2rem 0;
+}
+
+.modal-fotos-vazio {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  padding: 2rem 0;
+  color: var(--second-text-color);
+  opacity: 0.6;
+  font-size: var(--fs-sm);
+}
+
+.modal-fotos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 12px;
+}
+
+.modal-fotos-item {
+  display: block;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: border-color 0.2s;
+}
+
+.modal-fotos-item:hover {
+  border-color: var(--primary-color);
+}
+
+.modal-fotos-img {
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  display: block;
+}

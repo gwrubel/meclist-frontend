@@ -1,0 +1,86 @@
+.checklist-page-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.checklist-page-header__voltar {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1.5px solid #ccc;
+  background: transparent;
+  color: var(--text-color);
+  font-weight: var(--fw-bold);
+  font-size: 0.88rem;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: border-color 0.2s, color 0.2s;
+  flex-shrink: 0;
+}
+
+.checklist-page-header__voltar:hover {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.checklist-page-header__titulo {
+  flex: 1;
+  min-width: 0;
+}
+
+.checklist-page-header__titulo h1 {
+  font-size: 1.35rem;
+  margin: 0 0 8px;
+}
+
+.checklist-page-header__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  font-size: 0.9rem;
+  color: #444;
+}
+
+/* ---- Badge de status ---- */
+.checklist-page-header__badge {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+  align-self: flex-start;
+}
+
+.checklist-page-header__badge--aguardando_precificacao {
+  background-color: #fff8e1;
+  color: #f57f17;
+  border: 1px solid #ffe082;
+}
+
+.checklist-page-header__badge--aguardando_aprovacao {
+  background-color: #e3f2fd;
+  color: #1565c0;
+  border: 1px solid #90caf9;
+}
+
+.checklist-page-header__badge--aprovado {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+}
+
+.checklist-page-header__badge--reprovado {
+  background-color: #ffebee;
+  color: #c62828;
+  border: 1px solid #ef9a9a;
+}
+
+.checklist-page-header__badge--finalizado {
+  background-color: #f3e5f5;
+  color: #6a1b9a;
+  border: 1px solid #ce93d8;
+}

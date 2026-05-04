@@ -6,6 +6,7 @@ import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { CategoriaParteVeiculo } from "../../types/Item";
 import "./ModalCadastroItem.css";
 import { SelectCustom } from "../Select/SelectCustom";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalCadastroItemProps {
     isOpen: boolean;
@@ -77,7 +78,7 @@ export default function ModalCadastroItem({ isOpen, onClose, onSuccess }: ModalC
         formPayload.append("imagem", formData.imagem);
 
         try {
-            const response = await fetch("http://localhost:8080/itens", {
+            const response = await fetch(buildApiUrl("/itens"), {
                 method: "POST",
                 headers: {
                     Authorization: `Bearer ${token}`,

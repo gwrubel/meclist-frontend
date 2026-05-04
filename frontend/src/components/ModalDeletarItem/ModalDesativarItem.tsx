@@ -5,6 +5,7 @@ import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import './ModalDesativarItem.css'
 import { tItem } from "../../types/Item";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalDeletarItemProps {
     isOpen: boolean;
@@ -21,7 +22,7 @@ export default function ModalDeletarItem({ isOpen, onClose, onSuccess, item }: M
   const handleDelete = async () => {
         try {
             setIsDeleting(true);
-            const response = await fetch(`http://localhost:8080/itens/${item?.id}/desativar`, {
+            const response = await fetch(buildApiUrl(`/itens/${item?.id}/desativar`), {
                 method: 'PATCH',
                 headers: {
                     'Authorization': `Bearer ${token}`,

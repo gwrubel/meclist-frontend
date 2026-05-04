@@ -1,0 +1,415 @@
+.aprovacao-admin-container {
+  padding: 100px 32px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+/* ---- Stepper ---- */
+.aprovacao-admin-stepper {
+  display: flex;
+  gap: 0;
+  margin-bottom: 28px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.aprovacao-admin-step {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 14px 16px;
+  background-color: #fafafa;
+  border-right: 1px solid #e0e0e0;
+  color: #aaa;
+  font-size: 0.85rem;
+  font-weight: var(--fw-bold);
+  transition: all 0.2s;
+}
+
+.aprovacao-admin-step:last-child {
+  border-right: none;
+}
+
+.aprovacao-admin-step.concluido {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.aprovacao-admin-step.ativo {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.aprovacao-admin-step-icon {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+}
+
+.aprovacao-admin-step-label {
+  line-height: 1.25;
+}
+
+/* ---- Painel de ações ---- */
+.aprovacao-admin-acoes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 32px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.btn-acao-manual {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  border: none;
+  transition: opacity 0.2s, background-color 0.2s;
+}
+
+.btn-acao-manual:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-iniciar {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.btn-iniciar:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.btn-link-cliente {
+  background-color: #5d4037;
+  color: white;
+}
+
+.btn-link-cliente:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.btn-pdf {
+  background-color: #1565c0;
+  color: white;
+}
+
+.btn-pdf:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.btn-confirmacao {
+  background-color: #f57f17;
+  color: white;
+}
+
+.btn-confirmacao:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.btn-aprovar {
+  background-color: #2e7d32;
+  color: white;
+}
+
+.btn-aprovar:hover:not(:disabled) {
+  opacity: 0.88;
+}
+
+.aprovacao-admin-hint-decisao {
+  font-size: 0.9rem;
+  color: #2e7d32;
+  font-weight: var(--fw-bold);
+}
+
+.aprovacao-admin-link-box {
+  margin-bottom: 28px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fffdf7;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.aprovacao-admin-link-box-texto {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #444;
+  font-size: 0.9rem;
+}
+
+.aprovacao-admin-link-box-acoes {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.aprovacao-admin-link-input {
+  flex: 1;
+  min-width: 280px;
+  border: 1px solid #d7d7d7;
+  border-radius: 6px;
+  padding: 10px 12px;
+  font-size: 0.88rem;
+  color: #333;
+  background-color: white;
+}
+
+.btn-copiar-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  border-radius: 6px;
+  background-color: #eceff1;
+  color: #263238;
+  padding: 10px 14px;
+  font-size: 0.88rem;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+}
+
+.btn-copiar-link:hover {
+  background-color: #dde3e6;
+}
+
+.aprovacao-admin-link-copiado {
+  align-self: center;
+  font-size: 0.82rem;
+  font-weight: var(--fw-bold);
+  color: #2e7d32;
+}
+
+/* ---- Itens ---- */
+.aprovacao-admin-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+.aprovacao-admin-categoria-titulo {
+  font-size: 1.05rem;
+  font-weight: var(--fw-bold);
+  margin-bottom: 12px;
+  color: var(--text-color);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.aprovacao-admin-item-card {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 16px 20px;
+  margin-bottom: 12px;
+  background-color: white;
+}
+
+.aprovacao-admin-item-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.aprovacao-admin-item-nome {
+  font-weight: var(--fw-bold);
+  font-size: 1rem;
+}
+
+.aprovacao-admin-item-status {
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78rem;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
+.status-trocar {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.status-verificar {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.status-ok {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.status-pendente {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.aprovacao-admin-item-mao-de-obra {
+  font-size: 0.88rem;
+  color: #555;
+  margin-bottom: 10px;
+}
+
+/* ---- Tabela de produtos ---- */
+.aprovacao-admin-produtos-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88rem;
+  margin-top: 8px;
+}
+
+.aprovacao-admin-produtos-table th,
+.aprovacao-admin-produtos-table td {
+  padding: 8px 10px;
+  border: 1px solid #e0e0e0;
+  text-align: left;
+}
+
+.aprovacao-admin-produtos-table th {
+  background-color: #f5f5f5;
+  font-weight: var(--fw-bold);
+}
+
+.aprovacao-admin-produtos-table tr:nth-child(even) {
+  background-color: #fafafa;
+}
+
+/* ---- Badges decisão ---- */
+.badge-aprovado {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: #e8f5e9;
+  color: #2e7d32;
+  font-size: 0.78rem;
+  font-weight: var(--fw-bold);
+}
+
+.badge-reprovado {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: #ffebee;
+  color: #c62828;
+  font-size: 0.78rem;
+  font-weight: var(--fw-bold);
+}
+
+.badge-pendente {
+  padding: 2px 8px;
+  border-radius: 10px;
+  background-color: #f5f5f5;
+  color: #888;
+  font-size: 0.78rem;
+  font-weight: var(--fw-bold);
+}
+
+.aprovacao-admin-radio-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.aprovacao-admin-radio-group label {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.82rem;
+  color: #333;
+  cursor: pointer;
+}
+
+.aprovacao-admin-item-actions {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-item-aprovar,
+.btn-item-reprovar {
+  border: none;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.82rem;
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+}
+
+.btn-item-aprovar {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.btn-item-reprovar {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.aprovacao-admin-footer-acoes {
+  margin-top: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.aprovacao-admin-resumo-decisao {
+  font-size: 0.88rem;
+  color: #444;
+  font-weight: var(--fw-bold);
+}
+
+@media (max-width: 768px) {
+  .aprovacao-admin-container {
+    padding: 80px 16px 32px;
+  }
+
+  .aprovacao-admin-stepper {
+    flex-direction: column;
+  }
+
+  .aprovacao-admin-step {
+    border-right: none;
+    border-bottom: 1px solid #e0e0e0;
+  }
+
+  .aprovacao-admin-step:last-child {
+    border-bottom: none;
+  }
+
+  .aprovacao-admin-radio-group {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .aprovacao-admin-link-box-acoes {
+    flex-direction: column;
+  }
+
+  .aprovacao-admin-link-input {
+    min-width: 0;
+    width: 100%;
+  }
+}

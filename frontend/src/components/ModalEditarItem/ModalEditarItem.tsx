@@ -6,6 +6,7 @@ import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { CategoriaParteVeiculo, tItem } from "../../types/Item";
 import "./ModalEditarItem.css";
 import { SelectCustom } from "../Select/SelectCustom";
+import { API_BASE_URL, buildApiUrl } from "../../config/api";
 
 interface ModalEditarItemProps {
     isOpen: boolean;
@@ -25,7 +26,7 @@ export default function ModalEditarItem({ isOpen, onClose, onSuccess, item }: Mo
         imagem: null,
         categoriaParteVeiculo: "",
     });
-     const URL_BASE_IMAGEM = "http://localhost:8080";
+    const URL_BASE_IMAGEM = API_BASE_URL;
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -79,7 +80,7 @@ export default function ModalEditarItem({ isOpen, onClose, onSuccess, item }: Mo
         }
 
         try {
-            const response = await fetch(`http://localhost:8080/itens/${item.id}`, {
+            const response = await fetch(buildApiUrl(`/itens/${item.id}`), {
                 method: "PUT",
                 headers: {
                     Authorization: `Bearer ${token}`,

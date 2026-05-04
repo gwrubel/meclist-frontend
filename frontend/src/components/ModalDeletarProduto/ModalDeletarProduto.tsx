@@ -5,6 +5,7 @@ import Modal from "../../layouts/Modal/Modal";
 import Button from "../Button/Button";
 import { tProduto } from "../../types/Produtos";
 import "./ModalDeletarProduto.css";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalDeletarProdutoProps {
     isOpen: boolean;
@@ -24,7 +25,7 @@ export default function ModalDeletarProduto({ isOpen, onClose, onSuccess, produt
         try {
             setIsDeleting(true);
             const response = await fetch(
-                `http://localhost:8080/itens/${itemId}/produtos/${produto.produtoId}/desativar`,
+                buildApiUrl(`/itens/${itemId}/produtos/${produto.produtoId}/desativar`),
                 {
                     method: "PATCH",
                     headers: {

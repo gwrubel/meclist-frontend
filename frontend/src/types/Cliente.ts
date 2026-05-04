@@ -29,6 +29,6 @@ export type tClienteCadastro = {
     telefone: string;
     email: string;
     endereco: string;
-    senha: string;
+    
 }
 

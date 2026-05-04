@@ -9,6 +9,7 @@ import InputCustom from "../../components/InputCustom/InputCustom";
 import { tlogin } from "../../types/userLogin";
 import Loading from "../../components/Loading/Loading";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { buildApiUrl } from "../../config/api";
 
 
 
@@ -31,7 +32,7 @@ function Login() {
         e.preventDefault();
         setIsLoading(true);
         try {
-            const response = await fetch("http://localhost:8080/adms/login", {
+            const response = await fetch(buildApiUrl("/adms/login"), {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",

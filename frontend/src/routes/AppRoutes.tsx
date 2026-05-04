@@ -7,6 +7,9 @@ import PrivateRoute from "../PrivateRoute";
 import AuthenticatedLayout from "../layouts/AuthenticatedLayout/AuthenticatedLayout";
 import DadosCliente from "../pages/DadosCliente/DadosCliente";
 import ItensDoChecklist from "../pages/itensDoChecklist/ItensDoChecklist";
+import GerenciarChecklist from "../pages/GerenciarChecklist/GerenciarChecklist";
+import PrecificarChecklist from "../pages/PrecificarChecklist/PrecificarChecklist";
+import AprovacaoAdminChecklist from "../pages/AprovacaoAdminChecklist/AprovacaoAdminChecklist";
 
 export function AppRoutes() {
   return (
@@ -27,6 +30,9 @@ export function AppRoutes() {
         <Route path="/cadastro-mecanico" element={<CadastroMecanico />} />
         <Route path="/cliente/:id" element={<DadosCliente />} />
         <Route path="/itens-do-checklist" element={<ItensDoChecklist />} />
+        <Route path="/gerenciar-checklist" element={<GerenciarChecklist />} />
+        <Route path="/checklist/:checklistId/precificar" element={<PrecificarChecklist />} />
+        <Route path="/checklist/:checklistId/aprovacao-admin" element={<AprovacaoAdminChecklist />} />
       </Route>
     </Routes>
   );

@@ -11,6 +11,7 @@ import Button from "../Button/Button";
 import { ModalCadastrarProduto } from "../ModalCadastrarProduto/ModalCadastrarProduto";
 import { ModalEditarProduto } from "../ModalEditarProduto/ModalEditarProduto";
 import ModalDeletarProduto from "../ModalDeletarProduto/ModalDeletarProduto";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalProdutosDoItemProps {
     item: tItem | undefined;
@@ -33,7 +34,7 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
 
         try {
             setLoading(true);
-            const response = await fetch(`http://localhost:8080/itens/${item.id}/produtos`, {
+            const response = await fetch(buildApiUrl(`/itens/${item.id}/produtos`), {
                 method: 'GET',
                 headers: {
                     'Authorization': `Bearer ${token}`,
@@ -65,7 +66,7 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                 }
 
                 const response = await fetch(
-                    `http://localhost:8080/itens/${item.id}/produtos/${produto.produtoId}/ativar`,
+                    buildApiUrl(`/itens/${item.id}/produtos/${produto.produtoId}/ativar`),
                     {
                         method: "PATCH",
                         headers: {

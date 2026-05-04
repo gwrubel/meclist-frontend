@@ -8,6 +8,7 @@ import {  aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtil
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { SelectCustom } from "../Select/SelectCustom";
+import { buildApiUrl } from "../../config/api";
 
 
 interface EditarMecanicoProps {
@@ -65,7 +66,7 @@ export default function ModalEditarMecanico({ isOpen, onClose, mecanico, onSuces
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/mecanicos/${cleanedData.id}`, {
+      const response = await fetch(buildApiUrl(`/mecanicos/${cleanedData.id}`), {
         method: 'PUT', 
         headers: {
           'Authorization': `Bearer ${token}`,

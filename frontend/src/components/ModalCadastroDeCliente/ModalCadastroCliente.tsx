@@ -7,6 +7,7 @@ import "./ModalCadastroCliente.css";
 import { useAuth } from "../../contexts/AuthContext";
 import { showErrorToast } from "../../utils/toast";
 import { SelectCustom } from "../Select/SelectCustom";
+import { buildApiUrl } from "../../config/api";
 
 interface CadastroDeClienteProps {
   isOpen: boolean;
@@ -22,10 +23,8 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
     telefone: '',
     email: '',
     endereco: '',
-    senha: '',
   });
   
-  const [confirmarSenha, setConfirmarSenha] = useState('');
   const { token } = useAuth();
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -45,10 +44,6 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (formData.senha !== confirmarSenha) {
-      showErrorToast("As senhas não coincidem");
-      return;
-    }
 
     const cleanedData = {
       ...formData,
@@ -58,7 +53,7 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
 
     try {
       setIsSubmitting(true);
-      const response = await fetch('http://localhost:8080/clientes', {
+      const response = await fetch(buildApiUrl('/clientes'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -161,28 +156,6 @@ export default function ModalCadastroCliente({ isOpen, onClose, onSucess }: Cada
  
           placeholder="Digite o endereço do cliente" 
         />
-        
-        <InputCustom 
-          label="Senha" 
-          name="senha" 
-          type="password" 
-          value={formData.senha} 
-          onChange={handleFormChange} 
-          required 
-      
-          placeholder="Digite a senha" 
-        />
-        
-        <InputCustom 
-          label="Confirmar Senha" 
-          name="confirmarSenha" 
-          type="password" 
-          value={confirmarSenha} 
-          onChange={(e) => setConfirmarSenha(e.target.value)} 
-          required 
-          placeholder="Confirme a senha" 
-        />
-
         
 
         <div className="form-buttons">

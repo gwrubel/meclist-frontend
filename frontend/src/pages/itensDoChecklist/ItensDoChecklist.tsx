@@ -11,6 +11,7 @@ import Loading from "../../components/Loading/Loading";
 import ModalEditarItem from "../../components/ModalEditarItem/ModalEditarItem";
 import ModalProdutosDoItem from "../../components/ModalProdutosDoItem/ModalProdutosDoItem";
 import ModalDesativarItem from "../../components/ModalDeletarItem/ModalDesativarItem";
+import { API_BASE_URL, buildApiUrl } from "../../config/api";
 
 
 export default function ItensDoChecklist() {
@@ -24,7 +25,7 @@ export default function ItensDoChecklist() {
   const [itemSelecionado, setItemSelecionado] = useState<tItem | undefined>(undefined);
   const [modalEditarItem, setModalEditarItem] = useState(false);
   const [modalProdutosDoItem, setModalProdutosDoItem] = useState(false);
-  const URL_BASE_IMAGEM = "http://localhost:8080";
+  const URL_BASE_IMAGEM = API_BASE_URL;
 
   // NOVO: filtro de situação
   const [filtroSituacao, setFiltroSituacao] = useState<string>("ATIVO");
@@ -47,7 +48,7 @@ export default function ItensDoChecklist() {
   const buscarItens = useCallback(async () => {
     try {
       setLoading(true);
-      const url = new URL("http://localhost:8080/itens");
+      const url = new URL(buildApiUrl("/itens"));
       if (filtroCategoria !== "Todos") {
         url.searchParams.append("categoria", filtroCategoria);
       }
@@ -87,7 +88,7 @@ export default function ItensDoChecklist() {
         return;
       }
 
-      const response = await fetch(`http://localhost:8080/itens/${selectedItem.id}/ativar`, {
+      const response = await fetch(buildApiUrl(`/itens/${selectedItem.id}/ativar`), {
         method: "PATCH",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { tMecanico } from "../../types/Mecanico";
 import Loading from "../../components/Loading/Loading";
+import { buildApiUrl } from "../../config/api";
 
 export default function ServicosDoMecanico() {
     const { id } = useParams<{ id: string }>();
@@ -12,7 +13,7 @@ export default function ServicosDoMecanico() {
     useEffect(() => {
         const fetchMecanico = async () => {
             try {
-                const response = await fetch(`http://localhost:8080/mecanicos/${id}`);
+                const response = await fetch(buildApiUrl(`/mecanicos/${id}`));
                 if (!response.ok) {
                     throw new Error("Erro ao buscar dados do mecânico");
                 }

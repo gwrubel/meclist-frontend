@@ -7,6 +7,7 @@ import "./ModalCadastroMecanico.css";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { limparMascara} from "../../utils/maskUtils";
 import { useAuth } from "../../contexts/AuthContext";
+import { buildApiUrl } from "../../config/api";
 
 interface CadastroDeMecanicoProps {
   isOpen: boolean;
@@ -49,7 +50,7 @@ export default function ModalCadastroMecanico({ isOpen, onClose, onSucess }: Cad
     };
 
     try {
-      const response = await fetch('http://localhost:8080/mecanicos', {
+      const response = await fetch(buildApiUrl('/mecanicos'), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

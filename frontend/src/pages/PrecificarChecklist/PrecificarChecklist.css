@@ -1,0 +1,67 @@
+/* ---- Container ---- */
+.precificar-checklist-container {
+  padding: 100px 32px 40px;
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 28px;
+}
+
+/* ---- Itens ---- */
+.precificar-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.precificar-vazio {
+  text-align: center;
+  color: var(--secondary-color);
+  padding: 40px 0;
+}
+
+/* ---- Footer ---- */
+.precificar-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fafafa;
+}
+
+.precificar-total {
+  font-size: 1rem;
+  color: var(--text-color);
+}
+
+.precificar-total strong {
+  color: var(--primary-color);
+  font-size: 1.1rem;
+}
+
+.precificar-acoes {
+  display: flex;
+  gap: 12px;
+}
+
+/* ---- Responsivo ---- */
+@media (max-width: 768px) {
+  .precificar-checklist-container {
+    padding: 80px 16px 32px;
+  }
+
+  .precificar-footer {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .precificar-acoes {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}

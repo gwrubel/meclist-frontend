@@ -1,0 +1,90 @@
+.modal-confirmacao-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.modal-confirmacao-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.modal-confirmacao-field label {
+  font-weight: var(--fw-bold);
+  font-size: 0.9rem;
+  color: var(--text-color);
+}
+
+.modal-confirmacao-opcional {
+  font-weight: var(--fw-base);
+  color: #888;
+  font-size: 0.82rem;
+}
+
+.modal-confirmacao-field select,
+.modal-confirmacao-field textarea {
+  border: 1px solid #cfcfcf;
+  border-radius: 6px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+}
+
+.modal-confirmacao-field select:focus,
+.modal-confirmacao-field textarea:focus {
+  border-color: var(--primary-color);
+}
+
+.modal-confirmacao-field textarea {
+  resize: vertical;
+  min-height: 80px;
+}
+
+.modal-confirmacao-chars {
+  font-size: 0.78rem;
+  color: #aaa;
+  text-align: right;
+}
+
+.modal-confirmacao-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  padding-top: 4px;
+}
+
+.btn-primario {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  font-weight: var(--fw-bold);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-primario:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+.btn-secundario {
+  padding: 8px 20px;
+  border-radius: 6px;
+  border: 1.5px solid #ccc;
+  background-color: transparent;
+  color: var(--text-color);
+  font-weight: var(--fw-bold);
+  font-size: 0.9rem;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.btn-secundario:hover:not(:disabled) {
+  border-color: var(--text-color);
+}

@@ -6,6 +6,7 @@ import { tProdutoCadastro } from "../../types/Produtos";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import "./ModalCadastrarProduto.css";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalCadastrarProdutoProps {
     isOpen: boolean;
@@ -31,7 +32,7 @@ export function ModalCadastrarProduto({ isOpen, onClose, itemId, onSuccess }: Mo
         setIsSubmitting(true);
 
         try {
-            const response = await fetch(`http://localhost:8080/itens/${itemId}/produtos`, {
+            const response = await fetch(buildApiUrl(`/itens/${itemId}/produtos`), {
                 method: 'POST',
                 headers: {
                     'Authorization': `Bearer ${token}`,

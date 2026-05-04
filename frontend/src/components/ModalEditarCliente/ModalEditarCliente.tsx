@@ -7,6 +7,7 @@ import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import { tCliente } from "../../types/Cliente";
 import { SelectCustom } from "../Select/SelectCustom";
+import { buildApiUrl } from "../../config/api";
 
 interface EditarClienteProps {
   isOpen: boolean;
@@ -61,7 +62,7 @@ export default function ModalEditarCliente({ isOpen, onClose, cliente, onSucess 
     };
 
     try {
-      const response = await fetch(`http://localhost:8080/clientes/${cleanedData.id}`, {
+      const response = await fetch(buildApiUrl(`/clientes/${cleanedData.id}`), {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,

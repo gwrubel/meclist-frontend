@@ -6,6 +6,7 @@ import { tProduto, tProdutoCadastro } from "../../types/Produtos";
 import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { useAuth } from "../../contexts/AuthContext";
 import "./ModalEditarProduto.css";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalEditarProdutoProps {
     isOpen: boolean;
@@ -40,7 +41,7 @@ export function ModalEditarProduto({ isOpen, onClose, produto, itemId, onSuccess
         setIsSubmitting(true);
 
         try {
-            const response = await fetch(`http://localhost:8080/itens/${itemId}/produtos/${produto?.produtoId}`, {
+            const response = await fetch(buildApiUrl(`/itens/${itemId}/produtos/${produto?.produtoId}`), {
                 method: 'PUT',
                 headers: {
                     'Authorization': `Bearer ${token}`,

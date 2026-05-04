@@ -116,7 +116,7 @@ export function Sidebar() {
           </button>
           {checklistOpen && open && (
             <div className="sidebar-submenu">
-              <button onClick={() => navigate("/checklist")} aria-label="Ir para Gerenciar Checklist">
+              <button onClick={() => navigate("/gerenciar-checklist")} aria-label="Ir para Gerenciar Checklist">
                 Gerenciar Checklist
               </button>
               <button onClick={() => navigate("/itens-do-checklist")} aria-label="Ir para Cadastrar Itens">

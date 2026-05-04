@@ -11,6 +11,7 @@ import ModalCadastroMecanico from "../../components/ModalCadastroDeMecanico/Moda
 import ModalEditarMecanico from "../../components/ModalEditarMecanico/ModalEditarMecanico";
 import { useAuth } from "../../contexts/AuthContext";
 import { aplicarMascaraTelefone } from "../../utils/maskUtils";
+import { buildApiUrl } from "../../config/api";
 
 
 
@@ -33,7 +34,7 @@ export default function CadastroMecanico() {
 
     const bucarMecanicos = async () => {
         try {
-            const url = new URL("http://localhost:8080/mecanicos");
+            const url = new URL(buildApiUrl("/mecanicos"));
             if (filtro.toLowerCase() !== "todos") {
                 url.searchParams.append('situacao', filtro.toUpperCase());
             }

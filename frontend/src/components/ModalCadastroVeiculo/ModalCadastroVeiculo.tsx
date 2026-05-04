@@ -5,6 +5,7 @@ import Button from "../Button/Button";
 import { useAuth } from "../../contexts/AuthContext";
 import { tVeiculoCadastro } from "../../types/Veiculo";
 import { showErrorToast, showSuccessToast } from "../../utils/toast";
+import { buildApiUrl } from "../../config/api";
 
 
 interface CadastroDeVeiculoProps {
@@ -90,7 +91,7 @@ export default function ModalCadastroVeiculo({ isOpen, onClose, onSucess, id }: 
   
     try {
       
-      const response = await fetch(`http://localhost:8080/clientes/${id}/veiculos`, {
+      const response = await fetch(buildApiUrl(`/clientes/${id}/veiculos`), {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,
