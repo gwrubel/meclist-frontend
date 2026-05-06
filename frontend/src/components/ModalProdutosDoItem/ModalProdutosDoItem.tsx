@@ -110,9 +110,8 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                 <table>
                     <thead>
                         <tr>
-                            
                             <th>Nome do Produto</th>
-                            <th>Ações</th>
+                            <th className="coluna-acoes">Ações</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -132,7 +131,7 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                                     <td className="acoes-coluna">
                                       <div className="acoes">
                                         <button
-                                            id="editar"
+                                            className="btn-editar-produto"
                                             aria-label={`Editar produto ${produto.nomeProduto}`}
                                             title={`Editar produto`}
                                             onClick={() => {
@@ -145,7 +144,7 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                                         </button>
 
                                         <button
-                                            id={produto.situacao === "ATIVO" ? "desativar-produto" : "ativar-produto"}
+                                            className="btn-toggle-produto"
                                             aria-label={
                                                 produto.situacao === "ATIVO"
                                                     ? `Desativar produto ${produto.nomeProduto}`
@@ -158,7 +157,7 @@ export default function ModalProdutosDoItem({ item, isOpen, onClose }: ModalProd
                                             }
                                             onClick={() => handleToggleSituacaoProduto(produto)}
                                         >
-                                            {produto.situacao === "ATIVO" ? <EyeOff /> : <Eye />}
+                                            {produto.situacao === "ATIVO" ? <EyeOff /> : <Eye className="icon-ativar-produto" />}
                                         </button>
                                       </div>
                                     </td>

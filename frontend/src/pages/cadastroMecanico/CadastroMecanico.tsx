@@ -79,18 +79,28 @@ export default function CadastroMecanico() {
 
     return (
         <div className="cadastro-mecanico-container">
-            <h1>Cadastro de Mecânicos</h1>
-            <section className="cadastro-mecanico-header">
-                <div>
-                    <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+            <section className="cadastro-mecanico-header-card">
+                <div className="cadastro-mecanico-title">
+                    <span className="dashboard-page__eyebrow">Gerenciar mecânicos</span>
+                    <h1>Cadastro de Mecânicos</h1>
                 </div>
-                <div className="cadastro-mecanico-buscar">
-                    <Button text="Cadastrar mecânico" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalCadastroOpen(true)} />
-                  
-                       <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
 
-                  
-                </div>
+                <section className="cadastro-mecanico-header">
+                    <div className="cadastro-mecanico-filter">
+                        <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                    </div>
+                    <div className="cadastro-mecanico-buscar">
+                        <Button text="Cadastrar mecânico" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalCadastroOpen(true)} />
+                        <input
+                            type="text"
+                            placeholder="Buscar por nome"
+                            value={buscarTexto}
+                            onChange={(e) => setBuscarTexto(e.target.value)}
+                            className="search-input cadastro-mecanico-search"
+                        />
+                    </div>
+                </section>
+
             </section>
 
             <div className="mecanico-table">

@@ -1,135 +1,209 @@
 .cadastro-cliente-container {
-    padding-top: 100px;
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    padding: 2rem;
 }
 
-.cadastro-cliente-container h1 {
-    margin-bottom: 40px;
+.dashboard-page__eyebrow {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
+.cadastro-cliente-header-card {
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(166, 166, 166, 0.2);
+    border-radius: 20px;
+    padding: 1.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.cadastro-cliente-title h1 {
+    margin-top: 0.35rem;
+    margin-bottom: 0;
+    color: var(--second-text-color);
+}
 
 .cadastro-cliente-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
-    gap: 2rem;
-    padding: 0 1rem;
-    position: relative;
-    z-index: 2;
+    gap: 1rem;
 }
 
-.cadastro-cliente-header > div:first-child {
-    min-width: 200px;
-    width: 250px;
+.cadastro-cliente-filter {
+    min-width: 13rem;
+    max-width: 16rem;
+    width: 100%;
 }
 
 .cadastro-cliente-buscar {
     display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 10px;
-    flex: 1;
+    align-items: center;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    width: 100%;
 }
 
-
-
-
-
-
-
-.loading {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
+.cadastro-cliente-search {
+    width: min(100%, 24rem);
 }
 
 .cliente-table {
-    margin-top: 20px;
-    text-align: center;
-    overflow: visible; /* evita recorte do dropdown nativo */
+    background: rgba(255, 255, 255, 0.96);
+    border: 1px solid rgba(166, 166, 166, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
     position: relative;
-    z-index: 1;
+}
+
+.cliente-table::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 0.35rem;
+    background: linear-gradient(90deg, var(--primary-color), #f18a23);
 }
 
 .cliente-table table {
     width: 100%;
-    border-collapse: collapse;
-    /* Modificado de 'collapse' para 'separate' */
+    border-collapse: separate;
     border-spacing: 0;
-    /* Opcional: pode remover o espaço entre as células */
-
 }
-
 
 .cliente-table th,
 .cliente-table td {
-    padding: 10px;
-    border: 2px solid var(--third-color);
+    padding: 0.95rem 0.85rem;
+    border: 0;
+    border-bottom: 1px solid rgba(166, 166, 166, 0.2);
+    text-align: left;
 }
 
 .cliente-table th {
-    background-color: var(--secondary-color);
-    /* Cor de fundo dos cabeçalhos */
-    font-weight: 800;
-}
-
-.cliente-table tr:nth-child(even) {
-    background-color: #EAEAEA;
-    /* Alterna a cor de fundo das linhas pares */
+    font-size: 0.73rem;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--secondary-color);
+    font-weight: 700;
+    padding-top: 1.15rem;
 }
 
 .cliente-table tr:hover {
-    background-color: #d0cece;
-    /* Cor de fundo ao passar o mouse */
-    transition: all 0.3s ease;
+    background-color: rgba(216, 107, 6, 0.04);
+    transition: background-color 0.2s ease;
+}
+
+.cliente-table td:first-child a {
+    color: var(--primary-color);
+    font-weight: 700;
 }
 
 .td-veiculo-content {
     display: flex;
     align-items: center;
-    justify-content: space-around;
+    justify-content: space-between;
+    gap: 0.5rem;
 }
 
 .add-veiculo {
-    display: flex;
+    display: inline-flex;
     align-items: center;
     justify-content: center;
-    border: none;
-    background: none;
+    border: 1px solid rgba(166, 166, 166, 0.35);
+    border-radius: 999px;
+    background: #fff;
     cursor: pointer;
-    padding: 0.5rem;
-    color: var(--text-color);
-    
-    height: 30px;
-    transition: color ease 0.3s;
+    padding: 0.35rem 0.55rem;
+    color: var(--secondary-color);
+    transition: color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
 }
 
 .add-veiculo:hover {
     color: var(--primary-color);
+    border-color: rgba(216, 107, 6, 0.5);
+    transform: translateY(-1px);
 }
 
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 15rem;
+}
 
+@media (max-width: 1080px) {
+    .cadastro-cliente-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
 
+    .cadastro-cliente-filter {
+        max-width: 100%;
+    }
 
-
-@media (width <=1280px) {
-
-    .mecanico-table th,
-    .mecanico-table td {
-        font-size: 14px;
-        padding: 8px;
+    .cadastro-cliente-buscar {
+        justify-content: flex-start;
+        flex-wrap: wrap;
     }
 }
 
-/* Mobile cards para tabela de clientes */
 @media (max-width: 800px) {
-    .cliente-table table { display: block; }
-    .cliente-table thead { display: none; }
-    .cliente-table tbody { display: grid; gap: 12px; }
-    .cliente-table tr { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; padding: 12px; border: 2px solid var(--third-color); border-radius: 8px; background: #fff; }
-    .cliente-table td { border: 0; padding: 2px 0; text-align: left; }
-    .cliente-table td::before { font-weight: 700; margin-right: 6px; color: var(--second-text-color); }
+    .cadastro-cliente-container {
+        padding: 1rem;
+    }
+
+    .cadastro-cliente-buscar button,
+    .cadastro-cliente-search {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    .cliente-table table {
+        display: block;
+    }
+
+    .cliente-table thead {
+        display: none;
+    }
+
+    .cliente-table tbody {
+        display: grid;
+        gap: 0.85rem;
+        padding: 0.25rem;
+    }
+
+    .cliente-table tr {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+        padding: 0.85rem;
+        border: 1px solid rgba(166, 166, 166, 0.3);
+        border-radius: 12px;
+        background: #fff;
+    }
+
+    .cliente-table td {
+        border: 0;
+        padding: 0.1rem 0;
+        text-align: left;
+        font-size: 0.9rem;
+    }
+
+    .cliente-table td::before {
+        font-weight: 700;
+        margin-right: 0.35rem;
+        color: var(--second-text-color);
+    }
+
     .cliente-table td:nth-child(1)::before { content: "Nome: "; }
     .cliente-table td:nth-child(2)::before { content: "Veículos: "; }
     .cliente-table td:nth-child(3)::before { content: "CPF: "; }

@@ -1,41 +1,101 @@
 .produtos-table {
-  margin-top: 20px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.table-header {
+  display: flex;
+  justify-content: flex-end;
 }
 
 .produtos-table table {
   width: 100%;
-  border-collapse: collapse;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: rgba(255, 255, 255, 0.96);
+  border: 1px solid rgba(166, 166, 166, 0.2);
+  border-radius: 14px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  overflow: hidden;
 }
 
 .produtos-table th,
 .produtos-table td {
-  padding: 10px;
-  border: 2px solid var(--third-color);
+  padding: 0.9rem 0.85rem;
+  border: 0;
+  border-bottom: 1px solid rgba(166, 166, 166, 0.2);
+  text-align: left;
 }
 
 .produtos-table th {
-  background-color: var(--secondary-color);
+  font-size: 0.73rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--secondary-color);
+  font-weight: 700;
+  padding-top: 1.05rem;
+}
+
+.produtos-table .coluna-acoes,
+.produtos-table .acoes-coluna {
+  text-align: center;
+  width: 150px;
+}
+
+.produtos-table tbody tr:hover {
+  background-color: rgba(216, 107, 6, 0.04);
+  transition: background-color 0.2s ease;
+}
+
+.produtos-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.acoes {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+}
+
+.acoes button {
+  margin: 0;
+  padding: 4px 6px;
+  border-radius: 5px;
+  cursor: pointer;
   font-weight: var(--fw-bold);
-}
-
-.produtos-table tr:nth-child(even) {
-  background-color: #eaeaea;
-}
-
-.produtos-table tr:hover {
-  background-color: #d0cece;
   transition: all 0.3s ease;
+  background-color: transparent;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
 }
-#desativar-produto, #ativar-produto {
-  background: none;
+
+.acoes button:first-child::after {
+  content: "";
+  position: absolute;
+  right: -9px;
+  height: 100%;
+  width: 2px;
+  background-color: var(--third-color);
+  cursor: default;
+}
+
+.btn-editar-produto,
+.btn-toggle-produto {
   border: none;
 }
-#desativar-produto :hover{
-  color: red;
-  opacity: 0.7;
-  transition: all 0.3s ease;
+
+.btn-editar-produto:hover {
+  color: var(--primary-color);
 }
+
+.btn-toggle-produto:hover {
+  color: red;
+}
+
 .produto-inativo td {
   color: #777;
 }
@@ -44,29 +104,72 @@
   color: #777;
 }
 
-.produto-inativo #ativar-produto {
+.produto-inativo .icon-ativar-produto {
   color: black;
   opacity: 1;
   transition: all 0.3s ease;
 }
 
-.produto-inativo #ativar-produto:hover {
+.produto-inativo .icon-ativar-produto:hover {
   color: #008000;
 }
 
-.table-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 10px;
-}
-
 @media (max-width: 800px) {
-  .produtos-table table {
-    font-size: 12px;
+  .table-header button {
+    width: 100%;
   }
 
-  .produtos-table th,
+  .produtos-table table {
+    display: block;
+    border: 0;
+    box-shadow: none;
+    background: transparent;
+  }
+
+  .produtos-table thead {
+    display: none;
+  }
+
+  .produtos-table tbody {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  .produtos-table tr {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.45rem;
+    border: 1px solid rgba(166, 166, 166, 0.3);
+    border-radius: 12px;
+    background: #fff;
+    padding: 0.75rem;
+  }
+
   .produtos-table td {
-    padding: 6px;
+    border: 0;
+    padding: 0.05rem 0;
+    font-size: 0.9rem;
+  }
+
+  .produtos-table td::before {
+    font-weight: 700;
+    margin-right: 0.35rem;
+    color: var(--second-text-color);
+  }
+
+  .produtos-table td:nth-child(1)::before { content: "Produto: "; }
+  .produtos-table td:nth-child(2)::before { content: "Ações: "; }
+
+  .produtos-table .acoes-coluna {
+    text-align: left;
+    width: auto;
+  }
+
+  .acoes {
+    justify-content: flex-start;
+  }
+
+  .produtos-table td[colspan] {
+    padding: 0.65rem 0;
   }
 }

@@ -55,25 +55,27 @@ export default function DadosCliente() {
     if (loading) return <Loading />;
 
     return (
-
-        <div >
-            <header className="header-cliente">
+        <div className="dados-cliente-page">
+            <header className="header-cliente-card">
                 <Link to="/cadastro-cliente" aria-label="Voltar para a lista de clientes" className="voltar">
-                    <ArrowLeft size={32} color="var(--text-color)" />
+                    <ArrowLeft size={26} color="var(--second-text-color)" />
                 </Link>
-                <h2>{cliente?.nome}</h2>
+                <div className="header-cliente-titulos">
+                    <span className="dashboard-page__eyebrow">Dados do cliente</span>
+                    <h2>{cliente?.nome}</h2>
+                </div>
             </header>
 
             <div className="container-cliente-dados">
-                <nav className="cliente-nav">
+                <nav className="cliente-tabs" aria-label="Seções do cadastro de cliente">
                     <button
-                        className={abaAtiva === "Dados Do Cliente" ? "ativo" : ""}
+                        className={`cliente-tab ${abaAtiva === "Dados Do Cliente" ? "ativo" : ""}`}
                         onClick={() => setAbaAtiva("Dados Do Cliente")}
                     >
                         Dados do Cliente
                     </button>
                     <button
-                        className={abaAtiva === "Veículos" ? "ativo" : ""}
+                        className={`cliente-tab ${abaAtiva === "Veículos" ? "ativo" : ""}`}
                         onClick={() => setAbaAtiva("Veículos")}
                     >
                         Veículos
@@ -83,8 +85,8 @@ export default function DadosCliente() {
 
                 <section className="cliente-conteudo">
                     {abaAtiva === "Dados Do Cliente" ? (
-                        <div className="dados-cliente">
-                            <header>
+                        <div className="dados-cliente-card">
+                            <header className="dados-cliente-card__header">
                                 <h3>Dados do Cliente</h3>
                             </header>
                             <div className="dados-container">
@@ -118,52 +120,57 @@ export default function DadosCliente() {
                         </div>
 
                     ) : (
-                        <div className="veiculos-cliente">
-                            <h3>Veículos</h3>
-                            <div className="veiculos-header">
-                                <div>
-                                <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                        <div className="veiculos-cliente-card">
+                            <div className="veiculos-card-header">
+                                <h3>Veículos</h3>
+                                <div className="veiculos-header">
+                                    <div>
+                                        <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                                    </div>
+                                    <Button text="Adicionar Veículo" icon={<Plus size={16} />} iconPosition="right" onClick={() => setModalOpen(true)} secondary type="button" />
                                 </div>
-                                <Button text="Adicionar Veículo" icon={<Plus size={16} />} iconPosition="right" onClick={() => setModalOpen(true)} secondary type="button" />
                             </div>
+
                             {cliente?.veiculos && cliente.veiculos.length > 0 ? (
-                                <table className="cliente-table">
-                                    <thead>
-                                        <tr>
-                                            <th>ID</th>
-                                            <th>Placa</th>
-                                            <th>Modelo</th>
-                                            <th>Marca</th>
-                                            <th>Cor</th>
-                                            <th>Ano</th>
-                                            <th>Quilometragem</th>
-                                            <th>Editar</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        {cliente.veiculos.map((veiculo) => (
-                                            <tr key={veiculo.id}>
-                                                <td>{veiculo.id}</td>
-                                                <td>{veiculo.placa}</td>
-                                                <td>{veiculo.modelo}</td>
-                                                <td>{veiculo.marca}</td>
-                                                <td>{veiculo.cor}</td>
-                                                <td>{veiculo.ano}</td>
-                                                <td>{veiculo.quilometragem}</td>
-                                                <td className="coluna-edit">
-                                                    <button onClick={() => {
-                                                        setVeiculoSelecionado(veiculo);
-                                                        setModalEditarVeiculoOpen(true);
-                                                    }} aria-label={`Editar veículo ${veiculo.placa}`}>
-                                                        <Pencil className="edit" />
-                                                    </button>
-                                                </td>
+                                <div className="veiculos-table-wrapper">
+                                    <table className="cliente-table">
+                                        <thead>
+                                            <tr>
+                                                <th>ID</th>
+                                                <th>Placa</th>
+                                                <th>Modelo</th>
+                                                <th>Marca</th>
+                                                <th>Cor</th>
+                                                <th>Ano</th>
+                                                <th>Quilometragem</th>
+                                                <th>Editar</th>
                                             </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
+                                        </thead>
+                                        <tbody>
+                                            {cliente.veiculos.map((veiculo) => (
+                                                <tr key={veiculo.id}>
+                                                    <td>{veiculo.id}</td>
+                                                    <td>{veiculo.placa}</td>
+                                                    <td>{veiculo.modelo}</td>
+                                                    <td>{veiculo.marca}</td>
+                                                    <td>{veiculo.cor}</td>
+                                                    <td>{veiculo.ano}</td>
+                                                    <td>{veiculo.quilometragem}</td>
+                                                    <td className="coluna-edit">
+                                                        <button onClick={() => {
+                                                            setVeiculoSelecionado(veiculo);
+                                                            setModalEditarVeiculoOpen(true);
+                                                        }} aria-label={`Editar veículo ${veiculo.placa}`}>
+                                                            <Pencil className="edit" />
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
                             ) : (
-                                <p>Não há veículos cadastrados.</p>
+                                <p className="veiculos-empty">Não há veículos cadastrados.</p>
                             )}
                         </div>
                     )}

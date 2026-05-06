@@ -74,17 +74,27 @@ export default function CadastroCliente() {
     });
     return (
         <div className="cadastro-cliente-container">
-            <h1>Cadastro de Clientes</h1>
-            <section className="cadastro-cliente-header">
-                <div>
-                    <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+            <section className="cadastro-cliente-header-card">
+                <div className="cadastro-cliente-title">
+                    <span className="dashboard-page__eyebrow">Gerenciar clientes</span>
+                    <h1>Cadastro de Clientes</h1>
                 </div>
-                <div className="cadastro-cliente-buscar">
-                    <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
-                    
-                        <input type="text" placeholder="Buscar por nome" value={buscarTexto} onChange={(e) => setBuscarTexto(e.target.value)} className="search-input" />
 
-                </div>
+                <section className="cadastro-cliente-header">
+                    <div className="cadastro-cliente-filter">
+                        <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                    </div>
+                    <div className="cadastro-cliente-buscar">
+                        <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
+                        <input
+                            type="text"
+                            placeholder="Buscar por nome"
+                            value={buscarTexto}
+                            onChange={(e) => setBuscarTexto(e.target.value)}
+                            className="search-input cadastro-cliente-search"
+                        />
+                    </div>
+                </section>
             </section>
 
             <div className="cliente-table">

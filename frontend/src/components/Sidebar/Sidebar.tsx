@@ -93,10 +93,10 @@ export function Sidebar() {
           {cadastroOpen && open && (
             <div className="sidebar-submenu">
               <button onClick={() => navigate("/cadastro-cliente")} aria-label="Ir para Cadastro de Clientes">
-                Cadastro de Clientes
+                Gerenciar Clientes
               </button>
               <button onClick={() => navigate("/cadastro-mecanico")} aria-label="Ir para Cadastro de Mecânicos">
-                Cadastro de Mecânicos
+                Gerenciar Mecânicos
               </button>
             </div>
           )}
@@ -117,7 +117,7 @@ export function Sidebar() {
           {checklistOpen && open && (
             <div className="sidebar-submenu">
               <button onClick={() => navigate("/gerenciar-checklist")} aria-label="Ir para Gerenciar Checklist">
-                Gerenciar Checklist
+                Painel de Serviços
               </button>
               <button onClick={() => navigate("/itens-do-checklist")} aria-label="Ir para Cadastrar Itens">
                 Itens do Checklist

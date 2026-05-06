@@ -77,7 +77,7 @@ export default function ItensDoChecklist() {
 
   useEffect(() => {
     buscarItens();
-  }, [filtroCategoria, filtroSituacao, buscarItens]);
+  }, [buscarItens]);
 
 
   const handleToggleSituacao = async (selectedItem: tItem) => {
@@ -116,54 +116,58 @@ export default function ItensDoChecklist() {
 
   return (
     <div className="itens-checklist-container">
-      <h1>Itens do Checklist</h1>
-
-      <section className="itens-checklist-header">
-        <div>
-          <SelectCustom
-            options={categorias}
-            value={filtroCategoria}
-            onChange={setFiltroCategoria}
-          />
+      <section className="itens-checklist-header-card">
+        <div className="itens-checklist-title">
+          <span className="dashboard-page__eyebrow">Gerenciar itens</span>
+          <h1>Itens do Checklist</h1>
         </div>
 
-        
-        <div>
-          <SelectCustom
-            options={situacoes}
-            value={filtroSituacao}
-            onChange={setFiltroSituacao}
-          />
-        </div>
+        <section className="itens-checklist-header">
+          <div className="itens-checklist-filter">
+            <SelectCustom
+              options={categorias}
+              value={filtroCategoria}
+              onChange={setFiltroCategoria}
+            />
+          </div>
 
-        <div className="itens-checklist-actions">
-          <Button
-            text="Cadastrar Item"
-            icon={<PlusCircle />}
-            iconPosition="left"
-            secondary
-            onClick={() => setModalOpen(true)}
-          />
-          <input
-            type="text"
-            placeholder="Buscar por nome"
-            value={buscarTexto}
-            onChange={(e) => setBuscarTexto(e.target.value)}
-            className="search-input"
-          />
-        </div>
+          <div className="itens-checklist-filter">
+            <SelectCustom
+              options={situacoes}
+              value={filtroSituacao}
+              onChange={setFiltroSituacao}
+            />
+          </div>
+
+          <div className="itens-checklist-buscar">
+            <Button
+              text="Cadastrar Item"
+              icon={<PlusCircle />}
+              iconPosition="left"
+              secondary
+              onClick={() => setModalOpen(true)}
+            />
+            <input
+              type="text"
+              placeholder="Buscar por nome"
+              value={buscarTexto}
+              onChange={(e) => setBuscarTexto(e.target.value)}
+              className="search-input itens-checklist-search"
+            />
+          </div>
+        </section>
       </section>
 
-      <div className="parte-table">
+      <div className="itens-checklist-table">
         <table>
           <thead>
             <tr>
               <th>ID</th>
               <th>Nome do Item</th>
-              <th>Imagem ilustrativa</th>
+              <th className="coluna-imagem">Imagem ilustrativa</th>
               <th>Parte do Veículo</th>
-              <th>Ações</th>
-              <th>Gerenciar produtos</th>
+              <th className="coluna-acoes">Ações</th>
+              <th className="coluna-produtos">Gerenciar produtos</th>
             </tr>
           </thead>
           <tbody>
@@ -181,7 +185,7 @@ export default function ItensDoChecklist() {
                 >
                   <td>N°{String(item.id).padStart(3, "0")}</td>
                   <td>{item.nome}</td>
-                  <td>
+                  <td className="coluna-imagem">
                     <img
                       className="item-imagem"
                       src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`}
@@ -197,7 +201,7 @@ export default function ItensDoChecklist() {
                   <td className="acoes-coluna">
                     <div className="acoes">
                     <button
-                      id="editar"
+                      className="btn-editar-item"
                       aria-label={`Editar item`}
                       title={`Editar item`}
                       onClick={() => {
@@ -210,7 +214,7 @@ export default function ItensDoChecklist() {
                     </button>
 
                     <button
-                      id="desativar"
+                      className="btn-toggle-situacao"
                       onClick={() => handleToggleSituacao(item)}
                       aria-label={
                         item.situacao === "ATIVO"
@@ -223,7 +227,7 @@ export default function ItensDoChecklist() {
                           : `Ativar item`
                       }
                     >
-                      {item.situacao === "ATIVO" ? <EyeOff /> : <Eye id="ativar" />}
+                      {item.situacao === "ATIVO" ? <EyeOff /> : <Eye className="icon-ativar" />}
                     </button>
                     </div>
                   </td>
@@ -295,9 +299,10 @@ export default function ItensDoChecklist() {
         <ModalProdutosDoItem
           isOpen={modalProdutosDoItem}
           item={itemSelecionado}
-          onClose={() => { { setModalProdutosDoItem(false); buscarItens(); }
-        }
-      }
+          onClose={() => {
+            setModalProdutosDoItem(false);
+            buscarItens();
+          }}
         />)}
 
 

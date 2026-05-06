@@ -1,109 +1,191 @@
+/* ──────────────────────────────────────────────────────────────
+   Página — padrão visual idêntico ao Dashboard
+────────────────────────────────────────────────────────────── */
 .gerenciar-checklist-container {
-  padding-top: 100px;
-  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 100%;
+  padding: 2rem;
 }
 
+/* Cabeçalho —————————————————————————————————————————————————— */
 .gerenciar-checklist-container h1 {
-  margin-bottom: 32px;
+  font-size: var(--fs-2xl);
 }
 
+.checklist-header-card {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(166, 166, 166, 0.35);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.06);
+}
+
+/* Abas — estilo pill idêntico ao toggle da dashboard ————————— */
 .checklist-tabs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  margin-bottom: 32px;
-  border: 1px solid var(--primary-color);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.4rem;
+  border: 1px solid rgba(166, 166, 166, 0.4);
+  border-radius: 999px;
+  background: #f3f4f6;
+  flex-shrink: 0;
 }
-
 
 .checklist-tab {
-  height: 48px;
-  border: none;
-  border-right: 1px solid var(--primary-color);
-  background-color: white;
-  color: var(--primary-color);
-  font-size: 1rem;
-  font-weight: var(--fw-bold);
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--second-text-color);
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding: 0.6rem 1.1rem;
+  transition: background-color 0.2s ease, color 0.2s ease, box-shadow 0.2s ease;
+  white-space: nowrap;
 }
 
-.checklist-tab:last-child {
-  border-right: none;
+.checklist-tab:hover {
+  color: var(--primary-color);
 }
-
-
 
 .checklist-tab.active {
-  background-color: var(--primary-color);
-  color: white;
+  background: linear-gradient(135deg, var(--primary-color), #f18a23);
+  color: var(--light-text-color);
+  box-shadow: 0 8px 18px rgba(216, 107, 6, 0.25);
+    transform: translateY(-2px);
+    transition: ease-in-out 0.5s;
 }
 
+/* Toolbar ———————————————————————————————————————————————————— */
 .checklist-toolbar {
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 20px;
 }
 
 .checklist-search-input {
-  width: 400px;
-  height: 40px;
-  padding: 0 12px;
-  border: 1px solid #cfcfcf;
-  border-radius: 6px;
+  width: 380px;
+  height: 42px;
+  padding: 0 14px;
+  border: 1.5px solid var(--third-color);
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.9);
+  color: var(--text-color);
+  font-size: 0.95rem;
   outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.checklist-search-input::placeholder {
+  color: var(--third-color);
+}
+
+.checklist-search-input:focus {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(216, 107, 6, 0.12);
+  
+}
+
+/* Card de tabela ————————————————————————————————————————————— */
+.checklist-table-wrapper {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(166, 166, 166, 0.35);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.92);
+  box-shadow: 0 18px 40px rgba(17, 24, 39, 0.06);
+}
+
+.checklist-table-wrapper::before {
+  content: "";
+  position: absolute;
+  inset: 0 auto auto 0;
+  width: 100%;
+  height: 0.35rem;
+  background: linear-gradient(90deg, var(--primary-color), rgba(216, 107, 6, 0.15));
 }
 
 .checklist-table-wrapper table {
   width: 100%;
   border-collapse: collapse;
+  margin-top: 0.35rem;
 }
 
 .checklist-table-wrapper th,
 .checklist-table-wrapper td {
-  padding: 10px;
-  border: 2px solid var(--third-color);
+  padding: 14px 16px;
+  text-align: left;
+  font-size: 0.95rem;
+}
+
+.checklist-table-wrapper thead tr {
+  border-bottom: 1.5px solid rgba(166, 166, 166, 0.3);
 }
 
 .checklist-table-wrapper th {
-  background-color: var(--secondary-color);
-  font-weight: var(--fw-bold);
+  color: var(--secondary-color);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  background: transparent;
 }
 
 .checklist-table-wrapper td {
-  font-weight: var(--fw-base);
+  color: var(--second-text-color);
+  font-weight: 500;
+  border-bottom: 1px solid rgba(166, 166, 166, 0.18);
 }
 
-.checklist-table-wrapper tr:nth-child(even) {
-  background-color: #EAEAEA;
+.checklist-table-wrapper tbody tr:last-child td {
+  border-bottom: none;
 }
 
-.checklist-table-wrapper tr:hover {
-  background-color: #d0cece;
-  transition: all 0.3s ease;
+.checklist-table-wrapper tbody tr {
+  transition: background-color 0.18s ease;
 }
 
+.checklist-table-wrapper tbody tr:hover {
+  background-color: rgba(216, 107, 6, 0.04);
+}
+
+.checklist-table-wrapper tbody tr td:first-child {
+  color: var(--primary-color);
+  font-weight: 700;
+}
+
+/* Botão de ação ————————————————————————————————————————————— */
 .checklist-action-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  padding: 6px 10px;
-  border-radius: 6px;
-  border: solid var(--text-color) 0.15rem;
+  padding: 0.45rem 1rem;
+  border-radius: 999px;
+  border: 1.5px solid rgba(166, 166, 166, 0.45);
   background-color: transparent;
-  color: var(--text-color);
-  font-weight: var(--fw-bold);
+  color: var(--second-text-color);
+  font-weight: 700;
   font-size: 0.85rem;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: border-color 0.2s ease, color 0.2s ease, background-color 0.2s ease, box-shadow 0.2s ease;
   white-space: nowrap;
 }
 
 .checklist-action-button:hover {
-  border: solid var(--primary-color) 0.15rem;
+  border-color: var(--primary-color);
   color: var(--primary-color);
+  background-color: rgba(216, 107, 6, 0.06);
+  box-shadow: 0 4px 12px rgba(216, 107, 6, 0.12);
 }
 
+/* Badges e status ——————————————————————————————————————————— */
 .checklist-status-cell {
   display: inline-flex;
   align-items: center;
@@ -112,29 +194,38 @@
 
 .checklist-badge-manual {
   display: inline-block;
-  padding: 2px 8px;
-  border-radius: 10px;
+  padding: 2px 10px;
+  border-radius: 999px;
   background-color: #e3f2fd;
   color: #1565c0;
   font-size: 0.74rem;
-  font-weight: var(--fw-bold);
+  font-weight: 700;
   border: 1px solid #90caf9;
   white-space: nowrap;
 }
 
-@media (max-width: 900px) {
+/* Responsivo ————————————————————————————————————————————————— */
+@media (max-width: 1080px) {
+  .checklist-header-card {
+    flex-direction: column;
+  }
+
   .checklist-tabs {
-    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    flex-wrap: wrap;
+    border-radius: 14px;
+  }
+
+  .checklist-tab {
+    flex: 1;
+    text-align: center;
   }
 }
 
 @media (max-width: 640px) {
   .gerenciar-checklist-container {
-    padding-top: 40px;
-  }
-
-  .checklist-tabs {
-    grid-template-columns: 1fr;
+    padding: 1.25rem;
+    gap: 1rem;
   }
 
   .checklist-toolbar {
@@ -147,5 +238,10 @@
 
   .checklist-table-wrapper {
     overflow-x: auto;
+  }
+
+  .checklist-table-wrapper th,
+  .checklist-table-wrapper td {
+    padding: 10px 12px;
   }
 }
