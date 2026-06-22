@@ -5,6 +5,8 @@ import { useAuth } from "../../contexts/AuthContext";
 import Loading from "../../components/Loading/Loading";
 import { API_BASE_URL } from "../../config/api";
 import ModalEncaminharMecanico from "../../components/ModalEncaminharMecanico/ModalEncaminharMecanico";
+import { ListFilter, Search, X } from "lucide-react";
+import { formatarPlaca, normalizarPlaca } from "../../utils/maskUtils";
 import "./GerenciarChecklist.css";
 
 type TabKey =
@@ -76,7 +78,6 @@ export default function GerenciarChecklist() {
       });
       
       const json = await response.json();
-      console.log("Resposta da API:", json);
       setChecklists(json.data ?? []);
     } finally {
       setLoading(false);
@@ -90,9 +91,10 @@ export default function GerenciarChecklist() {
   const dadosFiltrados = useMemo(() => {
     if (!filtroTexto.trim()) return checklists;
     const termo = filtroTexto.toLowerCase();
+    const termoPlaca = normalizarPlaca(filtroTexto);
     return checklists.filter(
       (item) =>
-        item.placa.toLowerCase().includes(termo) ||
+        (termoPlaca.length > 0 && normalizarPlaca(item.placa).includes(termoPlaca)) ||
         item.nomeCliente.toLowerCase().includes(termo)
     );
   }, [checklists, filtroTexto]);
@@ -126,35 +128,70 @@ export default function GerenciarChecklist() {
   return (
     <>
       <div className="gerenciar-checklist-container">
-        <div className="checklist-header-card">
-          <div>
+        <section className="checklist-header-card">
+          <div className="checklist-header-copy">
             <span className="dashboard-page__eyebrow">Painel de serviços</span>
             <h1>Área do checklist</h1>
+            <p>Acompanhe os serviços e avance cada checklist pela etapa correta.</p>
           </div>
 
-          <div className="checklist-tabs" aria-label="Filtrar por status">
-            {TABS.map((tab) => (
-              <button
-                key={tab.key}
-                type="button"
-                className={`checklist-tab ${activeTab === tab.key ? "active" : ""}`}
-                onClick={() => setActiveTab(tab.key)}
-              >
-                {tab.label}
-              </button>
-            ))}
-          </div>
-        </div>
+          <div className="checklist-header-controls">
+            <div className="checklist-control-group checklist-status-filter">
+              <span className="checklist-control-label">
+                <ListFilter size={15} aria-hidden="true" />
+                Etapa do serviço
+              </span>
 
-        <div className="checklist-toolbar">
-          <input
-            type="text"
-            placeholder="Filtrar por placa ou cliente"
-            value={filtroTexto}
-            onChange={(e) => setFiltroTexto(e.target.value)}
-            className="checklist-search-input"
-          />
-        </div>
+              <div className="checklist-tabs" aria-label="Filtrar por status">
+                {TABS.map((tab) => (
+                  <button
+                    key={tab.key}
+                    type="button"
+                    className={`checklist-tab ${activeTab === tab.key ? "active" : ""}`}
+                    onClick={() => setActiveTab(tab.key)}
+                    aria-pressed={activeTab === tab.key}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="checklist-control-group checklist-search-group">
+              <label className="checklist-control-label" htmlFor="checklist-search">
+                <Search size={15} aria-hidden="true" />
+                Pesquisar
+              </label>
+
+              <div className="checklist-search-control">
+                <Search
+                  size={18}
+                  className="checklist-search-icon"
+                  aria-hidden="true"
+                />
+                <input
+                  id="checklist-search"
+                  type="text"
+                  placeholder="Placa ou nome do cliente"
+                  value={filtroTexto}
+                  onChange={(e) => setFiltroTexto(e.target.value)}
+                  className="checklist-search-input"
+                />
+                {filtroTexto && (
+                  <button
+                    type="button"
+                    className="checklist-search-clear"
+                    onClick={() => setFiltroTexto("")}
+                    aria-label="Limpar pesquisa"
+                    title="Limpar pesquisa"
+                  >
+                    <X size={16} aria-hidden="true" />
+                  </button>
+                )}
+              </div>
+            </div>
+          </div>
+        </section>
 
         {loading ? (
           <Loading />
@@ -175,7 +212,7 @@ export default function GerenciarChecklist() {
                   dadosFiltrados.map((checklist) => (
                     <tr key={checklist.checklistId}>
                       <td>{checklist.checklistId}</td>
-                      <td>{checklist.placa}</td>
+                      <td><span className="vehicle-plate">{formatarPlaca(checklist.placa)}</span></td>
                       <td>{checklist.nomeCliente}</td>
                       <td>
                         {formatarDataHora(checklist.criadoEm).dataFormatada +

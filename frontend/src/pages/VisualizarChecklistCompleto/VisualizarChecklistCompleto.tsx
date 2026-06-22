@@ -1,50 +1,68 @@
 import { useCallback, useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import { ChecklistCompletoResponse, StatusProcesso, ItemVisualizacao } from "../../types/Checklist";
+import {
+  ChecklistCompletoResponse,
+  StatusProcesso,
+  ItemVisualizacao,
+  ItemCompletoBackend,
+} from "../../types/Checklist";
+import { CategoriaParteVeiculo } from "../../types/Item";
 import { useAuth } from "../../contexts/AuthContext";
 import Loading from "../../components/Loading/Loading";
 import ChecklistPageHeader from "../../components/ChecklistPageHeader/ChecklistPageHeader";
 import ItemVisualizacaoCard from "../../components/ItemVisualizacaoCard/ItemVisualizacaoCard";
-import { formatCurrency, CHECKLIST_STATUS_LABEL } from "../../utils/formatUtils";
+import {
+  formatCurrency,
+  formatarCategoria,
+  formatarDataHora,
+  CHECKLIST_STATUS_LABEL,
+} from "../../utils/formatUtils";
+import { formatarPlaca } from "../../utils/maskUtils";
 import { buildApiUrl } from "../../config/api";
 import { toast } from "react-toastify";
-import { AlertCircle } from "lucide-react";
+import {
+  AlertCircle,
+  ArrowRight,
+  CalendarClock,
+  CheckCircle2,
+  ClipboardCheck,
+  Layers3,
+} from "lucide-react";
 import "./VisualizarChecklistCompleto.css";
 
 const STATUS_LABEL = CHECKLIST_STATUS_LABEL as Record<StatusProcesso, string>;
 
-// Função para processar itens do backend e converter para formato do componente
-function processarItens(dados: ChecklistCompletoResponse): ItemVisualizacao[] {
-  const itensArray: ItemVisualizacao[] = [];
-  
-  // Verificar se itensPorCategoria existe
-  if (!dados.itensPorCategoria) {
-    return itensArray;
-  }
-  
-  // Iterar por todas as categorias e seus itens
-  Object.values(dados.itensPorCategoria).forEach((itensCategoria) => {
-    if (itensCategoria) {
-      itensCategoria.forEach((itemBackend) => {
-        itensArray.push({
-          id: itemBackend.itemChecklistId,
-          descricao: itemBackend.nomeDoItem,
-          statusItem: itemBackend.statusItem,
-          maoDeObraValor: itemBackend.maoDeObra,
-          produtos: itemBackend.produtos.map((p) => ({
-            descricao: p.nomeProduto,
-            quantidade: p.quantidade,
-            precoUnitario: p.preco,
-            marca: p.marca,
-            aprovadoCliente: p.aprovadoCliente,
-          })),
-          fotos: itemBackend.fotos.map((f) => f.url),
-        });
-      });
-    }
-  });
-  
-  return itensArray;
+const ORDEM_CATEGORIAS: CategoriaParteVeiculo[] = [
+  "DENTRO_DO_VEICULO",
+  "FORA_DO_VEICULO",
+  "VEICULO_NO_CHAO",
+  "VEICULO_NO_ELEVADOR",
+  "CAPO_LEVANTADO",
+];
+
+function processarItem(itemBackend: ItemCompletoBackend): ItemVisualizacao {
+  return {
+    id: itemBackend.itemChecklistId,
+    descricao: itemBackend.nomeDoItem,
+    statusItem: itemBackend.statusItem,
+    maoDeObraValor: itemBackend.maoDeObra,
+    produtos: itemBackend.produtos.map((produto) => ({
+      descricao: produto.nomeProduto,
+      quantidade: produto.quantidade,
+      precoUnitario: produto.preco,
+      marca: produto.marca,
+      aprovadoCliente: produto.aprovadoCliente,
+    })),
+    fotos: itemBackend.fotos.map((foto) => foto.url),
+  };
+}
+
+function processarGrupos(dados: ChecklistCompletoResponse) {
+  return ORDEM_CATEGORIAS.map((categoria) => ({
+    categoria,
+    label: formatarCategoria(categoria),
+    itens: (dados.itensPorCategoria?.[categoria] ?? []).map(processarItem),
+  })).filter((grupo) => grupo.itens.length > 0);
 }
 
 export default function VisualizarChecklistCompleto() {
@@ -121,36 +139,102 @@ export default function VisualizarChecklistCompleto() {
     );
   }
 
-  // Processar itens do backend
-  const itens = processarItens(dados);
+  const grupos = processarGrupos(dados);
+  const totalItens = grupos.reduce((total, grupo) => total + grupo.itens.length, 0);
+  const dataConclusao = dados.dataConclusao ?? dados.DataConclusao ?? dados.atualizadoEm;
+  const quilometragem = Number.isFinite(dados.quilometragem)
+    ? `${new Intl.NumberFormat("pt-BR").format(dados.quilometragem)} km`
+    : "--";
 
   return (
     <div className="visualizar-checklist-container">
-      <ChecklistPageHeader
-        title={`Checklist #${dados.checklistId}`}
-        metaItems={[
-          { label: "Placa", value: dados.placa },
-          { label: "Veículo", value: `${dados.marca} ${dados.modelo} (${dados.ano})` },
-          { label: "Cliente", value: dados.nomeCliente },
-          { label: "Valor Total", value: formatCurrency(dados.valorTotal) },
-          {
-            label: "Mecânico",
-            value: dados.nomeMecanico || "Não atribuído",
-          },
-        ]}
-        status={dados.status}
-        statusLabel={STATUS_LABEL[dados.status] ?? dados.status}
-        onVoltar={voltarParaLista}
-      />
+      <section className="visualizar-checklist-header-card">
+        <span className="dashboard-page__eyebrow">Consulta completa</span>
+        <ChecklistPageHeader
+          title={`Checklist #${dados.checklistId}`}
+          metaItems={[
+            { label: "Placa", value: <span className="vehicle-plate">{formatarPlaca(dados.placa)}</span> },
+            {
+              label: "Veículo",
+              value: (
+                <span className="visualizar-checklist-vehicle-summary">
+                  <span>{dados.marca} {dados.modelo}</span>
+                  <small>{dados.ano} • {dados.cor || "--"} • {quilometragem}</small>
+                </span>
+              ),
+            },
+            { label: "Cliente", value: dados.nomeCliente },
+            { label: "Mecânico", value: dados.nomeMecanico || "Não atribuído" },
+            {
+              label: "Período",
+              value: (
+                <span className="visualizar-checklist-period">
+                  <span className="visualizar-checklist-period-step">
+                    <CalendarClock size={16} aria-hidden="true" />
+                    <span>
+                      <small>Iniciado</small>
+                      <b>{formatarDataHora(dados.criadoEm)}</b>
+                    </span>
+                  </span>
+                  <ArrowRight size={15} aria-hidden="true" />
+                  <span className="visualizar-checklist-period-step visualizar-checklist-period-step--finished">
+                    <CheckCircle2 size={16} aria-hidden="true" />
+                    <span>
+                      <small>Finalizado</small>
+                      <b>{formatarDataHora(dataConclusao)}</b>
+                    </span>
+                  </span>
+                </span>
+              ),
+            },
+            { label: "Valor total", value: formatCurrency(dados.valorTotal) },
+          ]}
+          status={dados.status}
+          statusLabel={STATUS_LABEL[dados.status] ?? dados.status}
+          onVoltar={voltarParaLista}
+        />
+      </section>
 
       <div className="visualizar-checklist-conteudo">
-        {/* Itens do Serviço */}
         <div className="visualizar-checklist-itens">
-          <h2 className="visualizar-checklist-secao-titulo">Itens do Serviço</h2>
-          {itens.length === 0 ? (
+          <header className="visualizar-checklist-secao-header">
+            <span className="visualizar-checklist-secao-icon" aria-hidden="true">
+              <ClipboardCheck size={22} />
+            </span>
+            <div>
+              <span className="dashboard-page__eyebrow">Inspeção detalhada</span>
+              <h2>Itens do serviço</h2>
+              <p>{totalItens} {totalItens === 1 ? "item registrado" : "itens registrados"} em {grupos.length} {grupos.length === 1 ? "parte do veículo" : "partes do veículo"}.</p>
+            </div>
+          </header>
+
+          {grupos.length === 0 ? (
             <p className="visualizar-checklist-vazio">Nenhum item registrado neste checklist.</p>
           ) : (
-            itens.map((item) => <ItemVisualizacaoCard key={item.id} item={item} />)
+            <div className="visualizar-checklist-categorias">
+              {grupos.map((grupo, index) => (
+                <section className="visualizar-checklist-categoria" key={grupo.categoria}>
+                  <header className="visualizar-checklist-categoria-header">
+                    <span className="visualizar-checklist-categoria-indice">
+                      {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <span className="visualizar-checklist-categoria-icon" aria-hidden="true">
+                      <Layers3 size={19} />
+                    </span>
+                    <div>
+                      <h3>{grupo.label}</h3>
+                      <p>{grupo.itens.length} {grupo.itens.length === 1 ? "item inspecionado" : "itens inspecionados"}</p>
+                    </div>
+                  </header>
+
+                  <div className="visualizar-checklist-categoria-itens">
+                    {grupo.itens.map((item) => (
+                      <ItemVisualizacaoCard key={item.id} item={item} />
+                    ))}
+                  </div>
+                </section>
+              ))}
+            </div>
           )}
         </div>
       </div>

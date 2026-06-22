@@ -109,6 +109,10 @@
 
 .dados-cliente-card__header {
   padding: 1.4rem 1.4rem 0.85rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
   border-bottom: 1px solid rgba(166, 166, 166, 0.25);
 }
 
@@ -116,11 +120,19 @@
   color: var(--second-text-color);
 }
 
+.dados-cliente-card__header p {
+  margin-top: 0.25rem;
+  color: var(--secondary-color);
+  font-size: 0.8rem;
+}
+
+.dados-cliente-card__header .btn-primary,
+.dados-cliente-card__header .btn-secondary {
+  margin: 0;
+  white-space: nowrap;
+}
+
 .dados-container {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 1.5rem;
   width: 100%;
   padding: 1.25rem 1.4rem 1.4rem;
 }
@@ -142,10 +154,25 @@
   color: var(--second-text-color);
 }
 
-.botao-editar {
-  min-width: 10rem;
-  display: flex;
-  justify-content: flex-end;
+.cliente-status {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.cliente-status--ativo {
+  color: #237a3b;
+  background: #eaf7ee;
+  border: 1px solid #bde5c8;
+}
+
+.cliente-status--inativo {
+  color: #8b3b33;
+  background: #fff0ee;
+  border: 1px solid #f0c4be;
 }
 
 .veiculos-cliente-card {
@@ -158,23 +185,94 @@
 .veiculos-card-header {
   display: flex;
   flex-direction: column;
-  gap: 0.9rem;
+  gap: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(166, 166, 166, 0.18);
 }
 
-.veiculos-card-header h3 {
+.veiculos-card-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.veiculos-card-heading h3 {
   color: var(--second-text-color);
 }
 
-.veiculos-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 0.75rem;
-  width: 100%;
+.veiculos-card-heading p {
+  margin-top: 0.25rem;
+  color: var(--secondary-color);
+  font-size: 0.8rem;
 }
 
-.veiculos-header button {
-  max-width: 18rem;
+.veiculos-card-heading .btn-primary,
+.veiculos-card-heading .btn-secondary {
+  margin: 0;
+  white-space: nowrap;
+}
+
+.veiculos-toolbar {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 0.45rem;
+  width: min(100%, 32rem);
+}
+
+.veiculos-toolbar > label {
+  color: var(--secondary-color);
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  text-transform: uppercase;
+}
+
+.veiculos-search-control {
+  width: 100%;
+  min-height: 43px;
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  padding: 0 0.9rem;
+  border: 1px solid rgba(166, 166, 166, 0.45);
+  border-radius: 999px;
+  background: #fff;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.veiculos-search-control:focus-within {
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(216, 107, 6, 0.15);
+}
+
+.veiculos-search-control svg {
+  flex: 0 0 auto;
+  color: var(--third-color);
+  transition: color 0.2s ease;
+}
+
+.veiculos-search-control:focus-within svg {
+  color: var(--primary-color);
+}
+
+.veiculos-search-control input {
+  min-width: 0;
+  height: 41px;
+  flex: 1 1 auto;
+  padding: 0;
+  border: 0;
+  outline: 0;
+  color: var(--text-color);
+  background: transparent;
+  font-family: inherit;
+  font-size: 0.9rem;
+}
+
+.veiculos-search-control input::placeholder {
+  color: var(--third-color);
 }
 
 .veiculos-table-wrapper {
@@ -210,6 +308,12 @@
   transition: background-color 0.2s ease;
 }
 
+.veiculos-search-empty {
+  padding: 2rem !important;
+  color: var(--secondary-color);
+  text-align: center !important;
+}
+
 .coluna-edit button {
   border: 1px solid rgba(166, 166, 166, 0.35);
   border-radius: 999px;
@@ -236,22 +340,13 @@
 }
 
 @media (max-width: 980px) {
-  .dados-container {
-    flex-direction: column;
-  }
-
-  .botao-editar {
-    width: 100%;
-    justify-content: flex-start;
-  }
-
-  .veiculos-header {
+  .veiculos-card-heading {
     flex-direction: column;
     align-items: stretch;
   }
 
-  .veiculos-header button {
-    max-width: 100%;
+  .veiculos-card-heading button {
+    width: 100%;
   }
 }
 
@@ -262,6 +357,15 @@
 
   .header-cliente-card {
     align-items: flex-start;
+  }
+
+  .dados-cliente-card__header {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .dados-cliente-card__header button {
+    width: 100%;
   }
 
   .cliente-tabs {

@@ -1,6 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
 import "./ItensDoChecklist.css";
-import { Pencil, PlusCircle, EyeOff, Eye, Box } from "lucide-react";
+import {
+  Pencil,
+  PlusCircle,
+  EyeOff,
+  Eye,
+  Box,
+  Search,
+  SlidersHorizontal,
+} from "lucide-react";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
 import ModalCadastroItem from "../../components/ModalCadastroItem/ModalCadastroItem";
@@ -118,43 +126,78 @@ export default function ItensDoChecklist() {
   return (
     <div className="itens-checklist-container">
       <section className="itens-checklist-header-card">
-        <div className="itens-checklist-title">
-          <span className="dashboard-page__eyebrow">Gerenciar itens</span>
-          <h1>Itens do Checklist</h1>
-        </div>
-
-        <section className="itens-checklist-header">
-          <div className="itens-checklist-filter">
-            <SelectCustom
-              options={categorias}
-              value={filtroCategoria}
-              onChange={setFiltroCategoria}
-            />
+        <div className="itens-checklist-title-row">
+          <div className="itens-checklist-title">
+            <span className="dashboard-page__eyebrow">Gerenciar itens</span>
+            <h1>Itens do Checklist</h1>
+            <p>Organize os itens usados nas etapas de inspeção dos veículos.</p>
           </div>
 
-          <div className="itens-checklist-filter">
-            <SelectCustom
-              options={situacoes}
-              value={filtroSituacao}
-              onChange={setFiltroSituacao}
-            />
-          </div>
-
-          <div className="itens-checklist-buscar">
+          <div className="itens-checklist-header-action">
             <Button
-              text="Cadastrar Item"
+              text="Cadastrar item"
               icon={<PlusCircle />}
               iconPosition="left"
               secondary
               onClick={() => setModalOpen(true)}
             />
-            <input
-              type="text"
-              placeholder="Buscar por nome"
-              value={buscarTexto}
-              onChange={(e) => setBuscarTexto(e.target.value)}
-              className="search-input itens-checklist-search"
-            />
+          </div>
+        </div>
+
+        <section className="itens-checklist-header">
+          <div className="itens-checklist-control-group">
+            <span className="itens-checklist-control-label">
+              <SlidersHorizontal size={15} aria-hidden="true" />
+              Filtros
+            </span>
+
+            <div className="itens-checklist-filters">
+              <div className="itens-checklist-filter-field">
+                <SelectCustom
+                  label="Categoria"
+                  ariaLabel="Filtrar por categoria"
+                  options={categorias}
+                  value={filtroCategoria}
+                  onChange={setFiltroCategoria}
+                />
+              </div>
+
+              <div className="itens-checklist-filter-field">
+                <SelectCustom
+                  label="Situação"
+                  ariaLabel="Filtrar por situação"
+                  options={situacoes}
+                  value={filtroSituacao}
+                  onChange={setFiltroSituacao}
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="itens-checklist-control-group itens-checklist-search-group">
+            <label
+              className="itens-checklist-control-label"
+              htmlFor="itens-checklist-search"
+            >
+              <Search size={15} aria-hidden="true" />
+              Pesquisar
+            </label>
+
+            <div className="itens-checklist-search-control">
+              <Search
+                size={18}
+                className="itens-checklist-search-icon"
+                aria-hidden="true"
+              />
+              <input
+                id="itens-checklist-search"
+                type="text"
+                placeholder="Buscar item por nome"
+                value={buscarTexto}
+                onChange={(e) => setBuscarTexto(e.target.value)}
+                className="itens-checklist-search"
+              />
+            </div>
           </div>
         </section>
       </section>

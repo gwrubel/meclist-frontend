@@ -11,8 +11,8 @@ export default function LinkSeguroCard({ linkSeguroData, linkCopiado, onCopiar }
   return (
     <div className="aprovacao-admin-link-box">
       <div className="aprovacao-admin-link-box-texto">
-        <strong>Link do cliente</strong>
-        <span>Esse link é temporário e de uso único.</span>
+        <strong>Acesso rápido do cliente</strong>
+        <span>Envie este link somente ao cliente. O acesso é temporário e de uso único.</span>
         <span>
           Expira em: <strong>{formatarDataHora(linkSeguroData.expiraEm)}</strong>
         </span>

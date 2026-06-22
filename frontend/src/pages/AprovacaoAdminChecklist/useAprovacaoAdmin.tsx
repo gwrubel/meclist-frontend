@@ -254,7 +254,7 @@ export function useAprovacaoAdmin() {
   // Steps for stepper (computed here so the page component stays thin)
   const etapaIdxFinal = ETAPA_ORDEM.indexOf("CONCLUIDO");
   const steps = [
-    { id: 1, label: "Iniciar fluxo manual", concluido: etapaIdx >= etapaIndex("INICIADO"), icon: <ClipboardCheck size={20} /> },
+    { id: 1, label: "Iniciar aprovação assistida", concluido: etapaIdx >= etapaIndex("INICIADO"), icon: <ClipboardCheck size={20} /> },
     { id: 2, label: "Gerar PDF da proposta", concluido: etapaIdx >= etapaIndex("PDF_GERADO"), icon: <FileText size={20} /> },
     { id: 3, label: "Registrar confirmação do cliente", concluido: etapaIdx >= etapaIndex("CONFIRMACAO_REGISTRADA"), icon: <MessageSquare size={20} /> },
     { id: 4, label: "Aprovar / Reprovar checklist", concluido: etapaIdx >= etapaIdxFinal, icon: <ShieldCheck size={20} /> },

@@ -1,4 +1,12 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  LoaderCircle,
+  Search,
+  UserRoundCheck,
+  UsersRound,
+  UserX,
+  Wrench,
+} from "lucide-react";
 import Modal from "../../layouts/Modal/Modal";
 import Loading from "../Loading/Loading";
 import { buildApiUrl } from "../../config/api";
@@ -23,6 +31,7 @@ export default function ModalEncaminharMecanico({
   onSuccess,
 }: ModalEncaminharMecanicoProps) {
   const [mecanicos, setMecanicos] = useState<tMecanico[]>([]);
+  const [busca, setBusca] = useState("");
   const [loading, setLoading] = useState(false);
   const [vinculando, setVinculando] = useState<number | null>(null);
 
@@ -50,8 +59,23 @@ export default function ModalEncaminharMecanico({
   }, [token]);
 
   useEffect(() => {
-    if (isOpen) buscarMecanicos();
+    if (isOpen) {
+      setBusca("");
+      buscarMecanicos();
+    }
   }, [isOpen, buscarMecanicos]);
+
+  const mecanicosFiltrados = useMemo(() => {
+    const termo = busca.trim().toLocaleLowerCase("pt-BR");
+    if (!termo) return mecanicos;
+
+    return mecanicos.filter((mecanico) =>
+      [mecanico.nome, mecanico.email, mecanico.telefone]
+        .join(" ")
+        .toLocaleLowerCase("pt-BR")
+        .includes(termo)
+    );
+  }, [busca, mecanicos]);
 
   const handleVincular = async (mecanicoId: number) => {
     try {
@@ -68,57 +92,117 @@ export default function ModalEncaminharMecanico({
         }
       );
       if (response.status === 204) {
-        showSuccessToast("Serviço encaminhado com sucesso.");
+        showSuccessToast("Serviço vinculado ao mecânico com sucesso.");
         onSuccess();
         return;
       }
-      showErrorToast("Erro ao encaminhar serviço. Tente novamente.");
+      showErrorToast("Erro ao vincular o serviço. Tente novamente.");
     } catch {
-      showErrorToast("Erro ao encaminhar serviço. Tente novamente.");
+      showErrorToast("Erro ao vincular o serviço. Tente novamente.");
     } finally {
       setVinculando(null);
     }
   };
 
+  const handleClose = () => {
+    if (vinculando === null) onClose();
+  };
+
   return (
-    <Modal isOpen={isOpen} onClose={onClose} header="Víncular Serviço a mecânico">
-      {loading ? (
-        <Loading />
-      ) : mecanicos.length === 0 ? (
-        <p className="encaminhar-mecanico-empty">
-          Nenhum mecânico ativo encontrado.
-        </p>
-      ) : (
-        <ul className="encaminhar-mecanico-lista">
-          {mecanicos.map((mecanico) => (
-            <li key={mecanico.id} className="encaminhar-mecanico-item">
-              <div className="encaminhar-mecanico-info">
-                <span className="encaminhar-mecanico-nome">{mecanico.nome}</span>
-                <span className="encaminhar-mecanico-telefone">
-                  {aplicarMascaraTelefone(mecanico.telefone)}
-                </span>
-              </div>
-              <button
-                type="button"
-                className="btn-vincular"
-                disabled={vinculando !== null}
-                onClick={() => handleVincular(mecanico.id)}
-              >
-                {vinculando === mecanico.id ? "Vinculando..." : "Vincular"}
-              </button>
-            </li>
-          ))}
-        </ul>
-      )}
-      <div className="encaminhar-mecanico-actions">
-        <button
-          type="button"
-          className="btn-secundario"
-          onClick={onClose}
-          disabled={vinculando !== null}
-        >
-          Cancelar
-        </button>
+    <Modal isOpen={isOpen} onClose={handleClose} header="Vincular serviço a um mecânico">
+      <div className="encaminhar-mecanico-modal">
+        <div className="encaminhar-mecanico-contexto">
+          <span className="encaminhar-mecanico-contexto-icon" aria-hidden="true">
+            <Wrench size={21} />
+          </span>
+          <div>
+            <span>Checklist #{checklistId}</span>
+            <strong>Selecione o profissional responsável</strong>
+            <p>O serviço ficará disponível para o mecânico escolhido.</p>
+          </div>
+        </div>
+
+        {!loading && mecanicos.length > 0 && (
+          <label className="encaminhar-mecanico-busca" htmlFor="buscar-mecanico-vinculo">
+            <Search size={17} aria-hidden="true" />
+            <input
+              id="buscar-mecanico-vinculo"
+              type="search"
+              value={busca}
+              onChange={(event) => setBusca(event.target.value)}
+              placeholder="Buscar por nome, e-mail ou telefone"
+              autoComplete="off"
+            />
+          </label>
+        )}
+
+        <div className="encaminhar-mecanico-conteudo">
+          {loading ? (
+            <div className="encaminhar-mecanico-loading"><Loading /></div>
+          ) : mecanicos.length === 0 ? (
+            <div className="encaminhar-mecanico-empty">
+              <UserX size={25} aria-hidden="true" />
+              <strong>Nenhum mecânico ativo</strong>
+              <p>Cadastre ou reative um mecânico para vincular este serviço.</p>
+            </div>
+          ) : mecanicosFiltrados.length === 0 ? (
+            <div className="encaminhar-mecanico-empty">
+              <Search size={24} aria-hidden="true" />
+              <strong>Nenhum resultado encontrado</strong>
+              <p>Tente pesquisar usando outro nome, e-mail ou telefone.</p>
+            </div>
+          ) : (
+            <ul className="encaminhar-mecanico-lista">
+              {mecanicosFiltrados.map((mecanico) => (
+                <li key={mecanico.id} className="encaminhar-mecanico-item">
+                  <span className="encaminhar-mecanico-avatar" aria-hidden="true">
+                    {mecanico.nome.trim().charAt(0).toUpperCase()}
+                  </span>
+                  <div className="encaminhar-mecanico-info">
+                    <span className="encaminhar-mecanico-codigo">
+                      MEC-{String(mecanico.id).padStart(3, "0")}
+                    </span>
+                    <strong className="encaminhar-mecanico-nome">{mecanico.nome}</strong>
+                    <span className="encaminhar-mecanico-telefone">
+                      {aplicarMascaraTelefone(mecanico.telefone)}
+                    </span>
+                  </div>
+                  <button
+                    type="button"
+                    className="btn-vincular"
+                    disabled={vinculando !== null}
+                    onClick={() => handleVincular(mecanico.id)}
+                    aria-label={`Vincular serviço ao mecânico ${mecanico.nome}`}
+                  >
+                    {vinculando === mecanico.id ? (
+                      <LoaderCircle className="encaminhar-mecanico-spinner" size={16} aria-hidden="true" />
+                    ) : (
+                      <UserRoundCheck size={16} aria-hidden="true" />
+                    )}
+                    {vinculando === mecanico.id ? "Vinculando..." : "Vincular"}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          )}
+        </div>
+
+        <footer className="encaminhar-mecanico-actions">
+          {!loading && mecanicos.length > 0 && (
+            <span>
+              <UsersRound size={16} aria-hidden="true" />
+              {mecanicosFiltrados.length} {mecanicosFiltrados.length === 1 ? "mecânico disponível" : "mecânicos disponíveis"}
+            </span>
+          )}
+          <button
+            type="button"
+            className="btn-secundario"
+            onClick={handleClose}
+            disabled={vinculando !== null}
+          >
+            Cancelar
+          </button>
+        </footer>
       </div>
     </Modal>
   );

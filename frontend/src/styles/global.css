@@ -124,6 +124,20 @@ li {
   box-shadow: 0 0 0 3px rgba(216, 107, 6, 0.15);
 }
 
+.vehicle-plate {
+  display: inline-flex;
+  padding: 0.22rem 0.55rem;
+  border: 1px solid rgba(216, 107, 6, 0.25);
+  border-radius: 7px;
+  color: var(--primary-color);
+  background: rgba(216, 107, 6, 0.06);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  white-space: nowrap;
+}
+
 
 @media (width >= 1280px) {
   :root {

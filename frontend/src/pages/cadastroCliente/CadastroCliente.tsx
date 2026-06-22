@@ -3,7 +3,7 @@ import "./cadastroCliente.css";
 import { tCliente } from "../../types/Cliente";
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
-import { CarFront, Plus, UserPlus } from 'lucide-react';
+import { CarFront, Plus, Search, SlidersHorizontal, UserPlus } from 'lucide-react';
 import Loading from "../../components/Loading/Loading";
 import ModalCadastroCliente from "../../components/ModalCadastroDeCliente/ModalCadastroCliente";
 import { Link } from "react-router-dom";
@@ -75,24 +75,51 @@ export default function CadastroCliente() {
     return (
         <div className="cadastro-cliente-container">
             <section className="cadastro-cliente-header-card">
-                <div className="cadastro-cliente-title">
-                    <span className="dashboard-page__eyebrow">Gerenciar clientes</span>
-                    <h1>Cadastro de Clientes</h1>
+                <div className="cadastro-cliente-title-row">
+                    <div className="cadastro-cliente-title">
+                        <span className="dashboard-page__eyebrow">Gerenciar clientes</span>
+                        <h1>Cadastro de Clientes</h1>
+                        <p>Consulte clientes, veículos e informações de contato.</p>
+                    </div>
+
+                    <div className="cadastro-cliente-header-action">
+                        <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
+                    </div>
                 </div>
 
                 <section className="cadastro-cliente-header">
-                    <div className="cadastro-cliente-filter">
-                        <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                    <div className="cadastro-cliente-control-group">
+                        <span className="cadastro-cliente-control-label">
+                            <SlidersHorizontal size={15} aria-hidden="true" />
+                            Filtros
+                        </span>
+                        <div className="cadastro-cliente-filter">
+                            <SelectCustom
+                                label="Situação"
+                                ariaLabel="Filtrar clientes por situação"
+                                options={statusOptions}
+                                value={filtro}
+                                onChange={setFiltro}
+                            />
+                        </div>
                     </div>
-                    <div className="cadastro-cliente-buscar">
-                        <Button text="Cadastrar cliente" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalOpen(true)} />
-                        <input
-                            type="text"
-                            placeholder="Buscar por nome"
-                            value={buscarTexto}
-                            onChange={(e) => setBuscarTexto(e.target.value)}
-                            className="search-input cadastro-cliente-search"
-                        />
+
+                    <div className="cadastro-cliente-control-group cadastro-cliente-search-group">
+                        <label className="cadastro-cliente-control-label" htmlFor="cadastro-cliente-search">
+                            <Search size={15} aria-hidden="true" />
+                            Pesquisar
+                        </label>
+                        <div className="cadastro-cliente-search-control">
+                            <Search size={18} className="cadastro-cliente-search-icon" aria-hidden="true" />
+                            <input
+                                id="cadastro-cliente-search"
+                                type="text"
+                                placeholder="Buscar cliente por nome"
+                                value={buscarTexto}
+                                onChange={(e) => setBuscarTexto(e.target.value)}
+                                className="cadastro-cliente-search"
+                            />
+                        </div>
                     </div>
                 </section>
             </section>
@@ -152,7 +179,9 @@ export default function CadastroCliente() {
 
                                     <td>
                                         <Link to={`/cliente/${cliente.id}`}>
-                                            {cliente.situacao.charAt(0).toUpperCase() + cliente.situacao.slice(1).toLowerCase()}
+                                            <span className={`cliente-table-status cliente-table-status--${cliente.situacao.toLowerCase()}`}>
+                                                {cliente.situacao.charAt(0).toUpperCase() + cliente.situacao.slice(1).toLowerCase()}
+                                            </span>
                                         </Link>
                                     </td>
 

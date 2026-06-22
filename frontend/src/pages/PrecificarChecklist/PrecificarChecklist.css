@@ -1,93 +1,350 @@
-/* ---- Container ---- */
 .precificar-checklist-container {
-  padding: 100px 32px 40px;
-  max-width: 1100px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 1.5rem;
 }
 
-/* ---- Itens ---- */
-.precificar-itens {
+/* Cabeçalho */
+.precificar-header-card,
+.precificar-itens-section {
+  border: 1px solid rgba(166, 166, 166, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.055);
+}
+
+.precificar-header-card {
+  padding: 1.5rem;
+}
+
+.precificar-header-card > .dashboard-page__eyebrow {
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.precificar-header-card .checklist-page-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1rem;
+}
+
+.precificar-header-card .checklist-page-header__voltar {
+  min-height: 40px;
+  padding: 0.55rem 0.85rem;
+  border-width: 1px;
+  border-radius: 9px;
+  color: var(--secondary-color);
+  background: #fff;
+}
+
+.precificar-header-card .checklist-page-header__titulo h1 {
+  margin: -0.1rem 0 1rem;
+  color: var(--second-text-color);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  letter-spacing: -0.035em;
+}
+
+.precificar-header-card .checklist-page-header__meta {
+  display: grid;
+  grid-template-columns: 0.85fr 1.35fr 1.15fr 0.9fr;
+  gap: 0;
+  border: 1px solid rgba(166, 166, 166, 0.2);
+  border-radius: 12px;
+  background: rgba(248, 248, 248, 0.86);
+  overflow: hidden;
+}
+
+.precificar-header-card .checklist-page-header__meta > span {
+  min-width: 0;
+  min-height: 54px;
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  justify-content: center;
+  gap: 0.18rem;
+  padding: 0.55rem 0.75rem;
+  border-right: 1px solid rgba(166, 166, 166, 0.2);
+  color: var(--second-text-color);
+}
+
+.precificar-header-card .checklist-page-header__meta > span:last-child {
+  border-right: 0;
+  color: var(--primary-color);
+  background: rgba(216, 107, 6, 0.06);
+  font-weight: 700;
+}
+
+.precificar-header-card .checklist-page-header__meta strong {
+  color: var(--secondary-color);
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.precificar-header-description {
+  margin: 1rem 0 0 calc(40px + 1rem);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(166, 166, 166, 0.18);
+  color: var(--secondary-color);
+  font-size: 0.86rem;
+}
+
+/* Itens e categorias */
+.precificar-itens-section {
+  padding: 1.15rem;
+}
+
+.precificar-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.precificar-section-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--primary-color), #b85500);
+  box-shadow: 0 7px 16px rgba(216, 107, 6, 0.2);
+}
+
+.precificar-section-header h2 {
+  margin: 0.2rem 0 0;
+  color: var(--second-text-color);
+  font-size: 1.35rem;
+}
+
+.precificar-section-header p {
+  margin-top: 0.25rem;
+  color: var(--secondary-color);
+  font-size: 0.82rem;
+}
+
+.precificar-itens {
+  display: grid;
+  gap: 1.15rem;
 }
 
 .precificar-vazio {
-  text-align: center;
+  padding: 40px 20px;
+  border: 1px dashed #d0d0d0;
+  border-radius: 10px;
   color: var(--secondary-color);
-  padding: 40px 0;
+  background: #f9f9f9;
+  text-align: center;
 }
 
-/* ---- Categorias ---- */
 .precificar-categoria {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
+  position: relative;
+  border: 1px solid rgba(166, 166, 166, 0.24);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.04);
+  overflow: visible;
 }
 
-.precificar-categoria-titulo {
-  font-size: 1.15rem;
-  font-weight: 600;
-  color: #B35705;
-  padding: 12px 16px;
-  background: linear-gradient(135deg, #FFF5EB 0%, #FFE4CC 100%);
-  border-left: 5px solid #D86B06;
-  border-radius: 6px;
-  margin: 0;
-  box-shadow: 0 1px 3px rgba(216, 107, 6, 0.1);
+.precificar-categoria:has(.select-trigger.open) {
+  z-index: 20;
+}
+
+.precificar-categoria-header {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(216, 107, 6, 0.16);
+  border-radius: 17px 17px 0 0;
+  background: linear-gradient(90deg, rgba(216, 107, 6, 0.09), rgba(216, 107, 6, 0.015));
+}
+
+.precificar-categoria-indice {
+  color: rgba(216, 107, 6, 0.42);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.precificar-categoria-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(216, 107, 6, 0.22);
+  border-radius: 9px;
+  color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.precificar-categoria-header h3 {
+  color: var(--second-text-color);
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.precificar-categoria-header p {
+  margin-top: 0.2rem;
+  color: var(--secondary-color);
+  font-size: 0.75rem;
 }
 
 .precificar-categoria-itens {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  padding-left: 8px;
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  border-radius: 0 0 17px 17px;
+  background: rgba(248, 248, 248, 0.62);
 }
 
-/* ---- Footer ---- */
+.precificar-categoria .item-card {
+  position: relative;
+  margin-bottom: 0;
+  border-color: rgba(166, 166, 166, 0.34);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.035);
+  overflow: visible;
+}
+
+.precificar-categoria .item-card:has(.select-trigger.open) {
+  z-index: 21;
+}
+
+.precificar-categoria .item-card-header {
+  border-radius: 11px 11px 0 0;
+  background: linear-gradient(135deg, #4a4a4a, #353535);
+  font-weight: 700;
+}
+
+.precificar-categoria .item-card-footer {
+  border-radius: 0 0 11px 11px;
+  border-top-color: rgba(166, 166, 166, 0.3);
+  background: #f0f0f0;
+}
+
+.precificar-categoria .item-card-adicionar-area {
+  width: 100%;
+  padding: 0.8rem 1rem;
+}
+
+/* Total e ações */
 .precificar-footer {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
-  gap: 12px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fafafa;
+  gap: 1rem;
+  padding: 1rem 1.15rem;
+  border: 1px solid rgba(166, 166, 166, 0.28);
+  border-radius: 14px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.09);
 }
 
 .precificar-total {
-  font-size: 1rem;
-  color: var(--text-color);
+  color: var(--second-text-color);
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 
 .precificar-total strong {
+  margin-left: 0.25rem;
   color: var(--primary-color);
-  font-size: 1.1rem;
+  font-size: 1.05rem;
 }
 
 .precificar-acoes {
   display: flex;
-  gap: 12px;
+  align-items: center;
+  gap: 0.75rem;
 }
 
-/* ---- Responsivo ---- */
+.precificar-acoes .btn-primary,
+.precificar-acoes .btn-secondary {
+  margin: 0;
+}
+
 @media (max-width: 768px) {
   .precificar-checklist-container {
-    padding: 80px 16px 32px;
+    padding: 1rem;
+  }
+
+  .precificar-header-card,
+  .precificar-itens-section {
+    padding: 1rem;
+  }
+
+  .precificar-header-card .checklist-page-header {
+    grid-template-columns: 1fr;
+  }
+
+  .precificar-header-card .checklist-page-header__voltar {
+    width: fit-content;
+  }
+
+  .precificar-header-card .checklist-page-header__badge {
+    grid-row: 2;
+  }
+
+  .precificar-header-card .checklist-page-header__meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .precificar-header-card .checklist-page-header__meta > span:nth-child(2) {
+    border-right: 0;
+  }
+
+  .precificar-header-card .checklist-page-header__meta > span:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(166, 166, 166, 0.2);
+  }
+
+  .precificar-header-description {
+    margin-left: 0;
+  }
+
+  .precificar-categoria .item-card-table {
+    min-width: 52rem;
   }
 
   .precificar-footer {
+    align-items: stretch;
     flex-direction: column;
-    align-items: flex-start;
   }
 
-  .precificar-acoes {
+  .precificar-acoes,
+  .precificar-acoes button {
     width: 100%;
-    justify-content: flex-end;
+  }
+}
+
+@media (max-width: 520px) {
+  .precificar-header-card .checklist-page-header__meta {
+    grid-template-columns: 1fr;
+  }
+
+  .precificar-header-card .checklist-page-header__meta > span {
+    border-right: 0;
+    border-bottom: 1px solid rgba(166, 166, 166, 0.2);
+  }
+
+  .precificar-header-card .checklist-page-header__meta > span:last-child {
+    border-bottom: 0;
+  }
+
+  .precificar-section-header,
+  .precificar-categoria-header {
+    align-items: flex-start;
   }
 }

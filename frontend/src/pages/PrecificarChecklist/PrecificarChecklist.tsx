@@ -1,5 +1,5 @@
 ﻿import { useCallback, useEffect, useState } from "react";
-import { Send } from "lucide-react";
+import { Calculator, Layers3, Send } from "lucide-react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { ChecklistDetalheResponse, ItemChecklistDetalhe, ProdutoPrecificado, StatusProcesso } from "../../types/Checklist";
 import { useAuth } from "../../contexts/AuthContext";
@@ -7,13 +7,27 @@ import Loading from "../../components/Loading/Loading";
 import Button from "../../components/Button/Button";
 import ItemPrecificacaoCard from "../../components/ItemPrecificacaoCard/ItemPrecificacaoCard";
 import ChecklistPageHeader from "../../components/ChecklistPageHeader/ChecklistPageHeader";
-import { formatCurrency, CHECKLIST_STATUS_LABEL, formatarCategoria } from "../../utils/formatUtils";
+import {
+  formatCurrency,
+  formatarDataHora,
+  CHECKLIST_STATUS_LABEL,
+  formatarCategoria,
+} from "../../utils/formatUtils";
+import { formatarPlaca } from "../../utils/maskUtils";
 import { CategoriaParteVeiculo } from "../../types/Item";
 import "./PrecificarChecklist.css";
 import { toast } from "react-toastify";
 import { API_BASE_URL, buildApiUrl } from "../../config/api";
 
 const STATUS_LABEL = CHECKLIST_STATUS_LABEL as Record<StatusProcesso, string>;
+
+const ORDEM_CATEGORIAS: CategoriaParteVeiculo[] = [
+  "DENTRO_DO_VEICULO",
+  "FORA_DO_VEICULO",
+  "VEICULO_NO_CHAO",
+  "VEICULO_NO_ELEVADOR",
+  "CAPO_LEVANTADO",
+];
 
 function processarItensPrecificaveis(checklist: ChecklistDetalheResponse): ItemChecklistDetalhe[] {
   const itensArray: ItemChecklistDetalhe[] = [];
@@ -76,7 +90,6 @@ export default function PrecificarChecklist() {
       }
 
       const json = await response.json();
-      console.log("Checklist de precificação carregado:", json);
       setChecklist(json.data);
     } catch (error) {
       console.error("Erro ao buscar checklist de precificação:", error);
@@ -210,35 +223,65 @@ const handleEnviarParaAprovacao = async () => {
   if (loading) return <Loading />;
   if (erro || !checklist) return <p>{erro || "Checklist não encontrado."}</p>;
 
-  const categorias = Object.entries(checklist.itensPorCategoria || {}) as [CategoriaParteVeiculo, ItemChecklistDetalhe[]][];
-  const temItens = categorias.some(([, itensCategoria]) => itensCategoria && itensCategoria.length > 0);
+  const categorias = ORDEM_CATEGORIAS.map(
+    (categoria) => [categoria, checklist.itensPorCategoria?.[categoria] ?? []] as const
+  ).filter(([, itensCategoria]) => itensCategoria.length > 0);
+  const totalItens = categorias.reduce(
+    (total, [, itensCategoria]) => total + itensCategoria.length,
+    0
+  );
 
   return (
     <div className="precificar-checklist-container">
-      <ChecklistPageHeader
-        title={`Precificação — Checklist #${checklist.checklistId}`}
-        metaItems={[
-          { label: "Placa", value: checklist.placa },
-          { label: "Cliente", value: checklist.nomeCliente },
-          { label: "Valor total", value: formatCurrency(valorTotal) },
-        ]}
-        status={checklist.status}
-        statusLabel={STATUS_LABEL[checklist.status] ?? checklist.status}
-        onVoltar={voltarParaLista}
-      />
-      {/* Itens agrupados por categoria */}
-      <div className="precificar-itens">
-        {!temItens ? (
+      <section className="precificar-header-card">
+        <span className="dashboard-page__eyebrow">Precificação do serviço</span>
+        <ChecklistPageHeader
+          title={`Checklist #${checklist.checklistId}`}
+          metaItems={[
+            { label: "Placa", value: <span className="vehicle-plate">{formatarPlaca(checklist.placa)}</span> },
+            { label: "Cliente", value: checklist.nomeCliente },
+            { label: "Criado em", value: formatarDataHora(checklist.criadoEm) },
+            { label: "Total estimado", value: formatCurrency(valorTotal) },
+          ]}
+          status={checklist.status}
+          statusLabel={STATUS_LABEL[checklist.status] ?? checklist.status}
+          onVoltar={voltarParaLista}
+        />
+        <p className="precificar-header-description">
+          Informe produtos, marcas, valores e mão de obra antes de enviar a proposta para aprovação.
+        </p>
+      </section>
+
+      <section className="precificar-itens-section">
+        <header className="precificar-section-header">
+          <span className="precificar-section-icon" aria-hidden="true">
+            <Calculator size={22} />
+          </span>
+          <div>
+            <span className="dashboard-page__eyebrow">Composição da proposta</span>
+            <h2>Itens para precificar</h2>
+            <p>{totalItens} {totalItens === 1 ? "item" : "itens"} em {categorias.length} {categorias.length === 1 ? "parte do veículo" : "partes do veículo"}.</p>
+          </div>
+        </header>
+
+        <div className="precificar-itens">
+        {categorias.length === 0 ? (
           <p className="precificar-vazio">Nenhum item com produto para precificar.</p>
         ) : (
-          categorias.map(([categoria, itensCategoria]) => {
-            if (!itensCategoria || itensCategoria.length === 0) return null;
-            
-            return (
-              <div key={categoria} className="precificar-categoria">
-                <h2 className="precificar-categoria-titulo">
-                  {formatarCategoria(categoria)}
-                </h2>
+          categorias.map(([categoria, itensCategoria], categoriaIndex) => (
+              <section key={categoria} className="precificar-categoria">
+                <header className="precificar-categoria-header">
+                  <span className="precificar-categoria-indice">
+                    {String(categoriaIndex + 1).padStart(2, "0")}
+                  </span>
+                  <span className="precificar-categoria-icon" aria-hidden="true">
+                    <Layers3 size={19} />
+                  </span>
+                  <div>
+                    <h3>{formatarCategoria(categoria)}</h3>
+                    <p>{itensCategoria.length} {itensCategoria.length === 1 ? "item para precificar" : "itens para precificar"}</p>
+                  </div>
+                </header>
                 <div className="precificar-categoria-itens">
                   {itensCategoria.map((item) => (
                     <ItemPrecificacaoCard
@@ -251,13 +294,12 @@ const handleEnviarParaAprovacao = async () => {
                     />
                   ))}
                 </div>
-              </div>
-            );
-          })
+              </section>
+          ))
         )}
-      </div>
+        </div>
+      </section>
 
-      {/* Footer */}
       <div className="precificar-footer">
         <span className="precificar-total">
           Valor total estimado:{" "}

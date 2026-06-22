@@ -1,6 +1,6 @@
 import { CheckCircle } from "lucide-react";
 
-type Step = {
+export type AprovacaoStep = {
   id: number;
   label: string;
   concluido: boolean;
@@ -8,7 +8,7 @@ type Step = {
 };
 
 type Props = {
-  steps: Step[];
+  steps: AprovacaoStep[];
   fluxoEncerrado: boolean;
 };
 

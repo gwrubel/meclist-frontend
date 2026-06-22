@@ -1,6 +1,7 @@
 import { ItemAprovacaoAdmin } from "../../types/Checklist";
 import { EtapaFluxoManual } from "../../types/Checklist";
 import { formatCurrency, formatarCategoria } from "./aprovacaoAdminUtils";
+import { Layers3 } from "lucide-react";
 
 type Props = {
   itensPorCategoria: Record<string, ItemAprovacaoAdmin[] | undefined>;
@@ -20,13 +21,30 @@ export default function AprovacaoAdminItens({
   onDefinirDecisaoItem,
 }: Props) {
   const podeDecidir = !fluxoEncerrado && etapaAtual === "CONFIRMACAO_REGISTRADA";
+  const categorias = Object.entries(itensPorCategoria).filter(
+    (entrada): entrada is [string, ItemAprovacaoAdmin[]] =>
+      Boolean(entrada[1] && entrada[1].length > 0)
+  );
 
   return (
     <div className="aprovacao-admin-itens">
-      {Object.entries(itensPorCategoria).map(([categoria, itens]) => (
-        <div key={categoria} className="aprovacao-admin-categoria">
-          <h2 className="aprovacao-admin-categoria-titulo">{formatarCategoria(categoria)}</h2>
-          {itens?.map((item) => (
+      {categorias.map(([categoria, itens], categoriaIndex) => (
+        <section key={categoria} className="aprovacao-admin-categoria">
+          <header className="aprovacao-admin-categoria-header">
+            <span className="aprovacao-admin-categoria-indice">
+              {String(categoriaIndex + 1).padStart(2, "0")}
+            </span>
+            <span className="aprovacao-admin-categoria-icon" aria-hidden="true">
+              <Layers3 size={19} />
+            </span>
+            <div>
+              <h3>{formatarCategoria(categoria)}</h3>
+              <p>{itens.length} {itens.length === 1 ? "item para revisar" : "itens para revisar"}</p>
+            </div>
+          </header>
+
+          <div className="aprovacao-admin-categoria-itens">
+          {itens.map((item) => (
             <div key={item.itemChecklistId} className="aprovacao-admin-item-card">
               <div className="aprovacao-admin-item-header">
                 <span className="aprovacao-admin-item-nome">{item.nomeDoItem}</span>
@@ -42,6 +60,7 @@ export default function AprovacaoAdminItens({
               )}
 
               {item.produtos.length > 0 && (
+                <div className="aprovacao-admin-produtos-table-wrapper">
                 <table className="aprovacao-admin-produtos-table">
                   <thead>
                     <tr>
@@ -93,6 +112,7 @@ export default function AprovacaoAdminItens({
                     ))}
                   </tbody>
                 </table>
+                </div>
               )}
 
               {podeDecidir && item.produtos.length > 0 && (
@@ -125,7 +145,8 @@ export default function AprovacaoAdminItens({
               )}
             </div>
           ))}
-        </div>
+          </div>
+        </section>
       ))}
     </div>
   );

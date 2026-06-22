@@ -1,14 +1,18 @@
 import { Link, useParams } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {  tClienteComVeiculos } from "../../types/Cliente";
 import { tVeiculo } from "../../types/Veiculo";
 import Loading from "../../components/Loading/Loading";
-import { ArrowLeft, Pencil, Plus } from "lucide-react";
+import { ArrowLeft, Pencil, Plus, Search } from "lucide-react";
 import "./DadosCliente.css";
 import { useAuth } from "../../contexts/AuthContext";
 import Button from "../../components/Button/Button";
-import { SelectCustom } from "../../components/Select/SelectCustom";
-import { aplicarMascaraCpf, aplicarMascaraTelefone } from "../../utils/maskUtils";
+import {
+    aplicarMascaraCpf,
+    aplicarMascaraTelefone,
+    formatarPlaca,
+    normalizarPlaca,
+} from "../../utils/maskUtils";
 import ModalCadastroVeiculo from "../../components/ModalCadastroVeiculo/ModalCadastroVeiculo";
 import ModalEditarCliente from "../../components/ModalEditarCliente/ModalEditarCliente";
 import ModalEditarVeiculo from "../../components/ModalEditarVeiculo/ModalEditarVeiculo";
@@ -21,15 +25,29 @@ export default function DadosCliente() {
     const [loading, setLoading] = useState(true);
     const [abaAtiva, setAbaAtiva] = useState<"Dados Do Cliente" | "Veículos">("Dados Do Cliente");
     const { token } = useAuth();
-    const [filtro, setFiltro] = useState("Todos");
-    const statusOptions = [
-        { label: "Todos", value: "todos" }
-    ]
+    const [buscarVeiculo, setBuscarVeiculo] = useState("");
     const [modalOpen, setModalOpen] = useState(false);
     const [modalEditarOpen, setModalEditarOpen] = useState(false);
     const [veiculoSelecionado, setVeiculoSelecionado] = useState<tVeiculo | null>(null);
     const [modalEditarVeiculoOpen, setModalEditarVeiculoOpen] = useState(false);
-    async function fetchCliente() {
+
+    const veiculosFiltrados = (cliente?.veiculos ?? []).filter((veiculo) => {
+        const termo = buscarVeiculo.trim().toLowerCase();
+        if (!termo) return true;
+
+        const termoPlaca = normalizarPlaca(buscarVeiculo);
+        const placaCorresponde =
+            termoPlaca.length > 0 && normalizarPlaca(veiculo.placa).includes(termoPlaca);
+
+        return placaCorresponde || [
+            veiculo.id,
+            veiculo.modelo,
+            veiculo.marca,
+            veiculo.cor,
+            veiculo.ano,
+        ].some((valor) => String(valor).toLowerCase().includes(termo));
+    });
+    const fetchCliente = useCallback(async () => {
         try {
             const response = await fetch(buildApiUrl(`/clientes/${id}`), {
                 headers: {
@@ -44,13 +62,11 @@ export default function DadosCliente() {
         } finally {
             setLoading(false);
         }
-    }
+    }, [id, token]);
 
     useEffect(() => {
-
-
         fetchCliente();
-    }, [id]);
+    }, [fetchCliente]);
 
     if (loading) return <Loading />;
 
@@ -87,7 +103,16 @@ export default function DadosCliente() {
                     {abaAtiva === "Dados Do Cliente" ? (
                         <div className="dados-cliente-card">
                             <header className="dados-cliente-card__header">
-                                <h3>Dados do Cliente</h3>
+                                <div>
+                                    <h3>Dados do Cliente</h3>
+                                    <p>Informações cadastrais e de contato.</p>
+                                </div>
+                                <Button
+                                    text="Editar dados"
+                                    type="button"
+                                    icon={<Pencil size={16} />}
+                                    onClick={() => setModalEditarOpen(true)}
+                                />
                             </header>
                             <div className="dados-container">
                                 <dl className="dados">
@@ -108,26 +133,41 @@ export default function DadosCliente() {
 
                                     <dt>Situação:</dt>
                                     <dd>
-                                        {cliente?.situacao
-                                            ? cliente.situacao.charAt(0).toUpperCase() + cliente.situacao.slice(1).toLowerCase()
-                                            : ""}
+                                        {cliente?.situacao && (
+                                            <span className={`cliente-status cliente-status--${cliente.situacao.toLowerCase()}`}>
+                                                {cliente.situacao.charAt(0).toUpperCase() + cliente.situacao.slice(1).toLowerCase()}
+                                            </span>
+                                        )}
                                     </dd>
                                 </dl>
-                                <div className="botao-editar">
-                                    <Button text="Editar" type="button" onClick={() => setModalEditarOpen(true)} />
-                                </div>
                             </div>
                         </div>
 
                     ) : (
                         <div className="veiculos-cliente-card">
                             <div className="veiculos-card-header">
-                                <h3>Veículos</h3>
-                                <div className="veiculos-header">
+                                <div className="veiculos-card-heading">
                                     <div>
-                                        <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                                        <h3>Veículos</h3>
+                                        <p>
+                                            {cliente?.veiculos?.length ?? 0} {(cliente?.veiculos?.length ?? 0) === 1 ? "veículo cadastrado" : "veículos cadastrados"}
+                                        </p>
                                     </div>
                                     <Button text="Adicionar Veículo" icon={<Plus size={16} />} iconPosition="right" onClick={() => setModalOpen(true)} secondary type="button" />
+                                </div>
+
+                                <div className="veiculos-toolbar">
+                                    <label htmlFor="buscar-veiculo">Pesquisar veículo</label>
+                                    <div className="veiculos-search-control">
+                                        <Search size={18} aria-hidden="true" />
+                                        <input
+                                            id="buscar-veiculo"
+                                            type="text"
+                                            placeholder="Placa, marca, modelo, cor, ano ou ID"
+                                            value={buscarVeiculo}
+                                            onChange={(e) => setBuscarVeiculo(e.target.value)}
+                                        />
+                                    </div>
                                 </div>
                             </div>
 
@@ -147,25 +187,31 @@ export default function DadosCliente() {
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            {cliente.veiculos.map((veiculo) => (
+                                            {veiculosFiltrados.length > 0 ? veiculosFiltrados.map((veiculo) => (
                                                 <tr key={veiculo.id}>
                                                     <td>{veiculo.id}</td>
-                                                    <td>{veiculo.placa}</td>
+                                                    <td><span className="vehicle-plate">{formatarPlaca(veiculo.placa)}</span></td>
                                                     <td>{veiculo.modelo}</td>
                                                     <td>{veiculo.marca}</td>
                                                     <td>{veiculo.cor}</td>
                                                     <td>{veiculo.ano}</td>
-                                                    <td>{veiculo.quilometragem}</td>
+                                                    <td>{new Intl.NumberFormat("pt-BR").format(veiculo.quilometragem)} km</td>
                                                     <td className="coluna-edit">
                                                         <button onClick={() => {
                                                             setVeiculoSelecionado(veiculo);
                                                             setModalEditarVeiculoOpen(true);
-                                                        }} aria-label={`Editar veículo ${veiculo.placa}`}>
+                                                        }} aria-label={`Editar veículo ${formatarPlaca(veiculo.placa)}`}>
                                                             <Pencil className="edit" />
                                                         </button>
                                                     </td>
                                                 </tr>
-                                            ))}
+                                            )) : (
+                                                <tr>
+                                                    <td colSpan={8} className="veiculos-search-empty">
+                                                        Nenhum veículo corresponde à pesquisa.
+                                                    </td>
+                                                </tr>
+                                            )}
                                         </tbody>
                                     </table>
                                 </div>

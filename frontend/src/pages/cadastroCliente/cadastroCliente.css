@@ -30,29 +30,128 @@
     color: var(--second-text-color);
 }
 
-.cadastro-cliente-header {
+.cadastro-cliente-title-row {
     display: flex;
+    align-items: flex-start;
     justify-content: space-between;
-    align-items: flex-end;
-    gap: 1rem;
+    gap: 1.5rem;
+}
+
+.cadastro-cliente-title p {
+    max-width: 42rem;
+    margin-top: 0.45rem;
+    color: var(--secondary-color);
+    font-size: 0.88rem;
+}
+
+.cadastro-cliente-header-action {
+    flex: 0 0 auto;
+}
+
+.cadastro-cliente-header-action .btn-primary,
+.cadastro-cliente-header-action .btn-secondary {
+    margin: 0;
+    white-space: nowrap;
+}
+
+.cadastro-cliente-header {
+    display: grid;
+    grid-template-columns: minmax(13rem, 16rem) minmax(18rem, 24rem);
+    justify-content: space-between;
+    gap: 1.25rem;
+    padding-top: 1.1rem;
+    border-top: 1px solid rgba(166, 166, 166, 0.18);
+}
+
+.cadastro-cliente-control-group {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.cadastro-cliente-control-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    color: var(--secondary-color);
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    line-height: 1;
+    text-transform: uppercase;
+}
+
+.cadastro-cliente-control-label svg {
+    color: var(--primary-color);
 }
 
 .cadastro-cliente-filter {
-    min-width: 13rem;
-    max-width: 16rem;
-    width: 100%;
+    min-width: 0;
 }
 
-.cadastro-cliente-buscar {
+.cadastro-cliente-filter .select-label {
+    margin-bottom: 0.35rem;
+    color: var(--second-text-color);
+    font-size: 0.76rem;
+    font-weight: 600;
+}
+
+.cadastro-cliente-filter .select-trigger {
+    height: 43px;
+    border-width: 1px;
+    border-color: rgba(166, 166, 166, 0.55);
+    border-radius: 10px;
+    font-size: 0.9rem;
+}
+
+.cadastro-cliente-search-group {
+    justify-content: flex-end;
+}
+
+.cadastro-cliente-search-control {
+    min-height: 43px;
     display: flex;
     align-items: center;
-    justify-content: flex-end;
-    gap: 0.75rem;
+    gap: 0.65rem;
     width: 100%;
+    padding: 0 0.9rem;
+    border: 1px solid rgba(166, 166, 166, 0.45);
+    border-radius: 999px;
+    background: #fff;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cadastro-cliente-search-control:focus-within {
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(216, 107, 6, 0.15);
+}
+
+.cadastro-cliente-search-icon {
+    flex: 0 0 auto;
+    color: var(--third-color);
+    transition: color 0.2s ease;
+}
+
+.cadastro-cliente-search-control:focus-within .cadastro-cliente-search-icon {
+    color: var(--primary-color);
 }
 
 .cadastro-cliente-search {
-    width: min(100%, 24rem);
+    min-width: 0;
+    height: 41px;
+    flex: 1 1 auto;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    color: var(--text-color);
+    background: transparent;
+    font-family: inherit;
+    font-size: 0.95rem;
+}
+
+.cadastro-cliente-search::placeholder {
+    color: var(--third-color);
 }
 
 .cliente-table {
@@ -107,6 +206,28 @@
     font-weight: 700;
 }
 
+.cliente-table-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.18rem 0.65rem;
+    border: 1px solid transparent;
+    border-radius: 999px;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+.cliente-table-status--ativo {
+    color: #237a3b;
+    background: #eaf7ee;
+    border-color: #bde5c8;
+}
+
+.cliente-table-status--inativo {
+    color: #8b3b33;
+    background: #fff0ee;
+    border-color: #f0c4be;
+}
+
 .td-veiculo-content {
     display: flex;
     align-items: center;
@@ -142,17 +263,7 @@
 
 @media (max-width: 1080px) {
     .cadastro-cliente-header {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .cadastro-cliente-filter {
-        max-width: 100%;
-    }
-
-    .cadastro-cliente-buscar {
-        justify-content: flex-start;
-        flex-wrap: wrap;
+        grid-template-columns: 1fr;
     }
 }
 
@@ -161,10 +272,13 @@
         padding: 1rem;
     }
 
-    .cadastro-cliente-buscar button,
-    .cadastro-cliente-search {
+    .cadastro-cliente-title-row {
+        flex-direction: column;
+    }
+
+    .cadastro-cliente-header-action,
+    .cadastro-cliente-header-action button {
         width: 100%;
-        max-width: 100%;
     }
 
     .cliente-table table {

@@ -5,8 +5,15 @@ export function formatCurrency(value: number | null | undefined): string {
   return value.toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
 }
 
-export function formatarDataHora(data: string): string {
-  const date = new Date(data);
+export function formatarDataHora(data: string | null | undefined): string {
+  if (!data?.trim()) return "--";
+
+  // O backend pode enviar nanossegundos (ex.: .4827644), enquanto o Date
+  // do navegador aceita de forma consistente apenas milissegundos.
+  const dataNormalizada = data.trim().replace(/(\.\d{3})\d+/, "$1");
+  const date = new Date(dataNormalizada);
+  if (Number.isNaN(date.getTime())) return "--";
+
   return new Intl.DateTimeFormat("pt-BR", { dateStyle: "short", timeStyle: "short" }).format(date);
 }
 

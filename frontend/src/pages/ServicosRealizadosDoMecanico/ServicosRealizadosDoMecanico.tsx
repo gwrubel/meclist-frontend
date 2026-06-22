@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Search, SlidersHorizontal } from "lucide-react";
 import { tServicoConcluidoMecanico } from "../../types/Mecanico";
 import Loading from "../../components/Loading/Loading";
 import { SelectCustom } from "../../components/Select/SelectCustom";
@@ -130,34 +130,57 @@ export default function ServicosRealizadosDoMecanico() {
 
     return (
         <div className="servicos-mecanico-container">
-            <button
-                type="button"
-                className="servicos-mecanico-back-button"
-                onClick={() => navigate("/cadastro-mecanico")}
-                aria-label="Voltar para cadastro de mecânicos"
-                title="Voltar"
-            >
-                <ArrowLeft size={18} />
-            </button>
-
             <section className="servicos-mecanico-header-card">
-                <div className="servicos-mecanico-title">
-                    <span className="dashboard-page__eyebrow">Mecânico: {mecanicoLabel}</span>
-                    <h1>Serviços concluídos</h1>
+                <div className="servicos-mecanico-title-row">
+                    <div className="servicos-mecanico-title">
+                        <span className="dashboard-page__eyebrow">Mecânico: {mecanicoLabel}</span>
+                        <h1>Serviços concluídos</h1>
+                        <p>Consulte o histórico de checklists finalizados por este profissional.</p>
+                    </div>
+
+                    <button
+                        type="button"
+                        className="servicos-mecanico-back-button"
+                        onClick={() => navigate("/cadastro-mecanico")}
+                    >
+                        <ArrowLeft size={18} aria-hidden="true" />
+                        Voltar para mecânicos
+                    </button>
                 </div>
 
                 <section className="servicos-mecanico-header">
-                    <div className="servicos-mecanico-filter">
-                        <SelectCustom options={periodoOptions} value={filtro} onChange={setFiltro} />
+                    <div className="servicos-mecanico-control-group">
+                        <span className="servicos-mecanico-control-label">
+                            <SlidersHorizontal size={15} aria-hidden="true" />
+                            Filtros
+                        </span>
+                        <div className="servicos-mecanico-filter">
+                            <SelectCustom
+                                label="Período"
+                                ariaLabel="Filtrar serviços por período"
+                                options={periodoOptions}
+                                value={filtro}
+                                onChange={setFiltro}
+                            />
+                        </div>
                     </div>
-                    <div className="servicos-mecanico-buscar">
-                        <input
-                            type="text"
-                            placeholder="Buscar por cliente, placa, modelo ou checklist"
-                            value={buscarTexto}
-                            onChange={(e) => setBuscarTexto(e.target.value)}
-                            className="search-input servicos-mecanico-search"
-                        />
+
+                    <div className="servicos-mecanico-control-group servicos-mecanico-search-group">
+                        <label className="servicos-mecanico-control-label" htmlFor="servicos-mecanico-search">
+                            <Search size={15} aria-hidden="true" />
+                            Pesquisar
+                        </label>
+                        <div className="servicos-mecanico-search-control">
+                            <Search size={18} className="servicos-mecanico-search-icon" aria-hidden="true" />
+                            <input
+                                id="servicos-mecanico-search"
+                                type="text"
+                                placeholder="Cliente, placa, modelo ou checklist"
+                                value={buscarTexto}
+                                onChange={(e) => setBuscarTexto(e.target.value)}
+                                className="servicos-mecanico-search"
+                            />
+                        </div>
                     </div>
                 </section>
             </section>

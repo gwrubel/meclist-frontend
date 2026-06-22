@@ -4,7 +4,7 @@ import { tMecanico } from "../../types/Mecanico";
 
 import Button from "../../components/Button/Button";
 import { SelectCustom } from "../../components/Select/SelectCustom";
-import {  Pencil, UserPlus } from 'lucide-react';
+import { Pencil, Search, SlidersHorizontal, UserPlus } from 'lucide-react';
 import { Link } from "react-router-dom";
 import Loading from "../../components/Loading/Loading";
 import ModalCadastroMecanico from "../../components/ModalCadastroDeMecanico/ModalCadastroMecanico";
@@ -80,24 +80,51 @@ export default function CadastroMecanico() {
     return (
         <div className="cadastro-mecanico-container">
             <section className="cadastro-mecanico-header-card">
-                <div className="cadastro-mecanico-title">
-                    <span className="dashboard-page__eyebrow">Gerenciar mecânicos</span>
-                    <h1>Cadastro de Mecânicos</h1>
+                <div className="cadastro-mecanico-title-row">
+                    <div className="cadastro-mecanico-title">
+                        <span className="dashboard-page__eyebrow">Gerenciar mecânicos</span>
+                        <h1>Cadastro de Mecânicos</h1>
+                        <p>Gerencie a equipe responsável pelos serviços da oficina.</p>
+                    </div>
+
+                    <div className="cadastro-mecanico-header-action">
+                        <Button text="Cadastrar mecânico" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalCadastroOpen(true)} />
+                    </div>
                 </div>
 
                 <section className="cadastro-mecanico-header">
-                    <div className="cadastro-mecanico-filter">
-                        <SelectCustom options={statusOptions} value={filtro} onChange={setFiltro} />
+                    <div className="cadastro-mecanico-control-group">
+                        <span className="cadastro-mecanico-control-label">
+                            <SlidersHorizontal size={15} aria-hidden="true" />
+                            Filtros
+                        </span>
+                        <div className="cadastro-mecanico-filter">
+                            <SelectCustom
+                                label="Situação"
+                                ariaLabel="Filtrar mecânicos por situação"
+                                options={statusOptions}
+                                value={filtro}
+                                onChange={setFiltro}
+                            />
+                        </div>
                     </div>
-                    <div className="cadastro-mecanico-buscar">
-                        <Button text="Cadastrar mecânico" icon={<UserPlus />} iconPosition="left" secondary onClick={() => setModalCadastroOpen(true)} />
-                        <input
-                            type="text"
-                            placeholder="Buscar por nome"
-                            value={buscarTexto}
-                            onChange={(e) => setBuscarTexto(e.target.value)}
-                            className="search-input cadastro-mecanico-search"
-                        />
+
+                    <div className="cadastro-mecanico-control-group cadastro-mecanico-search-group">
+                        <label className="cadastro-mecanico-control-label" htmlFor="cadastro-mecanico-search">
+                            <Search size={15} aria-hidden="true" />
+                            Pesquisar
+                        </label>
+                        <div className="cadastro-mecanico-search-control">
+                            <Search size={18} className="cadastro-mecanico-search-icon" aria-hidden="true" />
+                            <input
+                                id="cadastro-mecanico-search"
+                                type="text"
+                                placeholder="Buscar mecânico por nome"
+                                value={buscarTexto}
+                                onChange={(e) => setBuscarTexto(e.target.value)}
+                                className="cadastro-mecanico-search"
+                            />
+                        </div>
                     </div>
                 </section>
 
@@ -137,7 +164,11 @@ export default function CadastroMecanico() {
                                     </td>
                                     <td className="hide-on-mobile">{aplicarMascaraTelefone(mecanico.telefone)}</td>
                                     <td className="hide-on-mobile">{mecanico.email}</td>
-                                    <td>{mecanico.situacao.charAt(0).toUpperCase() + mecanico.situacao.slice(1).toLowerCase()}</td>
+                                    <td>
+                                        <span className={`mecanico-table-status mecanico-table-status--${mecanico.situacao.toLowerCase()}`}>
+                                            {mecanico.situacao.charAt(0).toUpperCase() + mecanico.situacao.slice(1).toLowerCase()}
+                                        </span>
+                                    </td>
                                     <td className="coluna-edit">
                                         <button onClick={() => {
                                             setMecanicoSelecionado(mecanico);

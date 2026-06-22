@@ -1,16 +1,144 @@
 .aprovacao-admin-container {
-  padding: 100px 32px 40px;
-  max-width: 1100px;
+  width: 100%;
+  max-width: 1400px;
   margin: 0 auto;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+/* ---- Cabeçalho ---- */
+.aprovacao-admin-header-card,
+.aprovacao-admin-fluxo-card,
+.aprovacao-admin-itens-section {
+  border: 1px solid rgba(166, 166, 166, 0.2);
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.94);
+  box-shadow: 0 18px 38px rgba(0, 0, 0, 0.055);
+}
+
+.aprovacao-admin-header-card {
+  padding: 1.5rem;
+}
+
+.aprovacao-admin-header-card > .dashboard-page__eyebrow {
+  display: block;
+  margin-bottom: 0.65rem;
+}
+
+.aprovacao-admin-header-card .checklist-page-header {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: start;
+  gap: 1rem;
+}
+
+.aprovacao-admin-header-card .checklist-page-header__voltar {
+  min-height: 40px;
+  padding: 0.55rem 0.85rem;
+  border-width: 1px;
+  border-radius: 9px;
+  color: var(--secondary-color);
+  background: #fff;
+}
+
+.aprovacao-admin-header-card .checklist-page-header__titulo h1 {
+  margin: -0.1rem 0 1rem;
+  color: var(--second-text-color);
+  font-size: clamp(1.8rem, 3vw, 2.8rem);
+  letter-spacing: -0.035em;
+}
+
+.aprovacao-admin-header-card .checklist-page-header__meta {
+  display: grid;
+  grid-template-columns: 0.85fr 1.45fr 1.15fr 0.9fr;
+  gap: 0;
+  border: 1px solid rgba(166, 166, 166, 0.2);
+  border-radius: 12px;
+  background: rgba(248, 248, 248, 0.86);
+  overflow: hidden;
+}
+
+.aprovacao-admin-header-card .checklist-page-header__meta > span {
+  min-width: 0;
+  min-height: 54px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0.18rem;
+  padding: 0.55rem 0.75rem;
+  border-right: 1px solid rgba(166, 166, 166, 0.2);
+  color: var(--second-text-color);
+  background: transparent;
+}
+
+.aprovacao-admin-header-card .checklist-page-header__meta > span:last-child {
+  border-right: 0;
+  color: var(--primary-color);
+  background: rgba(216, 107, 6, 0.06);
+  font-weight: 700;
+}
+
+.aprovacao-admin-header-card .checklist-page-header__meta strong {
+  color: var(--secondary-color);
+  font-size: 0.65rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.aprovacao-admin-header-description {
+  margin: 1rem 0 0 calc(40px + 1rem);
+  padding-top: 1rem;
+  border-top: 1px solid rgba(166, 166, 166, 0.18);
+  color: var(--secondary-color);
+  font-size: 0.86rem;
+}
+
+.aprovacao-admin-fluxo-card,
+.aprovacao-admin-itens-section {
+  padding: 1.15rem;
+}
+
+.aprovacao-admin-section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  margin-bottom: 1rem;
+}
+
+.aprovacao-admin-section-icon {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(145deg, var(--primary-color), #b85500);
+  box-shadow: 0 7px 16px rgba(216, 107, 6, 0.2);
+}
+
+.aprovacao-admin-section-header h2 {
+  margin: 0.2rem 0 0;
+  color: var(--second-text-color);
+  font-size: 1.35rem;
+}
+
+.aprovacao-admin-section-header p {
+  margin-top: 0.25rem;
+  color: var(--secondary-color);
+  font-size: 0.82rem;
 }
 
 /* ---- Stepper ---- */
 .aprovacao-admin-stepper {
   display: flex;
   gap: 0;
-  margin-bottom: 28px;
+  margin-bottom: 1rem;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
+  border-radius: 12px;
   overflow: hidden;
 }
 
@@ -52,16 +180,141 @@
   line-height: 1.25;
 }
 
-/* ---- Painel de ações ---- */
+/* ---- Caminhos de aprovação ---- */
+.aprovacao-admin-caminhos {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr);
+  gap: 1rem;
+}
+
+.aprovacao-admin-caminho {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid rgba(166, 166, 166, 0.24);
+  border-radius: 15px;
+  background: #fff;
+}
+
+.aprovacao-admin-caminho--digital {
+  border-color: rgba(21, 101, 192, 0.22);
+  background: linear-gradient(145deg, rgba(227, 242, 253, 0.5), #fff 42%);
+}
+
+.aprovacao-admin-caminho--assistido {
+  border-color: rgba(216, 107, 6, 0.25);
+  background: linear-gradient(145deg, rgba(255, 243, 224, 0.64), #fff 42%);
+}
+
+.aprovacao-admin-caminho--em-andamento {
+  box-shadow: inset 3px 0 0 var(--primary-color);
+}
+
+.aprovacao-admin-caminho-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.aprovacao-admin-caminho-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 42px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 11px;
+}
+
+.aprovacao-admin-caminho--digital .aprovacao-admin-caminho-icon {
+  color: #1565c0;
+  background: #e3f2fd;
+}
+
+.aprovacao-admin-caminho--assistido .aprovacao-admin-caminho-icon {
+  color: var(--primary-color);
+  background: #fff3e0;
+}
+
+.aprovacao-admin-caminho-tag {
+  display: block;
+  margin-bottom: 0.18rem;
+  color: var(--secondary-color);
+  font-size: 0.64rem;
+  font-weight: 800;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.aprovacao-admin-caminho h3 {
+  color: var(--second-text-color);
+  font-size: 1rem;
+}
+
+.aprovacao-admin-caminho-descricao {
+  color: var(--secondary-color);
+  font-size: 0.78rem;
+  line-height: 1.55;
+}
+
+.aprovacao-admin-caminho-responsavel {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  padding: 0.65rem 0.7rem;
+  border-radius: 9px;
+  color: var(--second-text-color);
+  background: rgba(248, 248, 248, 0.9);
+  font-size: 0.73rem;
+  line-height: 1.4;
+}
+
+.aprovacao-admin-caminho-responsavel svg {
+  flex: 0 0 auto;
+  margin-top: 0.05rem;
+  color: var(--primary-color);
+}
+
+.aprovacao-admin-caminho--digital .aprovacao-admin-caminho-responsavel svg {
+  color: #1565c0;
+}
+
+.aprovacao-admin-andamento-manual {
+  display: flex;
+  flex-direction: column;
+  gap: 0.7rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid rgba(216, 107, 6, 0.16);
+}
+
+.aprovacao-admin-andamento-titulo {
+  color: var(--second-text-color);
+  font-size: 0.72rem;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.aprovacao-admin-caminho-encerrado {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.65rem 0.75rem;
+  border-radius: 9px;
+  color: #2e7d32;
+  background: #e8f5e9;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .aprovacao-admin-acoes {
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  margin-bottom: 32px;
-  padding: 20px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fafafa;
+  margin-bottom: 0;
+  padding: 0;
 }
 
 .btn-acao-manual {
@@ -69,7 +322,7 @@
   align-items: center;
   gap: 8px;
   padding: 10px 20px;
-  border-radius: 6px;
+  border-radius: 9px;
   font-size: 0.9rem;
   font-weight: var(--fw-bold);
   cursor: pointer;
@@ -92,7 +345,8 @@
 }
 
 .btn-link-cliente {
-  background-color: #5d4037;
+  width: fit-content;
+  background-color: #1565c0;
   color: white;
 }
 
@@ -128,16 +382,21 @@
 }
 
 .aprovacao-admin-hint-decisao {
-  font-size: 0.9rem;
+  width: 100%;
+  padding: 0.65rem 0.75rem;
+  border-radius: 9px;
+  background: #e8f5e9;
+  font-size: 0.78rem;
+  line-height: 1.45;
   color: #2e7d32;
   font-weight: var(--fw-bold);
 }
 
 .aprovacao-admin-link-box {
-  margin-bottom: 28px;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fffdf7;
+  margin: 0;
+  border: 1px solid rgba(21, 101, 192, 0.2);
+  border-radius: 12px;
+  background-color: rgba(255, 255, 255, 0.9);
   padding: 16px;
   display: flex;
   flex-direction: column;
@@ -196,26 +455,74 @@
 
 /* ---- Itens ---- */
 .aprovacao-admin-itens {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
+  display: grid;
+  gap: 1.15rem;
 }
 
-.aprovacao-admin-categoria-titulo {
-  font-size: 1.05rem;
-  font-weight: var(--fw-bold);
-  margin-bottom: 12px;
-  color: var(--text-color);
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
+.aprovacao-admin-categoria {
+  border: 1px solid rgba(166, 166, 166, 0.24);
+  border-radius: 18px;
+  background: #fff;
+  box-shadow: 0 9px 24px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+}
+
+.aprovacao-admin-categoria-header {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(216, 107, 6, 0.16);
+  background: linear-gradient(90deg, rgba(216, 107, 6, 0.09), rgba(216, 107, 6, 0.015));
+}
+
+.aprovacao-admin-categoria-indice {
+  color: rgba(216, 107, 6, 0.42);
+  font-size: 1.35rem;
+  font-weight: 800;
+  letter-spacing: -0.04em;
+}
+
+.aprovacao-admin-categoria-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid rgba(216, 107, 6, 0.22);
+  border-radius: 9px;
+  color: var(--primary-color);
+  background: rgba(255, 255, 255, 0.75);
+}
+
+.aprovacao-admin-categoria-header h3 {
+  color: var(--second-text-color);
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+
+.aprovacao-admin-categoria-header p {
+  margin-top: 0.2rem;
+  color: var(--secondary-color);
+  font-size: 0.75rem;
+}
+
+.aprovacao-admin-categoria-itens {
+  display: grid;
+  gap: 0.9rem;
+  padding: 1rem;
+  background: rgba(248, 248, 248, 0.62);
 }
 
 .aprovacao-admin-item-card {
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  padding: 16px 20px;
-  margin-bottom: 12px;
-  background-color: white;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid rgba(166, 166, 166, 0.32);
+  border-radius: 12px;
+  background: #fff;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.035);
 }
 
 .aprovacao-admin-item-header {
@@ -275,10 +582,22 @@
   margin-top: 8px;
 }
 
+.aprovacao-admin-produtos-table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid rgba(166, 166, 166, 0.22);
+  border-radius: 10px;
+}
+
+.aprovacao-admin-produtos-table-wrapper .aprovacao-admin-produtos-table {
+  margin-top: 0;
+}
+
 .aprovacao-admin-produtos-table th,
 .aprovacao-admin-produtos-table td {
   padding: 8px 10px;
-  border: 1px solid #e0e0e0;
+  border: 0;
+  border-bottom: 1px solid #e7e7e7;
   text-align: left;
 }
 
@@ -364,8 +683,9 @@
 .aprovacao-admin-footer-acoes {
   margin-top: 20px;
   border: 1px solid #e0e0e0;
-  border-radius: 8px;
-  background-color: #fafafa;
+  border-radius: 14px;
+  background-color: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 12px 26px rgba(0, 0, 0, 0.06);
   padding: 14px 16px;
   display: flex;
   align-items: center;
@@ -380,9 +700,49 @@
   font-weight: var(--fw-bold);
 }
 
+@media (max-width: 1100px) {
+  .aprovacao-admin-caminhos {
+    grid-template-columns: 1fr;
+  }
+}
+
 @media (max-width: 768px) {
   .aprovacao-admin-container {
-    padding: 80px 16px 32px;
+    padding: 1rem;
+  }
+
+  .aprovacao-admin-header-card,
+  .aprovacao-admin-fluxo-card,
+  .aprovacao-admin-itens-section {
+    padding: 1rem;
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header {
+    grid-template-columns: 1fr;
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__voltar {
+    width: fit-content;
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__badge {
+    grid-row: 2;
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__meta {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__meta > span:nth-child(2) {
+    border-right: 0;
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__meta > span:nth-child(-n + 2) {
+    border-bottom: 1px solid rgba(166, 166, 166, 0.2);
+  }
+
+  .aprovacao-admin-header-description {
+    margin-left: 0;
   }
 
   .aprovacao-admin-stepper {
@@ -411,5 +771,29 @@
   .aprovacao-admin-link-input {
     min-width: 0;
     width: 100%;
+  }
+
+  .aprovacao-admin-produtos-table {
+    min-width: 42rem;
+  }
+}
+
+@media (max-width: 520px) {
+  .aprovacao-admin-header-card .checklist-page-header__meta {
+    grid-template-columns: 1fr;
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__meta > span {
+    border-right: 0;
+    border-bottom: 1px solid rgba(166, 166, 166, 0.2);
+  }
+
+  .aprovacao-admin-header-card .checklist-page-header__meta > span:last-child {
+    border-bottom: 0;
+  }
+
+  .aprovacao-admin-section-header,
+  .aprovacao-admin-categoria-header {
+    align-items: flex-start;
   }
 }

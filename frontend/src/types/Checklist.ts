@@ -1,6 +1,6 @@
 import { CategoriaParteVeiculo } from "./Item";
 
-export type StatusItem = "PENDENTE" | "OK" | "TROCAR" | "VERIFICAR";
+export type StatusItem = "PENDENTE" | "OK" | "TROCAR" | "VERIFICAR" | "TROCA_FEITA";
 
 export type StatusProcesso =
   | "AGUARDANDO_PRECIFICACAO"
@@ -147,12 +147,15 @@ export type ChecklistCompletoResponse = {
   modelo: string;
   ano: number;
   cor: string;
+  quilometragem: number;
   nomeCliente: string;
   nomeMecanico: string;
   status: StatusProcesso;
   valorTotal: number;
   criadoEm: string;
-  atualizadoEm: string;
+  dataConclusao?: string | null;
+  DataConclusao?: string | null;
+  atualizadoEm?: string | null;
   itensPorCategoria: Partial<Record<CategoriaParteVeiculo, ItemCompletoBackend[]>>;
 };
 
