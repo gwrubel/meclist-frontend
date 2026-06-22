@@ -6,7 +6,7 @@ export type StatusProcesso =
   | "AGUARDANDO_PRECIFICACAO"
   | "AGUARDANDO_APROVACAO"
   | "APROVADO"
-  | "FINALIZADO";
+  | "CONCLUIDO";
 
 export type FotoChecklist = {
   id: number;
@@ -110,4 +110,66 @@ export type ChecklistAprovacaoAdminResponse = {
   criadoEm: string;
   atualizadoEm: string;
   itensPorCategoria: Partial<Record<CategoriaParteVeiculo, ItemAprovacaoAdmin[]>>;
+};
+
+// Tipos para visualização completa de checklist (GET /checklists/{checklistId}/completo)
+export type FotoItemCompleto = {
+  id: number;
+  url: string;
+  criadoEm: string;
+};
+
+export type ProdutoItemCompleto = {
+  produtoId: number;
+  nomeProduto: string;
+  quantidade: number;
+  preco: number;
+  marca: string;
+  aprovadoCliente?: boolean | null;
+};
+
+export type ItemCompletoBackend = {
+  itemChecklistId: number;
+  nomeDoItem: string;
+  parteDoVeiculo: CategoriaParteVeiculo;
+  imagemIlustrativa: string;
+  statusItem: StatusItem;
+  fotos: FotoItemCompleto[];
+  produtos: ProdutoItemCompleto[];
+  maoDeObra: number;
+};
+
+export type ChecklistCompletoResponse = {
+  checklistId: number;
+  veiculoId: number;
+  placa: string;
+  marca: string;
+  modelo: string;
+  ano: number;
+  cor: string;
+  nomeCliente: string;
+  nomeMecanico: string;
+  status: StatusProcesso;
+  valorTotal: number;
+  criadoEm: string;
+  atualizadoEm: string;
+  itensPorCategoria: Partial<Record<CategoriaParteVeiculo, ItemCompletoBackend[]>>;
+};
+
+// Tipos para ItemVisualizacaoCard (formato processado para o componente)
+export type ProdutoVisualizacao = {
+  descricao: string;
+  quantidade: number;
+  precoUnitario: number;
+  marca: string;
+  aprovadoCliente?: boolean | null;
+};
+
+export type ItemVisualizacao = {
+  id: number;
+  descricao: string;
+  statusItem: StatusItem;
+  maoDeObraValor: number;
+  produtos: ProdutoVisualizacao[];
+  fotos: string[];
 };

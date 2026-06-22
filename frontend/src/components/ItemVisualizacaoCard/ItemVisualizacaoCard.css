@@ -1,0 +1,184 @@
+.item-visualizacao-card {
+  border: 1px solid #b0b0b0;
+  border-radius: var(--border-radius);
+  margin-bottom: 24px;
+  background-color: #f9f9f9;
+}
+
+.item-visualizacao-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background-color: #7a7a7a;
+  color: var(--light-text-color);
+  font-weight: var(--fw-bold);
+  padding: 12px 16px;
+  border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.item-visualizacao-card-header-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.item-visualizacao-card-header-actions {
+  display: flex;
+  align-items: center;
+}
+
+.item-visualizacao-card-resumo-status {
+  font-size: 0.75rem;
+}
+
+.item-visualizacao-card-ver-fotos {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background-color: white;
+  color: #7a7a7a;
+  border: none;
+  border-radius: 6px;
+  padding: 4px 10px;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.item-visualizacao-card-ver-fotos:hover {
+  background-color: #f0f0f0;
+}
+
+.item-visualizacao-card-table-wrapper {
+  overflow-x: auto;
+}
+
+.item-visualizacao-card-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.item-visualizacao-card-table th,
+.item-visualizacao-card-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #d0d0d0;
+  text-align: left;
+}
+
+.item-visualizacao-card-table th {
+  background-color: #e8e8e8;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-sm);
+  color: #5a5a5a;
+}
+
+.item-visualizacao-card-table td {
+  color: #4a4a4a;
+}
+
+.badge-aprovado,
+.badge-reprovado,
+.badge-pendente,
+.badge-parcial {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 0.78rem;
+  font-weight: var(--fw-bold);
+  white-space: nowrap;
+}
+
+.badge-aprovado {
+  background-color: #e8f5e9;
+  color: #2e7d32;
+}
+
+.badge-reprovado {
+  background-color: #ffebee;
+  color: #c62828;
+}
+
+.badge-pendente {
+  background-color: #f5f5f5;
+  color: #888;
+}
+
+.badge-parcial {
+  background-color: #fff8e1;
+  color: #f57f17;
+}
+
+.item-visualizacao-card-qtd {
+  text-align: center;
+  font-weight: var(--fw-md);
+}
+
+.item-visualizacao-card-valor {
+  text-align: right;
+  white-space: nowrap;
+}
+
+.item-visualizacao-card-subtotal {
+  white-space: nowrap;
+  font-weight: var(--fw-bold);
+  text-align: right;
+}
+
+.item-visualizacao-card-vazio {
+  text-align: center;
+  color: #888;
+  font-style: italic;
+  padding: 20px !important;
+}
+
+.item-visualizacao-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background-color: #e0e0e0;
+  border-top: 1px solid #d0d0d0;
+  flex-wrap: wrap;
+  gap: 12px;
+  border-radius: 0 0 var(--border-radius) var(--border-radius);
+}
+
+.item-visualizacao-card-mao-de-obra {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: var(--fs-sm);
+  color: #5a5a5a;
+}
+
+.item-visualizacao-card-mao-de-obra strong {
+  color: #3a3a3a;
+  font-weight: var(--fw-bold);
+}
+
+.item-visualizacao-card-total-item {
+  font-size: var(--fs-sm);
+  color: #5a5a5a;
+}
+
+.item-visualizacao-card-total-item strong {
+  color: #3a3a3a;
+  font-weight: var(--fw-bold);
+  font-size: var(--fs-md);
+}
+
+@media (max-width: 768px) {
+  .item-visualizacao-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .item-visualizacao-card-header-actions {
+    width: 100%;
+  }
+}

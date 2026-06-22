@@ -1,0 +1,80 @@
+.visualizar-checklist-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.visualizar-checklist-erro {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  padding: 60px 20px;
+  text-align: center;
+  color: #666;
+}
+
+.visualizar-checklist-erro svg {
+  color: #e74c3c;
+}
+
+.visualizar-checklist-erro h2 {
+  font-size: var(--fs-lg);
+  color: #333;
+  margin: 0;
+}
+
+.btn-voltar-erro {
+  margin-top: 12px;
+  padding: 10px 24px;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: var(--border-radius);
+  font-weight: var(--fw-bold);
+  cursor: pointer;
+  transition: opacity 0.2s;
+}
+
+.btn-voltar-erro:hover {
+  opacity: 0.9;
+}
+
+.visualizar-checklist-conteudo {
+  margin-top: 24px;
+}
+
+.visualizar-checklist-itens {
+  min-width: 0;
+}
+
+.visualizar-checklist-secao-titulo {
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-bold);
+  color: #333;
+  margin-bottom: 20px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--primary-color);
+}
+
+.visualizar-checklist-vazio {
+  text-align: center;
+  padding: 40px 20px;
+  color: #888;
+  font-style: italic;
+  background-color: #f9f9f9;
+  border: 1px dashed #d0d0d0;
+  border-radius: var(--border-radius);
+}
+
+/* Responsividade */
+@media (max-width: 768px) {
+  .visualizar-checklist-container {
+    padding: 16px;
+  }
+
+  .visualizar-checklist-secao-titulo {
+    font-size: var(--fs-md);
+  }
+}

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { ClipboardCheck, FileText, MessageSquare, ShieldCheck } from "lucide-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "../../contexts/AuthContext";
 import { ChecklistAprovacaoAdminResponse, EtapaFluxoManual } from "../../types/Checklist";
 import { buildApiUrl } from "../../config/api";
@@ -15,6 +15,15 @@ export function useAprovacaoAdmin() {
   const { checklistId } = useParams<{ checklistId: string }>();
   const { token } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const returnTab =
+    location.state && typeof location.state === "object"
+      ? (location.state as { returnTab?: string }).returnTab ?? "aguardando-aprovacao"
+      : "aguardando-aprovacao";
+
+  const voltarParaLista = useCallback(() => {
+    navigate("/gerenciar-checklist", { state: { activeTab: returnTab } });
+  }, [navigate, returnTab]);
 
   const [checklist, setChecklist] = useState<ChecklistAprovacaoAdminResponse | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,12 +45,12 @@ export function useAprovacaoAdmin() {
       );
       if (response.status === 404) {
         toast.error("Checklist não encontrado.");
-        navigate("/gerenciar-checklist");
+        voltarParaLista();
         return;
       }
       if (response.status === 403) {
         toast.error("Acesso negado. Apenas administradores podem acessar este painel.");
-        navigate("/gerenciar-checklist");
+        voltarParaLista();
         return;
       }
       const json = await response.json();
@@ -49,7 +58,7 @@ export function useAprovacaoAdmin() {
     } finally {
       setLoading(false);
     }
-  }, [checklistId, token, navigate]);
+  }, [checklistId, token, voltarParaLista]);
 
   useEffect(() => {
     buscarChecklist();
@@ -229,7 +238,7 @@ export function useAprovacaoAdmin() {
 
       if (response.status === 204) {
         toast.success("Decisões registradas com sucesso.");
-        navigate("/gerenciar-checklist");
+        voltarParaLista();
         return;
       }
       if (response.status === 409) {

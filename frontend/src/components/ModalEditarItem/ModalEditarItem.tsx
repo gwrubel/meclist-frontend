@@ -6,7 +6,7 @@ import { showSuccessToast, showErrorToast } from "../../utils/toast";
 import { CategoriaParteVeiculo, tItem } from "../../types/Item";
 import "./ModalEditarItem.css";
 import { SelectCustom } from "../Select/SelectCustom";
-import { API_BASE_URL, buildApiUrl } from "../../config/api";
+import { buildApiUrl } from "../../config/api";
 
 interface ModalEditarItemProps {
     isOpen: boolean;
@@ -26,7 +26,6 @@ export default function ModalEditarItem({ isOpen, onClose, onSuccess, item }: Mo
         imagem: null,
         categoriaParteVeiculo: "",
     });
-    const URL_BASE_IMAGEM = API_BASE_URL;
 
     const [errors, setErrors] = useState<{ [key: string]: string }>({});
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -177,7 +176,7 @@ export default function ModalEditarItem({ isOpen, onClose, onSuccess, item }: Mo
                             <span className="current-image-label">Imagem atual:</span>
                             <div className="preview-wrapper">
                                 <img 
-                                    src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`} 
+                                    src={item.imagemIlustrativa} 
                                     alt="Imagem atual" 
                                     className="preview-image" 
                                 />

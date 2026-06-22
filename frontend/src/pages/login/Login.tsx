@@ -4,7 +4,7 @@ import "./login.css";
 import logo from "../../assets/logo.svg";
 import checkbox from "../../assets/Checked Checkbox.svg";
 import Button from "../../components/Button/Button";
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import InputCustom from "../../components/InputCustom/InputCustom";
 import { tlogin } from "../../types/userLogin";
 import Loading from "../../components/Loading/Loading";
@@ -103,9 +103,9 @@ function Login() {
                         ) : (
                             <Button text="Entrar" />
                         )}
-                        <a href="#" className="forgot-password">
+                        <Link to="/adm/recuperar-senha" className="forgot-password">
                             Esqueceu a senha?
-                        </a>
+                        </Link>
                     </form>
                 </div>
                 <div className="info-box">

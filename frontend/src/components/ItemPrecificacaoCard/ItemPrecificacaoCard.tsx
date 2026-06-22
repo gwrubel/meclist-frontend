@@ -131,7 +131,14 @@ export default function ItemPrecificacaoCard({ item, token, onChange }: Props) {
       });
       const json = await res.json();
       const lista: tProduto[] = Array.isArray(json) ? json : json.data ?? [];
-      setProdutosDisponiveis(lista.filter((p) => p.situacao === "ATIVO"));
+      
+      // Filtrar produtos já adicionados ao item
+      const produtosJaAdicionados = new Set(produtos.map(p => p.produtoId));
+      const produtosFiltrados = lista.filter(
+        (p) => p.situacao === "ATIVO" && !produtosJaAdicionados.has(p.produtoId)
+      );
+      
+      setProdutosDisponiveis(produtosFiltrados);
       setProdutoSelecionadoId("");
       setMostrarSeletor(true);
     } finally {

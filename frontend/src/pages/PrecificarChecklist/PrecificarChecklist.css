@@ -12,13 +12,39 @@
 .precificar-itens {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 32px;
 }
 
 .precificar-vazio {
   text-align: center;
   color: var(--secondary-color);
   padding: 40px 0;
+}
+
+/* ---- Categorias ---- */
+.precificar-categoria {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.precificar-categoria-titulo {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: #B35705;
+  padding: 12px 16px;
+  background: linear-gradient(135deg, #FFF5EB 0%, #FFE4CC 100%);
+  border-left: 5px solid #D86B06;
+  border-radius: 6px;
+  margin: 0;
+  box-shadow: 0 1px 3px rgba(216, 107, 6, 0.1);
+}
+
+.precificar-categoria-itens {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-left: 8px;
 }
 
 /* ---- Footer ---- */

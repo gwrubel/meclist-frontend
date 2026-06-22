@@ -5,11 +5,23 @@ export interface DashboardGraficoPorMes {
 
 export interface DashboardPeriodo {
   periodo: string;
-  totalServicos: number;
-  servicosPendentes: number;
-  servicosFinalizados: number;
-  valorTotalMovimentado: number | null;
-  graficoOsPorMes: DashboardGraficoPorMes;
+  movimentados: number;
+  finalizados: number;
+  faturamento: number | null;
+  taxaAprovacao: number | null;
+  grafico: DashboardGraficoPorMes;
+}
+
+export interface DashboardEstadoAtual {
+  pendentesAtuais: number;
+  aguardandoAprovacao: number;
+  atribuidos: number;
+  emAndamento: number;
+}
+
+export interface DashboardTemposMedios {
+  tempoMedioAteMecanico: number | null;
+  tempoMedioExecucao: number | null;
 }
 
 export interface DashboardTopMecanico {
@@ -21,9 +33,10 @@ export interface DashboardTopMecanico {
 export interface DashboardData {
   ultimos7Dias: DashboardPeriodo;
   ultimos30Dias: DashboardPeriodo;
+  estadoAtual: DashboardEstadoAtual;
   ticketMedio: number | null;
-  taxaAprovacao: number | null;
   topMecanicos: DashboardTopMecanico[];
+  temposMedios: DashboardTemposMedios;
 }
 
 export interface DashboardResponse {

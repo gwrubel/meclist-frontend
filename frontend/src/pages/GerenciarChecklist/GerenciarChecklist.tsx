@@ -1,5 +1,5 @@
 ﻿import { useCallback, useEffect, useMemo, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ChecklistListItem, StatusProcesso } from "../../types/Checklist";
 import { useAuth } from "../../contexts/AuthContext";
 import Loading from "../../components/Loading/Loading";
@@ -17,14 +17,14 @@ const TABS: { key: TabKey; label: string }[] = [
   { key: "pendentes", label: "Pendentes" },
   { key: "aguardando-aprovacao", label: "Aguardando Aprovação" },
   { key: "aprovados", label: "Aprovados" },
-  { key: "finalizados", label: "Finalizados" },
+  { key: "finalizados", label: "Concluídos" },
 ];
 
 const TAB_STATUS: Record<TabKey, StatusProcesso> = {
   pendentes: "AGUARDANDO_PRECIFICACAO",
   "aguardando-aprovacao": "AGUARDANDO_APROVACAO",
   aprovados: "APROVADO",
-  finalizados: "FINALIZADO",
+  finalizados: "CONCLUIDO",
 };
 
 const TAB_ACAO: Record<TabKey, string> = {
@@ -33,6 +33,10 @@ const TAB_ACAO: Record<TabKey, string> = {
   aprovados: "Encaminhar",
   finalizados: "Detalhes",
 };
+
+function isTabKey(value: unknown): value is TabKey {
+  return TABS.some((tab) => tab.key === value);
+}
 
 function formatarDataHora(data: string) {
   const date = new Date(data);
@@ -43,13 +47,25 @@ function formatarDataHora(data: string) {
 
 export default function GerenciarChecklist() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { token } = useAuth();
-  const [activeTab, setActiveTab] = useState<TabKey>("pendentes");
+  const activeTabFromState = location.state && typeof location.state === "object"
+    ? (location.state as { activeTab?: unknown }).activeTab
+    : undefined;
+  const [activeTab, setActiveTab] = useState<TabKey>(
+    isTabKey(activeTabFromState) ? activeTabFromState : "pendentes"
+  );
   const [filtroTexto, setFiltroTexto] = useState("");
   const [checklists, setChecklists] = useState<ChecklistListItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [modalEncaminharOpen, setModalEncaminharOpen] = useState(false);
   const [checklistSelecionado, setChecklistSelecionado] = useState<ChecklistListItem | null>(null);
+
+  useEffect(() => {
+    if (isTabKey(activeTabFromState)) {
+      setActiveTab(activeTabFromState);
+    }
+  }, [activeTabFromState]);
 
   const buscarChecklists = useCallback(async () => {
     try {
@@ -58,7 +74,9 @@ export default function GerenciarChecklist() {
       const response = await fetch(`${API_BASE_URL}/checklists?status=${status}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
+      
       const json = await response.json();
+      console.log("Resposta da API:", json);
       setChecklists(json.data ?? []);
     } finally {
       setLoading(false);
@@ -78,6 +96,32 @@ export default function GerenciarChecklist() {
         item.nomeCliente.toLowerCase().includes(termo)
     );
   }, [checklists, filtroTexto]);
+
+  const handleAcaoChecklist = (checklist: ChecklistListItem) => {
+    if (activeTab === "aprovados") {
+      setChecklistSelecionado(checklist);
+      setModalEncaminharOpen(true);
+      return;
+    }
+
+    if (activeTab === "aguardando-aprovacao") {
+      navigate(`/checklist/${checklist.checklistId}/aprovacao-admin`, {
+        state: { returnTab: activeTab },
+      });
+      return;
+    }
+
+    if (activeTab === "finalizados") {
+      navigate(`/checklist/${checklist.checklistId}/visualizar`, {
+        state: { returnTab: activeTab },
+      });
+      return;
+    }
+
+    navigate(`/checklist/${checklist.checklistId}/precificar`, {
+      state: { returnTab: activeTab },
+    });
+  };
 
   return (
     <>
@@ -142,16 +186,7 @@ export default function GerenciarChecklist() {
                         <button
                           type="button"
                           className="checklist-action-button"
-                          onClick={() => {
-                            if (activeTab === "aprovados") {
-                              setChecklistSelecionado(checklist);
-                              setModalEncaminharOpen(true);
-                            } else if (activeTab === "aguardando-aprovacao") {
-                              navigate(`/checklist/${checklist.checklistId}/aprovacao-admin`);
-                            } else {
-                              navigate(`/checklist/${checklist.checklistId}/precificar`);
-                            }
-                          }}
+                          onClick={() => handleAcaoChecklist(checklist)}
                         >
                           {TAB_ACAO[activeTab]}
                         </button>

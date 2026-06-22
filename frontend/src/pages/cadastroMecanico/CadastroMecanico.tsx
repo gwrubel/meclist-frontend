@@ -125,8 +125,16 @@ export default function CadastroMecanico() {
                         ) : mecanicosFiltrados.length > 0 ? (
                             mecanicosFiltrados.map((mecanico) => (
                                 <tr  key={mecanico.id}>
-                                    <td><Link to={`/mecanicos/${mecanico.id}`}>MEC-{String(mecanico.id).padStart(3, '0')}</Link></td>
-                                    <td><Link to={`/mecanicos/${mecanico.id}`}>{mecanico.nome}</Link></td>
+                                    <td>
+                                        <Link to={`/mecanicos/${mecanico.id}`} state={{ mecanicoNome: mecanico.nome }}>
+                                            MEC-{String(mecanico.id).padStart(3, '0')}
+                                        </Link>
+                                    </td>
+                                    <td>
+                                        <Link to={`/mecanicos/${mecanico.id}`} state={{ mecanicoNome: mecanico.nome }}>
+                                            {mecanico.nome}
+                                        </Link>
+                                    </td>
                                     <td className="hide-on-mobile">{aplicarMascaraTelefone(mecanico.telefone)}</td>
                                     <td className="hide-on-mobile">{mecanico.email}</td>
                                     <td>{mecanico.situacao.charAt(0).toUpperCase() + mecanico.situacao.slice(1).toLowerCase()}</td>

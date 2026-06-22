@@ -1,0 +1,14 @@
+/* Reaproveita a base visual do login com pequenos ajustes de espaçamento */
+@import "../login/login.css";
+
+.recuperar-senha-box {
+  justify-content: center;
+}
+
+.recuperar-senha-box header {
+  margin-bottom: 0.5rem;
+}
+
+.recuperar-senha-box form {
+  max-width: 360px;
+}

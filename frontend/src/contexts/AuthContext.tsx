@@ -45,7 +45,7 @@ const isTokenExpired = (decoded: DecodedToken | null): boolean => {
 const safeDecode = (token: string): DecodedToken | null => {
   try {
     return jwtDecode<DecodedToken>(token);
-  } catch (_e) {
+  } catch {
     return null;
   }
 };

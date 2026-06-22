@@ -79,8 +79,10 @@
   border: 1px solid #ef9a9a;
 }
 
-.checklist-page-header__badge--finalizado {
-  background-color: #f3e5f5;
-  color: #6a1b9a;
-  border: 1px solid #ce93d8;
+
+
+.checklist-page-header__badge--concluido {
+   background-color: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
 }

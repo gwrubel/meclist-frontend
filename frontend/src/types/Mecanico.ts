@@ -18,3 +18,12 @@ export type tMecanicoCadastro = {
     senha: string;
 }
 
+export type tServicoConcluidoMecanico = {
+    checklistId: number;
+    nomeCliente: string;
+    placa: string;
+    modelo: string;
+    dataInicio: string;
+    dataConclusao: string;
+};
+

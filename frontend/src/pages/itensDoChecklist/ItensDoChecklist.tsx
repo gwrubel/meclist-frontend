@@ -11,7 +11,7 @@ import Loading from "../../components/Loading/Loading";
 import ModalEditarItem from "../../components/ModalEditarItem/ModalEditarItem";
 import ModalProdutosDoItem from "../../components/ModalProdutosDoItem/ModalProdutosDoItem";
 import ModalDesativarItem from "../../components/ModalDeletarItem/ModalDesativarItem";
-import { API_BASE_URL, buildApiUrl } from "../../config/api";
+import { buildApiUrl } from "../../config/api";
 
 
 export default function ItensDoChecklist() {
@@ -25,7 +25,7 @@ export default function ItensDoChecklist() {
   const [itemSelecionado, setItemSelecionado] = useState<tItem | undefined>(undefined);
   const [modalEditarItem, setModalEditarItem] = useState(false);
   const [modalProdutosDoItem, setModalProdutosDoItem] = useState(false);
-  const URL_BASE_IMAGEM = API_BASE_URL;
+
 
   // NOVO: filtro de situação
   const [filtroSituacao, setFiltroSituacao] = useState<string>("ATIVO");
@@ -64,6 +64,7 @@ export default function ItensDoChecklist() {
         throw new Error("Erro ao buscar itens do checklist");
       }
       const data = await response.json();
+      
       setItens(data.data);
 
     } catch (error) {
@@ -188,7 +189,7 @@ export default function ItensDoChecklist() {
                   <td className="coluna-imagem">
                     <img
                       className="item-imagem"
-                      src={`${URL_BASE_IMAGEM}${item.imagemIlustrativa}`}
+                      src={item.imagemIlustrativa}
                       alt={item.nome}
                     />
                   </td>

@@ -6,7 +6,7 @@ import logo from "../../assets/logo.svg";
 import m from "../../assets/m.svg";
 import grid from "../../assets/grid.svg";
 import lista from "../../assets/lista.svg";
-import relatorio from "../../assets/relatorio.svg";
+
 import cadastro from "../../assets/cadastro.svg";
 import configuracoes from "../../assets/configuracoes.svg";
 import userSvg from "../../assets/user.svg";
@@ -20,10 +20,8 @@ export function Sidebar() {
   const { logout } = useAuth();
   const navigate = useNavigate();
   const { user } = useAuth();
-
   const [open, setOpen] = useState(false);
   const [cadastroOpen, setCadastroOpen] = useState(false);
-  const [relatorioOpen, setRelatorioOpen] = useState(false);
   const [checklistOpen, setChecklistOpen] = useState(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -50,13 +48,13 @@ export function Sidebar() {
         const el = document.activeElement as HTMLButtonElement;
         if (el?.textContent?.includes("Cadastro")) setCadastroOpen(true);
         if (el?.textContent?.includes("Checklist")) setChecklistOpen(true);
-        if (el?.textContent?.includes("Relatório")) setRelatorioOpen(true);
+        
       } else if (e.key === "ArrowLeft") {
         // fecha grupos com seta esquerda
         const el = document.activeElement as HTMLButtonElement;
         if (el?.textContent?.includes("Cadastro")) setCadastroOpen(false);
         if (el?.textContent?.includes("Checklist")) setChecklistOpen(false);
-        if (el?.textContent?.includes("Relatório")) setRelatorioOpen(false);
+        
       }
     }
     const node = menuRef.current;
@@ -127,25 +125,7 @@ export function Sidebar() {
         </section>
 
 
-        <section className="sidebar-group">
-          <button onClick={() => setRelatorioOpen(!relatorioOpen)} aria-label="Abrir seção Relatório">
-            <img src={relatorio} alt="relatorio" />
-            Relatório <span>{relatorioOpen ? <img src={setaLabelBaixo} alt="seta" /> : <img src={setaLabelLado} alt="seta" />}</span>
-          </button>
-          {relatorioOpen && open && (
-            <div className="sidebar-submenu">
-              <button onClick={() => navigate("/relatorio/mensal")} aria-label="Ir para Faturamento mensal">
-                Faturamento mensal
-              </button>
-              <button onClick={() => navigate("/relatorio/status")} aria-label="Ir para Checklist por status">
-                Checklist por status
-              </button>
-              <button onClick={() => navigate("/relatorio/tempo")} aria-label="Ir para Tempo médio de execução">
-                Tempo médio de execução
-              </button>
-            </div>
-          )}
-        </section>
+        
       </nav>
 
       {open && (
